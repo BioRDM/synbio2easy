@@ -10,11 +10,13 @@
 	</parent>
 	<groupId>ed.biordm</groupId>
 	<artifactId>sbol-synbio-toolkit</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>sbol-synbio-toolkit</name>
 	<description>SynBioHub client</description>
 	<properties>
 		<java.version>11</java.version>
+                <maven.compiler.source>11</maven.compiler.source>
+                <maven.compiler.target>11</maven.compiler.target>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -34,7 +36,10 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
+                                <configuration>
+                                    <executable>true</executable>
+                                </configuration>
+                        </plugin>
 		</plugins>
 	</build>
 
