@@ -9,6 +9,10 @@ import ed.biordm.sbol.synbio.dom.Command;
 import static ed.biordm.sbol.synbio.dom.Command.*;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
 import java.io.Console;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.Scanner;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +27,7 @@ public class UserInputPrompter {
     
     public UserInputPrompter() {
         this(System.console());
+        
     }
     
     // for testing so that console can be mocked
@@ -32,7 +37,8 @@ public class UserInputPrompter {
     
     public CommandOptions getCommandOptions(ApplicationArguments args) throws MissingOptionException {
     
-        Command command = getCommand(args);       
+        Command command = getCommand(args); 
+        
         CommandOptions options = new CommandOptions(command);        
         setPassedOptions(options, args);        
         
@@ -43,14 +49,29 @@ public class UserInputPrompter {
     }
 
     Command getCommand(ApplicationArguments args) throws MissingOptionException {
-        if (args.getNonOptionArgs().isEmpty()) 
-            throw new MissingOptionException("Missing command name");
         
-        String command = args.getNonOptionArgs().get(0);
+        String command;
+        
+        if (args.getNonOptionArgs().isEmpty()) {
+            command = promptForCommand();
+        } else {
+            command = args.getNonOptionArgs().get(0);
+        }
+        
         switch(command) {
             case "deposit": return DEPOSIT;
             default: throw new MissingOptionException("Uknown command "+command);
         }
+    }
+    
+    String promptForCommand() {
+        
+        console.printf("What operation do you want to perform?%n");
+        console.printf("Choose from: deposit | describe%n");
+        
+        String command = console.readLine("Operation: ");
+        
+        return command;
     }
 
     CommandOptions promptDepositOptions(CommandOptions options) {
@@ -64,7 +85,7 @@ public class UserInputPrompter {
         }
         
         if (options.password == null) {
-            options.password = console.readLine("Please enter your SynBioHub password: ");
+            options.password = new String(console.readPassword("Please enter your SynBioHub password: "));
         } else {
             console.printf("Password: *****");
         }

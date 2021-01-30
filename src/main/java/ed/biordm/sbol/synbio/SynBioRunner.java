@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component;
  * @author tzielins
  */
 @Component
+@Profile("!test")
 public class SynBioRunner implements ApplicationRunner{
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -38,10 +40,8 @@ public class SynBioRunner implements ApplicationRunner{
     @Override
     public void run(ApplicationArguments args) {
         
-        
         try {
-            CommandOptions command = prompter.getCommandOptions(args); 
-            
+            CommandOptions command = prompter.getCommandOptions(args);             
             handler.handle(command);
             
         } catch (MissingOptionException e) {
