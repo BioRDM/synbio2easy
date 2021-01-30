@@ -6,6 +6,7 @@
 package ed.biordm.sbol.synbio;
 
 import ed.biordm.sbol.synbio.dom.CommandOptions;
+import ed.biordm.sbol.synbio.handler.SynBioHandler;
 import ed.biordm.sbol.synbio.prompt.MissingOptionException;
 import ed.biordm.sbol.synbio.prompt.UserInputPrompter;
 import org.slf4j.Logger;
@@ -25,11 +26,12 @@ public class SynBioRunner implements ApplicationRunner{
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     
     final UserInputPrompter prompter;
-    
+    final SynBioHandler handler;
     
     @Autowired
-    public SynBioRunner(UserInputPrompter prompter) {
+    public SynBioRunner(UserInputPrompter prompter, SynBioHandler handler) {
         this.prompter = prompter;
+        this.handler = handler;
     }
     
     
@@ -39,7 +41,8 @@ public class SynBioRunner implements ApplicationRunner{
         
         try {
             CommandOptions command = prompter.getCommandOptions(args); 
-            throw new IllegalArgumentException("Logging");
+            
+            handler.handle(command);
             
         } catch (MissingOptionException e) {
             
