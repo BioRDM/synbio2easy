@@ -21,15 +21,19 @@ public class SynBioClientIntTest {
     @Autowired
     SynBioClient client;
     
-    String synBioUrl = "http://localhost:7777/";
-    String synBioUser = "test@test.com";
-    String synBioPassword = "testpass";
+
+    String synBioUrl;
+    String synBioUser;
+    String synBioPassword;
     
     public SynBioClientIntTest() {
     }
     
     @BeforeEach
     public void setUp() {
+        synBioUrl = "http://localhost:7777/";
+        synBioUser = "test@test.com";
+        synBioPassword = "testpass";       
     }
 
     @Test
@@ -46,7 +50,7 @@ public class SynBioClientIntTest {
             // test if the anwers is user friendly
         }
         
-        url = "htpp://wrong.address.url";
+        url = "http://wrong.address.url";
         
         try {
             String token = client.login(url, user, password);

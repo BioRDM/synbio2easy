@@ -7,8 +7,13 @@ package ed.biordm.sbol.synbio.handler;
 
 import ed.biordm.sbol.synbio.client.SynBioClient;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -96,7 +101,13 @@ public class SynBioHandler {
     }
     
     List<Path> subfolders(String dir) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        try (Stream<Path> files = Files.list(Paths.get(dir))) {
+            return  files.filter( f -> Files.isDirectory(f))
+                    .collect(Collectors.toList());            
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not read directories of "+dir, e);
+        }
     }
 
 

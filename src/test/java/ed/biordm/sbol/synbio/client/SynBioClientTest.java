@@ -8,59 +8,102 @@ package ed.biordm.sbol.synbio.client;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.client.ExpectedCount;
+import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.test.web.client.match.MockRestRequestMatchers;
+import org.springframework.test.web.client.response.MockRestResponseCreators;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 /**
  *
  * @author tzielins
  */
-@SpringBootTest
 public class SynBioClientTest {
     
-    @Autowired
+    
+    RestTemplate template;    
+    MockRestServiceServer server;    
+    
     SynBioClient client;
     
-    String synBioUrl = "https://synbiohub.org/";
-    String synBioUser = "tomasz.zielinski@ed.ac.uk";
-    String synBioPassword = ".SBmizeria";
+    String synBioUrl;
+    String synBioUser;
+    String synBioPassword;
     
     public SynBioClientTest() {
     }
     
     @BeforeEach
     public void setUp() {
+        synBioUrl = "http://localhost:7777/";
+        synBioUser = "test@test.com";
+        synBioPassword = "testpass";
+        
+        template = new RestTemplate();
+        RestTemplateBuilder builder = mock(RestTemplateBuilder.class);
+        when(builder.build()).thenReturn(template);
+        
+        server = MockRestServiceServer.bindTo(template).build();
+        
+        client = new SynBioClient(builder);
     }
 
-    @Test
-    public void handlesFailedLogins() {
-        
-        String url = "https://synbiohub.org/";
-        String user = "wrong@user.mail";
-        String password = "wrong";
-        
-        try {
-            String token = client.login(url, user, password);
-            
-        } catch (IllegalStateException e) {
-            // test if the anwers is user friendly
-        }
-        
-        url = "htpp://wrong.address.url";
-        
-        try {
-            String token = client.login(url, user, password);
-            
-        } catch (IllegalStateException e) {
-            // test if the anwers is user friendly
-        }
-    }
     
     @Test
     public void logsIn() {
-        String token = client.login(synBioUrl, synBioUser, synBioPassword);
-        System.out.println(token);
-        assertNotNull(token);
+        
+        String url = synBioUrl+"login";
+        
+        String token = "bf938ea7-b805-438e-ac26-d1f23592a70";
+        
+        MultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
+        expected.set("email", synBioUser);
+        expected.set("password", synBioPassword);      
+        
+        server.expect(ExpectedCount.once(), 
+                MockRestRequestMatchers.requestTo(url))
+                .andExpect(MockRestRequestMatchers.method(HttpMethod.POST))
+                .andExpect(MockRestRequestMatchers.content().formData(expected))     
+                .andRespond(MockRestResponseCreators.withSuccess(token, MediaType.APPLICATION_JSON));        
+        
+        String response = client.login(synBioUrl, synBioUser, synBioPassword);
+        assertEquals(token, response);
+        
+        server.verify();   
+    }
+    
+    @Test
+    public void handlesFailedLogins() {
+        
+        String url = synBioUrl+"login";
+        
+        server.expect(ExpectedCount.once(), 
+                MockRestRequestMatchers.requestTo(url))
+                .andExpect(MockRestRequestMatchers.method(HttpMethod.POST))
+                .andRespond(MockRestResponseCreators.withUnauthorizedRequest());
+
+        try {                
+            String response = client.login(synBioUrl, synBioUser, synBioPassword);
+        } catch (IllegalStateException e) {
+            assertEquals("Could not login: Unauthorized", e.getMessage());
+        }
+        
+        server.verify();   
+    }  
+    
+    @Test
+    public void getsServerFromURL() {
+        String url = "https://synbiohub.org/user/zajawka/trevor_test/trevor_test_collection/1";
+        
+        assertEquals("https://synbiohub.org/", client.hubFromUrl(url));
     }
     
 }

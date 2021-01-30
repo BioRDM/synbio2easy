@@ -9,13 +9,17 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -25,6 +29,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class SynBioClient {
 
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
     final RestTemplateBuilder restBuilder;
     
     public SynBioClient(RestTemplateBuilder restBuilder) {
@@ -38,31 +43,27 @@ public class SynBioClient {
     public String login(String hubUrl, String user, String password) {
         
         HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         
-        Map<String, Object> body = new HashMap<>();
-        body.put("email", user);
-        body.put("password", password);
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("email", user);
+        body.add("password", password);
         
-        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
         
         String url = hubUrl+"login";
         
         RestTemplate template = restBuilder.build();
         
-        ResponseEntity<String> response = template.postForEntity(url, request, String.class);
-        
-        if (!response.getStatusCode().is2xxSuccessful()) {
-            // what can we get from the SynBioHub reponse ....
-            // log details, prepare a message
-            //System.out.println(response.getStatusCode());
-            //System.out.println(response.getBody());
-            String reason = "unknown";
-            throw new IllegalStateException("Cound not login: "+reason);
+        try {
+            String response = template.postForObject(url, request, String.class);
+            return response;
+        } catch (RuntimeException e) {
+            throw reportError("Could not login", e);
         }
         
-        return response.getBody();
     }
     
     // some other params as for API
@@ -78,15 +79,10 @@ public class SynBioClient {
         
         RestTemplate template = restBuilder.build();
         
-        ResponseEntity<String> response = template.postForEntity(url, body, String.class);
-        
-        if (!response.getStatusCode().is2xxSuccessful()) {
-            // what can we get from the SynBioHub reponse ....
-            // log details, prepare a message
-            //System.out.println(response.getStatusCode());
-            //System.out.println(response.getBody());
-            String reason = "fix me";
-            throw new IllegalStateException("Cound not deposit: "+reason);
+        try {
+            String response = template.postForObject(url, body, String.class);
+        } catch (RuntimeException e) {
+            throw reportError("Could not deposit", e);
         }        
         
     }
@@ -105,6 +101,18 @@ public class SynBioClient {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+
+    IllegalStateException reportError(String operation, RuntimeException e) {
+        
+        logger.error(operation, e);
+        
+        String msg = operation+": "+e.getMessage();
+        if (e instanceof HttpClientErrorException) {
+            HttpClientErrorException he = (HttpClientErrorException)e;
+            msg = operation+": "+he.getStatusText(); 
+        }
+        return new IllegalStateException(msg);
+    }    
 
     
 }
