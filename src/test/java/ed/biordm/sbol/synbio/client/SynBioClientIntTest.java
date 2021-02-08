@@ -5,9 +5,12 @@
  */
 package ed.biordm.sbol.synbio.client;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -20,11 +23,16 @@ public class SynBioClientIntTest {
     
     @Autowired
     SynBioClient client;
-    
+
+    @TempDir
+    Path tmpDir;
 
     String synBioUrl;
     String synBioUser;
     String synBioPassword;
+
+    String synBioCollUrl;
+    Path sbolFilePath;
     
     public SynBioClientIntTest() {
     }
@@ -33,7 +41,13 @@ public class SynBioClientIntTest {
     public void setUp() {
         synBioUrl = "http://localhost:7777/";
         synBioUser = "test@test.com";
-        synBioPassword = "testpass";       
+        synBioPassword = "testpass";
+
+        synBioCollUrl = synBioUrl+"user/Johnny/johnny_collection_29_01_21/johnny_collection_29_01_21_collection/1.0";
+        sbolFilePath = Paths.get("D://temp//sbol//codA_Km_0081_slr1130.xml");
+        
+        synBioUser = "j.hay@epcc.ed.ac.uk";
+        synBioPassword = "admin";
     }
 
     @Test
@@ -66,5 +80,18 @@ public class SynBioClientIntTest {
         System.out.println(token);
         assertNotNull(token);
     }
-    
+
+    @Test
+    public void deposit() {
+        String token = client.login(synBioUrl, synBioUser, synBioPassword);
+        System.out.println(token);
+        assertNotNull(token);
+
+        System.out.println(tmpDir.getParent().toString());
+        Path file = tmpDir.resolve("test.txt");
+        synBioCollUrl = synBioCollUrl.replace("//", "\\");
+        client.deposit(token, synBioCollUrl, sbolFilePath);
+    }
+
+
 }
