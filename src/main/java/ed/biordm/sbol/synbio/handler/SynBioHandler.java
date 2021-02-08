@@ -8,10 +8,13 @@ package ed.biordm.sbol.synbio.handler;
 import ed.biordm.sbol.synbio.client.SynBioClient;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +34,7 @@ public class SynBioHandler {
        this.client = client; 
     }
 
-    public void handle(CommandOptions command) {
+    public void handle(CommandOptions command) throws URISyntaxException {
         
         switch (command.command) {
             case DEPOSIT: handleDeposit(command);
@@ -39,7 +42,7 @@ public class SynBioHandler {
         }
     }
 
-    void handleDeposit(CommandOptions parameters) {
+    void handleDeposit(CommandOptions parameters) throws URISyntaxException {
         
         if (parameters.sessionToken == null) {
             parameters.sessionToken = login(parameters);
@@ -52,7 +55,7 @@ public class SynBioHandler {
         }
     }
     
-    String login(CommandOptions parameters) {
+    String login(CommandOptions parameters) throws URISyntaxException {
         
         String url = client.hubFromUrl(parameters.url);
         return client.login(url,parameters.user, parameters.password);

@@ -5,10 +5,13 @@
  */
 package ed.biordm.sbol.synbio.client;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -36,8 +39,19 @@ public class SynBioClient {
         this.restBuilder = restBuilder;
     }
 
-    public String hubFromUrl(String url) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String hubFromUrl(String url) throws URISyntaxException {
+        URI collectionUri = new URI(url);
+        String scheme = collectionUri.getScheme();
+        String domain = collectionUri.getHost();
+        int port = collectionUri.getPort();
+        String collServerUrl = scheme.concat("://").concat(domain);
+
+        if (port > 0) {
+            collServerUrl = collServerUrl.concat(":").concat(String.valueOf(port));
+        }
+
+        collServerUrl = collServerUrl.concat("/");
+        return collServerUrl;
     }    
     
     public String login(String hubUrl, String user, String password) {
@@ -69,7 +83,12 @@ public class SynBioClient {
     // some other params as for API
     public void deposit(String sessionToken, String collectionUrl, Path file) {
         
-        String url = hubFromUrl(collectionUrl) + "submit";
+        String url;
+        try {
+            url = hubFromUrl(collectionUrl) + "submit";
+        } catch (URISyntaxException e) {
+            throw reportError("Could not derive base SynBioHub server URL", e);
+        }
         
         HttpHeaders headers = authenticatedHeaders(sessionToken);
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -102,7 +121,7 @@ public class SynBioClient {
     }
 
 
-    IllegalStateException reportError(String operation, RuntimeException e) {
+    IllegalStateException reportError(String operation, Exception e) {
         
         logger.error(operation, e);
         

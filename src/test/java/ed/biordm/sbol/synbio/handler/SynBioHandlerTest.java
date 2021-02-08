@@ -8,6 +8,7 @@ package ed.biordm.sbol.synbio.handler;
 import ed.biordm.sbol.synbio.client.SynBioClient;
 import ed.biordm.sbol.synbio.dom.Command;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -34,7 +35,7 @@ public class SynBioHandlerTest {
     }
     
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws URISyntaxException {
         client = mock(SynBioClient.class);
         
         when(client.hubFromUrl(anyString())).thenReturn("http://synbio.org/");

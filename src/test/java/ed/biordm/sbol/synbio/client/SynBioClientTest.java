@@ -5,12 +5,12 @@
  */
 package ed.biordm.sbol.synbio.client;
 
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -100,10 +100,20 @@ public class SynBioClientTest {
     }  
     
     @Test
-    public void getsServerFromURL() {
+    public void getsServerFromURL() throws URISyntaxException {
         String url = "https://synbiohub.org/user/zajawka/trevor_test/trevor_test_collection/1";
         
         assertEquals("https://synbiohub.org/", client.hubFromUrl(url));
     }
-    
+
+    @Test
+    public void depositBadUrl() {
+        String token = "token";
+
+        try {
+            client.deposit(token, synBioUrl.replace("/", "\\"), Paths.get("D://temp"));
+        } catch(IllegalStateException e) {
+            assertTrue(e.getMessage().startsWith("Could not derive base SynBioHub server URL: Illegal character in opaque part"));
+        }
+    }
 }
