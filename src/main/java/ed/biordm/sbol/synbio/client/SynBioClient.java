@@ -5,20 +5,19 @@
  */
 package ed.biordm.sbol.synbio.client;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -92,7 +91,7 @@ public class SynBioClient {
         
         HttpHeaders headers = authenticatedHeaders(sessionToken);
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        
+
         //other params as needed by api
         MultiValueMap<String, Object> body = makeDepositBody(collectionUrl, file);
         
@@ -100,10 +99,10 @@ public class SynBioClient {
         
         try {
             String response = template.postForObject(url, body, String.class);
+            logger.debug("Response from deposit request: "+response);
         } catch (RuntimeException e) {
             throw reportError("Could not deposit", e);
-        }        
-        
+        }
     }
 
     HttpHeaders authenticatedHeaders(String sessionToken) {
@@ -117,9 +116,22 @@ public class SynBioClient {
     }
 
     MultiValueMap<String, Object> makeDepositBody(String collectionUrl, Path file) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        File fromPath = file.toFile();
+        Resource fileResource = new FileSystemResource(fromPath);
 
+        /*HttpHeaders parts = new HttpHeaders();
+        parts.setContentType(MediaType.APPLICATION_XML);
+
+        MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
+        bodyMap.add("file", fileResource;
+
+        final HttpEntity<ByteArrayResource> partsEntity = new HttpEntity<>(fileResource, parts);*/
+
+        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
+        requestMap.add("file", fileResource);
+
+        return requestMap;
+    }
 
     IllegalStateException reportError(String operation, Exception e) {
         

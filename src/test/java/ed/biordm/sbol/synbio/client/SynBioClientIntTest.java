@@ -44,7 +44,7 @@ public class SynBioClientIntTest {
         synBioPassword = "testpass";
 
         synBioCollUrl = synBioUrl+"user/Johnny/johnny_collection_29_01_21/johnny_collection_29_01_21_collection/1.0";
-        sbolFilePath = Paths.get("D://temp//sbol//codA_Km_0081_slr1130.xml");
+        sbolFilePath = Paths.get("D://temp//sbol//cyano_sl1099.xml");
         
         synBioUser = "j.hay@epcc.ed.ac.uk";
         synBioPassword = "admin";
@@ -87,9 +87,6 @@ public class SynBioClientIntTest {
         System.out.println(token);
         assertNotNull(token);
 
-        System.out.println(tmpDir.getParent().toString());
-        Path file = tmpDir.resolve("test.txt");
-        synBioCollUrl = synBioCollUrl.replace("//", "\\");
         client.deposit(token, synBioCollUrl, sbolFilePath);
     }
 
