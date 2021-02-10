@@ -79,7 +79,9 @@ public class SynBioHandlerTest {
         
         Files.createDirectory(tmpDir.resolve("dir1"));
         Files.createDirectory(tmpDir.resolve("dir2"));
-        Files.createFile(tmpDir.resolve("file.xml"));
+
+        String newFileName = "test_file.xml";
+        Files.createFile(tmpDir.resolve(newFileName));
         
         CommandOptions params = new CommandOptions(Command.DEPOSIT);
         params.url = url;
@@ -87,7 +89,8 @@ public class SynBioHandlerTest {
         params.password = pass;
         params.dir = tmpDir.toString();
 
-        List<Path> dirs = handler.getFiles(params);
-        assertEquals(1, dirs.size());
+        List<Path> files = handler.getFiles(params);
+        assertEquals(1, files.size());
+        assertEquals(newFileName, files.get(0).getFileName().toString());
     }
 }
