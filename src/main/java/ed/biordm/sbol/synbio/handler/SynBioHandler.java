@@ -7,16 +7,20 @@ package ed.biordm.sbol.synbio.handler;
 
 import ed.biordm.sbol.synbio.client.SynBioClient;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +32,8 @@ import org.springframework.stereotype.Service;
 public class SynBioHandler {
     
     final SynBioClient client;
+
+    final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
     
     @Autowired
     public SynBioHandler(SynBioClient client) {
@@ -113,12 +119,39 @@ public class SynBioHandler {
         }
     }
 
-
     List<Path> getFiles(CommandOptions parameters) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String dirPath = parameters.dir;
+        String fileExtFilter = "xml";
+        File directory = new File(dirPath);
+
+        List<Path> fileNamesList = new ArrayList<>();
+
+        if (directory.isFile()) {
+            fileNamesList.add(Paths.get(dirPath));
+        } else {
+            Predicate<String> fileExtCondition = (String filename) -> {
+                if (filename.toLowerCase().endsWith(".".concat(fileExtFilter))) {
+                    return true;
+                }
+                return false;
+            };
+
+            // Reading the folder and getting Stream.
+            try (Stream<Path> list = Files.list(Paths.get(dirPath))) {
+
+                // Filtering the paths by a regular file and adding into a list.
+                fileNamesList = list.filter(Files::isRegularFile)
+                        .map(x -> x.toString()).filter(fileExtCondition)
+                        .map(x -> Paths.get(x))
+                        .collect(Collectors.toList());
+
+                // printing the file nams
+                //fileNamesList.forEach(System.out::println);
+            } catch (IOException e) {
+                logger.error("Error locating files for upload", e);
+            }
+        }
+
+        return fileNamesList;
     }
-
-
-
-    
 }

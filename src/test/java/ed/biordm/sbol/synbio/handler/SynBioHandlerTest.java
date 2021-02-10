@@ -8,6 +8,7 @@ package ed.biordm.sbol.synbio.handler;
 import ed.biordm.sbol.synbio.client.SynBioClient;
 import ed.biordm.sbol.synbio.dom.Command;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,7 +31,10 @@ public class SynBioHandlerTest {
     SynBioClient client;
     SynBioHandler handler;
     
-    
+    String url = "http://synbio.org/toconvert";
+    String user = "user";
+    String pass = "pass";
+
     public SynBioHandlerTest() {
     }
     
@@ -44,11 +48,7 @@ public class SynBioHandlerTest {
     }
 
     @Test
-    public void loginCallsLoginWithExtractedHubUrl() {
-        String url = "http://synbio.org/toconvert";
-        String user = "user";
-        String pass = "pass";
-        
+    public void loginCallsLoginWithExtractedHubUrl() throws URISyntaxException {        
         CommandOptions params = new CommandOptions(Command.DEPOSIT);
         params.url = url;
         params.user = user;
@@ -72,5 +72,22 @@ public class SynBioHandlerTest {
         List<Path> dirs = handler.subfolders(tmpDir.toString());
         assertEquals(2, dirs.size());
     }
-    
+
+    @Test
+    public void testGetFiles() throws Exception {
+        assertNotNull(tmpDir);
+        
+        Files.createDirectory(tmpDir.resolve("dir1"));
+        Files.createDirectory(tmpDir.resolve("dir2"));
+        Files.createFile(tmpDir.resolve("file.xml"));
+        
+        CommandOptions params = new CommandOptions(Command.DEPOSIT);
+        params.url = url;
+        params.user = user;
+        params.password = pass;
+        params.dir = tmpDir.toString();
+
+        List<Path> dirs = handler.getFiles(params);
+        assertEquals(1, dirs.size());
+    }
 }
