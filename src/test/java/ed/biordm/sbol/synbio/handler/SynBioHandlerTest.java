@@ -91,6 +91,20 @@ public class SynBioHandlerTest {
 
         List<Path> files = handler.getFiles(params);
         assertEquals(1, files.size());
-        assertEquals(newFileName, files.get(0).getFileName().toString());
+        assertEquals(newFileName, files.get(files.size()-1).getFileName().toString());
+
+        newFileName = "test_file2.xml";
+        Files.createFile(tmpDir.resolve(newFileName));
+
+        files = handler.getFiles(params);
+        assertEquals(2, files.size());
+        assertEquals(newFileName, files.get(files.size()-1).getFileName().toString());
+
+        String badFileName = "test_file2.xml2";
+        Files.createFile(tmpDir.resolve(badFileName));
+
+        files = handler.getFiles(params);
+        assertEquals(2, files.size());
+        assertEquals(newFileName, files.get(files.size()-1).getFileName().toString());
     }
 }
