@@ -20,14 +20,14 @@ import org.springframework.boot.DefaultApplicationArguments;
  * @author tzielins
  */
 public class SynBioRunnerTest {
-    
+
     UserInputPrompter prompter;
     SynBioHandler handler; 
     SynBioRunner runner;
-    
+
     public SynBioRunnerTest() {
     }
-    
+
     @BeforeEach
     public void setUp() {
          prompter = mock(UserInputPrompter.class);
@@ -37,17 +37,31 @@ public class SynBioRunnerTest {
 
     @Test
     public void runPassesCommandsToHandler() throws Exception {
-        
+
         DefaultApplicationArguments arg = new DefaultApplicationArguments();
-        
+
         CommandOptions command = new CommandOptions(Command.DEPOSIT);
         when(prompter.getCommandOptions(arg)).thenReturn(command);
-        
+
         runner.run(arg);
-        
+
         verify(prompter).getCommandOptions(arg);
         verify(handler).handle(command);
-        
+
     }
-    
+
+    @Test
+    public void runDepositCommand() throws Exception {
+        String[] args = {"deposit", "--user"};
+        DefaultApplicationArguments arg = new DefaultApplicationArguments(args);
+
+        CommandOptions command = new CommandOptions(Command.DEPOSIT);
+        when(prompter.getCommandOptions(arg)).thenReturn(command);
+
+        runner.run(arg);
+
+        verify(prompter).getCommandOptions(arg);
+        verify(handler).handle(command);
+
+    }
 }
