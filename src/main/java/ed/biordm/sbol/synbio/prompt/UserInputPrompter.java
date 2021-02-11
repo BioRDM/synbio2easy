@@ -9,10 +9,9 @@ import ed.biordm.sbol.synbio.dom.Command;
 import static ed.biordm.sbol.synbio.dom.Command.*;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
 import java.io.Console;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.util.Scanner;
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringJoiner;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Component;
 
@@ -58,6 +57,8 @@ public class UserInputPrompter {
             command = args.getNonOptionArgs().get(0);
         }
 
+        final String depositCommand = Command.DEPOSIT.toString();
+
         switch(command) {
             case "deposit": return DEPOSIT;
             default: throw new MissingOptionException("Uknown command "+command);
@@ -67,8 +68,14 @@ public class UserInputPrompter {
     String promptForCommand() {
 
         console.printf("What operation do you want to perform?%n");
-        console.printf("Choose from: deposit | describe%n");
+        StringJoiner joiner = new StringJoiner("|", "", "");
 
+        for (Command cmd : Command.values()) {
+            joiner.add(String.valueOf(cmd));
+        }
+        // Arrays.asList(Command.values()).forEach(joiner::add);
+
+        console.printf("Choose from: %s%n", joiner.toString());
         String command = console.readLine("Operation: ");
 
         return command;
