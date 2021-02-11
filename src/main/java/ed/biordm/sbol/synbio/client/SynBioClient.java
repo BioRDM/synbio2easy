@@ -9,6 +9,7 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,8 @@ public class SynBioClient {
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     final RestTemplateBuilder restBuilder;
+
+    final private static int OVERWRITE_MERGE = 3;
     
     public SynBioClient(RestTemplateBuilder restBuilder) {
         this.restBuilder = restBuilder;
@@ -91,14 +94,16 @@ public class SynBioClient {
         
         HttpHeaders headers = authenticatedHeaders(sessionToken);
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN));
 
         //other params as needed by api
         MultiValueMap<String, Object> body = makeDepositBody(collectionUrl, file);
+        final HttpEntity<MultiValueMap<String, Object>> reqEntity = new HttpEntity<>(body, headers);
         
         RestTemplate template = restBuilder.build();
         
         try {
-            String response = template.postForObject(url, body, String.class);
+            String response = template.postForObject(url, reqEntity, String.class);
             logger.debug("Response from deposit request: "+response);
         } catch (RuntimeException e) {
             throw reportError("Could not deposit", e);
@@ -119,15 +124,9 @@ public class SynBioClient {
         File fromPath = file.toFile();
         Resource fileResource = new FileSystemResource(fromPath);
 
-        /*HttpHeaders parts = new HttpHeaders();
-        parts.setContentType(MediaType.APPLICATION_XML);
-
-        MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
-        bodyMap.add("file", fileResource;
-
-        final HttpEntity<ByteArrayResource> partsEntity = new HttpEntity<>(fileResource, parts);*/
-
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
+        requestMap.add("overwrite_merge", OVERWRITE_MERGE);
+        requestMap.add("rootCollections", collectionUrl);
         requestMap.add("file", fileResource);
 
         return requestMap;
