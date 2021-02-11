@@ -59,8 +59,8 @@ public class UserInputPrompter {
 
         final String depositCommand = Command.DEPOSIT.toString();
 
-        switch(command) {
-            case "deposit": return DEPOSIT;
+        switch(Command.valueOf(command)) {
+            case DEPOSIT: return DEPOSIT;
             default: throw new MissingOptionException("Uknown command "+command);
         }
     }
