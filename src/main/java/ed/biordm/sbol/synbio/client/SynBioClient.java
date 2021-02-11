@@ -11,14 +11,17 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -108,6 +111,54 @@ public class SynBioClient {
         } catch (RuntimeException e) {
             throw reportError("Could not deposit", e);
         }
+    }
+
+    public String createCollection(String sessionToken, String url, String user,
+            String id, int version, String name, String description,
+            String citations, int overwriteMerge) {
+
+        String newUrl = null;
+
+        HttpHeaders headers = authenticatedHeaders(sessionToken);
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN));
+
+        //other params as needed by api
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("id", id);
+        body.add("version", version);
+        body.add("name", name);
+        body.add("description", description);
+        body.add("citations", citations);
+        body.add("overwrite_merge", overwriteMerge);
+
+        final HttpEntity<MultiValueMap<String, Object>> reqEntity = new HttpEntity<>(body, headers);
+
+        RestTemplate template = restBuilder.build();
+
+        try {
+            // Use ResponseEntity since it's the best way to check if the response is 200 or not
+            // rather than checking if response is spurious String such as "Successfully Uploaded"
+            URI uri = URI.create(url);
+            final ResponseEntity<String> responseEntity = template.postForEntity(uri, reqEntity, String.class);
+            String resBody = responseEntity.getBody();
+            logger.debug("Response from deposit request: %s", resBody);
+
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                // build the collection URL
+                newUrl = this.hubFromUrl(url);
+                newUrl = newUrl.concat("user/");
+                newUrl = newUrl.concat(user+"/");
+                newUrl = newUrl.concat(id+"/");
+                newUrl = newUrl.concat(id+"_collection/");
+                newUrl = newUrl.concat(String.valueOf(version));
+            }
+        } catch (RuntimeException | URISyntaxException e) {
+            throw reportError("Could not create new collection", e);
+        }
+
+        System.out.println(newUrl);
+        return newUrl;
     }
 
     HttpHeaders authenticatedHeaders(String sessionToken) {

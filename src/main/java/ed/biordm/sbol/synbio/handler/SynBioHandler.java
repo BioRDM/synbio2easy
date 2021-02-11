@@ -22,6 +22,8 @@ import java.util.stream.Stream;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 /**
  *
@@ -102,7 +104,27 @@ public class SynBioHandler {
     }
 
     String createNewCollection(CommandOptions parameters) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // provide the id, version, name, description, citations
+        String name = parameters.collectionName;
+        String desc = "Default description for " + name;
+
+        String id = sanitizeName(name);
+        int version = 1;
+        String citations = "";
+        int overwriteMerge = 0; // Assume we are always overwriting
+
+        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
+        requestMap.add("id", id);
+        requestMap.add("version", version);
+        requestMap.add("name", name);
+        requestMap.add("description", desc);
+        requestMap.add("citations", citations);
+        requestMap.add("overwrite_merge", overwriteMerge);
+
+        String newUrl = client.createCollection(parameters.sessionToken, parameters.url+"submit",
+                parameters.user, id, version, name, desc, citations, overwriteMerge);
+
+        return newUrl;
     }
 
     List<Path> subfolders(String dir) {
@@ -149,5 +171,10 @@ public class SynBioHandler {
         }
 
         return fileNamesList;
+    }
+
+    protected String sanitizeName(String name) {
+        String cleanName = name.replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit}]", "_");
+        return cleanName;
     }
 }

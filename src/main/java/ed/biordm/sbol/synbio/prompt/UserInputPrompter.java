@@ -12,6 +12,7 @@ import java.io.Console;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
+import java.util.regex.Pattern;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,8 @@ import org.springframework.stereotype.Component;
 public class UserInputPrompter {
 
     final Console console;
+
+    private static final Pattern Y_N_PATTERN = Pattern.compile("[Y|N]{1}");
 
     public UserInputPrompter() {
         this(System.console());
@@ -56,8 +59,6 @@ public class UserInputPrompter {
         } else {
             command = args.getNonOptionArgs().get(0);
         }
-
-        final String depositCommand = Command.DEPOSIT.toString();
 
         switch(Command.valueOf(command)) {
             case DEPOSIT: return DEPOSIT;
@@ -95,6 +96,17 @@ public class UserInputPrompter {
             options.password = new String(console.readPassword("Please enter your SynBioHub password: "));
         } else {
             console.printf("Password: *****");
+        }
+
+        if (options.crateNew == false) {
+            String createNewAns = new String(console.readLine("Do you wish to create a new collection: Y|N%n").strip());
+            while(!Y_N_PATTERN.matcher(createNewAns).matches()) {
+                createNewAns = new String(console.readLine("Do you wish to create a new collection: Y|N%n").strip());
+            }
+
+            if (createNewAns.equals("Y")) {
+                options.crateNew = true;
+            }
         }
 
         if (options.crateNew == true) {
