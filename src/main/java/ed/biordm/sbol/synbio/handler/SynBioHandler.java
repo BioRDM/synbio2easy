@@ -71,6 +71,11 @@ public class SynBioHandler {
 
         String prefix = orgParameters.collectionName;
 
+        orgParameters.collectionName = orgParameters.dir;
+
+        // check whether collection exists first?
+        String rootCollUrl = createNewCollection(orgParameters);
+
         List<Path> subCollections = subfolders(orgParameters.dir);
 
         for (Path col: subCollections) {
@@ -81,8 +86,15 @@ public class SynBioHandler {
             params.collectionName = name;
             params.dir = col.toString();
             params.multipleCollections = false;
+            params.crateNew = false;
+
+            String collUrl = createNewCollection(params);
+            params.url = collUrl;
 
             depositSingleCollection(params);
+
+            logger.info("Adding child to root URL: {}", rootCollUrl);
+            addSubCollection(params, rootCollUrl, collUrl);
         }
     }
 
@@ -121,10 +133,16 @@ public class SynBioHandler {
         requestMap.add("citations", citations);
         requestMap.add("overwrite_merge", overwriteMerge);
 
+        logger.info("URL in parameters: {}", parameters.url);
+
         String newUrl = client.createCollection(parameters.sessionToken, parameters.url+"submit",
                 parameters.user, id, version, name, desc, citations, overwriteMerge);
 
         return newUrl;
+    }
+
+    void addSubCollection(CommandOptions parameters, String rootCollUrl, String childCollUrl) {
+        client.addChildCollection(parameters.sessionToken, rootCollUrl, childCollUrl);
     }
 
     List<Path> subfolders(String dir) {

@@ -142,14 +142,12 @@ public class SynBioClient {
             URI uri = URI.create(url);
             final ResponseEntity<String> responseEntity = template.postForEntity(uri, reqEntity, String.class);
             String resBody = responseEntity.getBody();
-            logger.debug("Response from deposit request: {}", resBody);
-            System.out.println(responseEntity.getStatusCode().value());
+            logger.info("Response from deposit request: {}", resBody);
 
             if (responseEntity.getStatusCode().is2xxSuccessful() ||
                     responseEntity.getStatusCode().is3xxRedirection()) {
                 // build the collection URL
                 newUrl = this.hubFromUrl(url);
-                System.out.println(newUrl);
                 /*newUrl = newUrl.concat("user/");
                 newUrl = newUrl.concat(user+"/");
                 newUrl = newUrl.concat(id+"/");
@@ -174,6 +172,39 @@ public class SynBioClient {
 
         logger.info("Newly created collection URL is: {}", newUrl);
         return newUrl;
+    }
+
+    public void addChildCollection(String sessionToken, String parentCollectionUrl,
+            String childCollectionUrl) {
+
+        HttpHeaders headers = authenticatedHeaders(sessionToken);
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN));
+
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("collections", parentCollectionUrl);
+
+        final HttpEntity<MultiValueMap<String, Object>> reqEntity = new HttpEntity<>(body, headers);
+
+        RestTemplate template = restBuilder.build();
+
+        logger.info("Parent coll URL: {}", parentCollectionUrl);
+        logger.info("Child coll URL: {}", childCollectionUrl);
+        String url = childCollectionUrl+"/addToCollection";
+
+        logger.info("POSTing to URL: {}", url);
+        /*try {
+            url = hubFromUrl(parentCollectionUrl) + "addToCollection";
+        } catch (URISyntaxException e) {
+            throw reportError("Could not derive base SynBioHub server URL", e);
+        }*/
+
+        try {
+            String response = template.postForObject(url, reqEntity, String.class);
+            logger.debug("Response from add child collection request: "+response);
+        } catch (RuntimeException e) {
+            throw reportError("Could not add child collection", e);
+        }
     }
 
     HttpHeaders authenticatedHeaders(String sessionToken) {

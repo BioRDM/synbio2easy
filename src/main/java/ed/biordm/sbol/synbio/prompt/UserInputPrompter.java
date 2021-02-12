@@ -98,6 +98,17 @@ public class UserInputPrompter {
             console.printf("Password: *****");
         }
 
+        if (options.multipleCollections == false) {
+            String multipleAns = new String(console.readLine("Do you wish to create multiple collections: Y|N%n").strip());
+            while(!Y_N_PATTERN.matcher(multipleAns).matches()) {
+                multipleAns = new String(console.readLine("Do you wish to create multiple collections: Y|N%n").strip());
+            }
+
+            if (multipleAns.equals("Y")) {
+                options.multipleCollections = true;
+            }
+        }
+
         if (options.crateNew == false) {
             String createNewAns = new String(console.readLine("Do you wish to create a new collection: Y|N%n").strip());
             while(!Y_N_PATTERN.matcher(createNewAns).matches()) {
@@ -126,7 +137,7 @@ public class UserInputPrompter {
             } else {
                 console.printf("Collection URL: %s", options.url);
             }
-        }
+        } 
 
         if (options.dir == null) {
             options.dir = new String(console.readLine("Please enter the directory path to upload: "));
