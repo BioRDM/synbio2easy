@@ -11,11 +11,10 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
@@ -121,7 +120,8 @@ public class SynBioClient {
 
         HttpHeaders headers = authenticatedHeaders(sessionToken);
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN));
+        // headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN));
+        headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
 
         //other params as needed by api
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
@@ -142,22 +142,37 @@ public class SynBioClient {
             URI uri = URI.create(url);
             final ResponseEntity<String> responseEntity = template.postForEntity(uri, reqEntity, String.class);
             String resBody = responseEntity.getBody();
-            logger.debug("Response from deposit request: %s", resBody);
+            logger.debug("Response from deposit request: {}", resBody);
+            System.out.println(responseEntity.getStatusCode().value());
 
-            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+            if (responseEntity.getStatusCode().is2xxSuccessful() ||
+                    responseEntity.getStatusCode().is3xxRedirection()) {
                 // build the collection URL
                 newUrl = this.hubFromUrl(url);
-                newUrl = newUrl.concat("user/");
+                System.out.println(newUrl);
+                /*newUrl = newUrl.concat("user/");
                 newUrl = newUrl.concat(user+"/");
                 newUrl = newUrl.concat(id+"/");
                 newUrl = newUrl.concat(id+"_collection/");
-                newUrl = newUrl.concat(String.valueOf(version));
+                newUrl = newUrl.concat(String.valueOf(version));*/
+
+                // When the request is made to accept only HTML rather than TEXT,
+                // the new collection URL is returned in the 'Location' header
+                HttpHeaders resHeaders = responseEntity.getHeaders();
+                for (Map.Entry<String, List<String>> resHeader : resHeaders.entrySet()) {
+                    if (resHeader.getKey().equalsIgnoreCase("Location")) {
+                        // strip leading slash since it's already trailing in URL
+                        String collPath = resHeader.getValue().get(0);
+                        collPath = collPath.replaceFirst("/", "");
+                        newUrl = newUrl.concat(collPath);
+                    }
+                }
             }
         } catch (RuntimeException | URISyntaxException e) {
             throw reportError("Could not create new collection", e);
         }
 
-        System.out.println(newUrl);
+        logger.info("Newly created collection URL is: {}", newUrl);
         return newUrl;
     }
 
