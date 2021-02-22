@@ -5,6 +5,9 @@
  */
 package ed.biordm.sbol.synbio.client;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.jupiter.api.BeforeEach;
@@ -90,5 +93,63 @@ public class SynBioClientIntTest {
         client.deposit(token, synBioCollUrl, sbolFilePath);
     }
 
+    @Test
+    public void addSubCollectionDeposit() {
+        String token = client.login(synBioUrl, synBioUser, synBioPassword);
+        System.out.println(token);
+        assertNotNull(token);
 
+        // Create the child collection and upload a file initially
+        String subCollName = "Johnny Child Collection";
+        String subCollId = "johnny_child_collection";
+
+        String submitUrl = synBioUrl + "submit";
+
+        String subCollUrl = client.createCollection(token, submitUrl, "Johnny", 
+                subCollId, 1, subCollName, subCollName, "", 1);
+
+        client.deposit(token, subCollUrl, sbolFilePath);
+
+        // Create the parent collection and upload a file
+        String parentCollName = "Johnny Parent Collection";
+        String parentCollId = "johnny_parent_collection";
+
+        String parentCollUrl = client.createCollection(token, submitUrl, "Johnny", 
+                parentCollId, 1, parentCollName, parentCollName, "", 1);
+
+        client.deposit(token, parentCollUrl, sbolFilePath);
+
+        // now add the sub collection to the parent collection
+        client.addChildCollection(token, parentCollUrl, subCollUrl);
+
+        // now submit a new object to the sub-collection
+        client.deposit(token, subCollUrl, sbolFilePath);
+    }
+
+    @Test
+    public void searchSubmissions() {
+        String token = client.login(synBioUrl, synBioUser, synBioPassword);
+        System.out.println(token);
+        assertNotNull(token);
+
+        String subsData = client.searchSubmissions(synBioUrl, token);
+        System.out.println(subsData);
+    }
+
+    @Test
+    public void searchMetadata() throws Exception {
+        String token = client.login(synBioUrl, synBioUser, synBioPassword);
+        System.out.println(token);
+        assertNotNull(token);
+
+        String collUrl = "http://localhost:7777/user/Johnny/johnny_parent_collection/johnny_parent_collection_collection/1";
+        // collUrl = "http://localhost:7777/user/Johnny/johnny_parent_collection";
+
+        String requestParams = "objectType=<http://sbols.org/v2#ComponentDefinition>&collection=<"+collUrl+">&";
+        requestParams = "objectType=<http://sbols.org/v2#ComponentDefinition>&";
+        requestParams = "/"+URLEncoder.encode(requestParams, StandardCharsets.UTF_8.name());
+        // requestParams = "/objectType=All&collection="+collUrl;
+        String metadata = client.searchMetadata(synBioUrl, requestParams, token);
+        System.out.println(metadata);
+    }
 }
