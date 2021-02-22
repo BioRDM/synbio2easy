@@ -19,6 +19,8 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -204,6 +206,67 @@ public class SynBioClient {
             logger.debug("Response from add child collection request: "+response);
         } catch (RuntimeException e) {
             throw reportError("Could not add child collection", e);
+        }
+    }
+
+    public String searchSubmissions(String hubUrl, String sessionToken) {
+        HttpHeaders headers = authenticatedHeaders(sessionToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Arrays.asList(MediaType.TEXT_PLAIN));
+
+        // build the request
+        HttpEntity request = new HttpEntity(headers);
+
+        RestTemplate template = restBuilder.build();
+
+        String url = hubUrl + "/manage";
+        logger.info("GETting from URL: {}", url);
+        String responseData = null;
+
+        try {
+            ResponseEntity<String> response = template.exchange(url, HttpMethod.GET, request, String.class, 1);
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                logger.debug("Request Successful.");
+                responseData = response.getBody();
+            } else {
+                logger.warn("Request Failed: {}", response.getStatusCode());
+            }
+
+            return responseData;
+        } catch (RuntimeException e) {
+            throw reportError("Could search submissions", e);
+        }
+    }
+
+    public String searchMetadata(String hubUrl, String requestParams, String sessionToken) {
+        HttpHeaders headers = authenticatedHeaders(sessionToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Arrays.asList(MediaType.TEXT_PLAIN));
+
+        // build the request
+        HttpEntity request = new HttpEntity(headers);
+
+        RestTemplate template = restBuilder.build();
+
+        String url = hubUrl + "/search";
+        url = url + requestParams;
+        logger.info("GETting from URL: {}", url);
+        String responseData = null;
+
+        try {
+            ResponseEntity<String> response = template.exchange(url, HttpMethod.GET, request, String.class, 1);
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                logger.debug("Request Successful.");
+                responseData = response.getBody();
+            } else {
+                logger.warn("Request Failed: {}", response.getStatusCode());
+            }
+
+            return responseData;
+        } catch (RuntimeException e) {
+            throw reportError("Could not search metadata", e);
         }
     }
 
