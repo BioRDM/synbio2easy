@@ -120,16 +120,26 @@ public class UserInputPrompter {
         }
 
         if (options.multipleCollections == false) {
-            String multipleAns = console.readLine("Do you wish to create multiple collections: Y|N%n").strip();
-            while(!Y_N_PATTERN.matcher(multipleAns).matches()) {
-                multipleAns = console.readLine("Do you wish to create multiple collections: Y|N%n").strip();
-            }
+            // check for sub-folders
+            boolean isSubFolders = isSubFolders(options.dir);
 
-            if (multipleAns.equals("Y")) {
-                options.multipleCollections = true;
+            if(isSubFolders) {
+                String multipleAns = console.readLine("Do you wish to create multiple collections: Y|N%n").strip();
+                while(!Y_N_PATTERN.matcher(multipleAns).matches()) {
+                    multipleAns = console.readLine("Do you wish to create multiple collections: Y|N%n").strip();
+                }
 
-                // check for sub-folders
-                boolean isSubFolders = isSubFolders(options.dir);
+                if (multipleAns.equals("Y")) {
+                    String subFolderColls = console.readLine("Do you want to submit each sub-folder as a new collection?: Y|N%n").strip();
+
+                    while(!Y_N_PATTERN.matcher(multipleAns).matches()) {
+                        subFolderColls = console.readLine("Do you want to submit each sub-folder as a new collection?: Y|N%n").strip();
+                    }
+
+                    if(subFolderColls.equals("Y")) {
+                        options.multipleCollections = true;
+                    }
+                }
             }
         }
 
