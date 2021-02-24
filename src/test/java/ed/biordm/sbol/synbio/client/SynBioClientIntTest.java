@@ -143,7 +143,6 @@ public class SynBioClientIntTest {
         assertNotNull(token);
 
         String collUrl = "<http://localhost:7777/user/Johnny/johnny_parent_collection/johnny_parent_collection_collection/1>";
-        //collUrl = "http://localhost:7777/user/Johnny/johnny_parent_collection";
         collUrl = URLEncoder.encode(collUrl, StandardCharsets.UTF_8.name());
 
         String objType = "http://sbols.org/v2#ComponentDefinition";
@@ -156,13 +155,12 @@ public class SynBioClientIntTest {
         //searchStr = URLEncoder.encode(searchStr, StandardCharsets.UTF_8.name());
 
         String requestParams = "/objectType="+objType+"&collection=<"+collUrl+">&"+searchStr+"/?offset=0&limit=10";
-        
+
         String dispIdType = "<http://sbols.org/v2#displayId>";
         dispIdType = URLEncoder.encode(dispIdType, StandardCharsets.UTF_8.name());
 
         requestParams = "/objectType="+objType+"&collection="+collUrl+"&"+dispIdType+"='"+searchStr+"'&/?offset=0&limit=10";
 
-        // requestParams = "/objectType=All&collection="+collUrl;
         String metadata = client.searchMetadata(synBioUrl, requestParams, token);
         System.out.println(metadata);
     }
