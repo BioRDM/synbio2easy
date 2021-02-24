@@ -8,12 +8,10 @@ package ed.biordm.sbol.synbio.client;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -261,12 +259,10 @@ public class SynBioClient {
         String responseData = null;
 
         try {
-            //ResponseEntity<byte[]> response = template.exchange(url, HttpMethod.GET, request, byte[].class);
             ResponseEntity<String> response = template.exchange(url, HttpMethod.GET, request, String.class);
 
             if (response.getStatusCode() == HttpStatus.OK) {
                 logger.debug("Request Successful.");
-                // responseData = new JSONObject(new String(response.getBody(), StandardCharsets.UTF_8)).toString();
                 responseData = response.getBody();
             } else {
                 logger.warn("Request Failed: {}", response.getStatusCode());
