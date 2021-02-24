@@ -142,12 +142,26 @@ public class SynBioClientIntTest {
         System.out.println(token);
         assertNotNull(token);
 
-        String collUrl = "http://localhost:7777/user/Johnny/johnny_parent_collection/johnny_parent_collection_collection/1";
-        // collUrl = "http://localhost:7777/user/Johnny/johnny_parent_collection";
+        String collUrl = "<http://localhost:7777/user/Johnny/johnny_parent_collection/johnny_parent_collection_collection/1>";
+        //collUrl = "http://localhost:7777/user/Johnny/johnny_parent_collection";
+        collUrl = URLEncoder.encode(collUrl, StandardCharsets.UTF_8.name());
 
-        String requestParams = "objectType=<http://sbols.org/v2#ComponentDefinition>&collection=<"+collUrl+">&";
-        requestParams = "objectType=<http://sbols.org/v2#ComponentDefinition>&";
-        requestParams = "/"+URLEncoder.encode(requestParams, StandardCharsets.UTF_8.name());
+        String objType = "http://sbols.org/v2#ComponentDefinition";
+        objType = "ComponentDefinition";
+        //objType = URLEncoder.encode(objType, StandardCharsets.UTF_8.name());
+
+        // this is where we can specify the display ID of the component
+        // definition, in the <search string> after the KVP params
+        String searchStr = "cyano_codA_Km";
+        //searchStr = URLEncoder.encode(searchStr, StandardCharsets.UTF_8.name());
+
+        String requestParams = "/objectType="+objType+"&collection=<"+collUrl+">&"+searchStr+"/?offset=0&limit=10";
+        
+        String dispIdType = "<http://sbols.org/v2#displayId>";
+        dispIdType = URLEncoder.encode(dispIdType, StandardCharsets.UTF_8.name());
+
+        requestParams = "/objectType="+objType+"&collection="+collUrl+"&"+dispIdType+"='"+searchStr+"'&/?offset=0&limit=10";
+
         // requestParams = "/objectType=All&collection="+collUrl;
         String metadata = client.searchMetadata(synBioUrl, requestParams, token);
         System.out.println(metadata);
