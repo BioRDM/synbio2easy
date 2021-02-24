@@ -121,9 +121,26 @@ public class SynBioHandler {
         String desc = "Default description for " + name;
 
         String id = sanitizeName(name);
-        int version = 1;
+        //int version = 1;
+        int version = Integer.parseInt(parameters.version);
         String citations = "";
+
+        boolean isOverwrite = parameters.overwrite;
         int overwriteMerge = 0; // Assume we are always overwriting
+
+        if(isOverwrite) {
+            if(parameters.crateNew) {
+                overwriteMerge = 1;
+            } else {
+                overwriteMerge = 3;
+            }
+        } else {
+            if(parameters.crateNew) {
+                overwriteMerge = 0;
+            } else {
+                overwriteMerge = 2;
+            }
+        }
 
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
         requestMap.add("id", id);
