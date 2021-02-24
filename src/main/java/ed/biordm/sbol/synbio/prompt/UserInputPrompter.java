@@ -139,8 +139,70 @@ public class UserInputPrompter {
                     if(subFolderColls.equals("Y")) {
                         options.multipleCollections = true;
                     }
+                } else {
+                    console.printf("Only the files in the top level directory (no sub-directories) will be submitted to SynBioHub");
                 }
             }
+        }
+
+        if (options.crateNew == false) {
+            String createNewAns = console.readLine("Do you wish to create a new collection: Y|N%n").strip();
+            while(!Y_N_PATTERN.matcher(createNewAns).matches()) {
+                createNewAns = console.readLine("Do you wish to create a new collection: Y|N%n").strip();
+            }
+
+            if (createNewAns.equals("Y")) {
+                options.crateNew = true;
+            } else {
+
+            }
+        }
+
+        if (options.crateNew == true) {
+            if (options.multipleCollections == false) {
+                if (options.collectionName == null) {
+                    options.collectionName = console.readLine("Please enter a name for the new collection: ");
+                } else {
+                    console.printf("New collection name: %s", options.collectionName);
+                }
+            } else {
+                if (options.collectionName == null) {
+                    options.collectionName = console.readLine("Please enter a prefix for the new collections: ");
+                } else {
+                    console.printf("New collection prefix: %s", options.collectionName);
+                }  
+            }
+
+            if (options.url == null) {
+                options.url = console.readLine("Please enter the URL of the SynBioHub server: ");
+            } else {
+                console.printf("SynBioHub URL: %s", options.url);
+            }
+        } else {
+            if (options.url == null) {
+                options.url = console.readLine("Please enter the URL for the existing collection: ");
+            } else {
+                console.printf("Collection URL: %s", options.url);
+            }
+        }
+
+        if (options.version == null) {
+            options.version = console.readLine("Please enter the version number: ");
+        } else {
+            console.printf("Version: %s", options.version);
+        }
+
+        if (options.overwrite == false) {
+            String overwriteAns = console.readLine("Do you wish to overwrite designs if they exist [default is merge and prevent if submission exists]: Y|N%n").strip();
+            while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
+                overwriteAns = console.readLine("Do you wish to overwrite designs if they exist [default is merge and prevent if submission exists]: Y|N%n").strip();
+            }
+
+            if (overwriteAns.equals("Y")) {
+                options.overwrite = true;
+            }
+        } else {
+            console.printf("Overwrite: %s", options.overwrite);
         }
 
         if (options.user == null) {
@@ -153,36 +215,6 @@ public class UserInputPrompter {
             options.password = new String(console.readPassword("Please enter your SynBioHub password: "));
         } else {
             console.printf("Password: *****");
-        }
-
-        if (options.crateNew == false) {
-            String createNewAns = console.readLine("Do you wish to create a new collection: Y|N%n").strip();
-            while(!Y_N_PATTERN.matcher(createNewAns).matches()) {
-                createNewAns = console.readLine("Do you wish to create a new collection: Y|N%n").strip();
-            }
-
-            if (createNewAns.equals("Y")) {
-                options.crateNew = true;
-            }
-        }
-
-        if (options.crateNew == true) {
-            if (options.collectionName == null) {
-                options.collectionName = console.readLine("Please enter a name for the new collection: ");
-            } else {
-                console.printf("New collection name: %s", options.collectionName);
-            }
-            if (options.url == null) {
-                options.url = console.readLine("Please enter the URL of the SynBioHub server: ");
-            } else {
-                console.printf("SynBioHub URL: %s", options.url);
-            }
-        } else {
-            if (options.url == null) {
-                options.url = console.readLine("Please enter the URL for the existing collection: ");
-            } else {
-                console.printf("Collection URL: %s", options.url);
-            }
         }
 
         return options;
