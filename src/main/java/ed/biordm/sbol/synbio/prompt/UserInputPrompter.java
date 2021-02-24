@@ -9,8 +9,9 @@ import ed.biordm.sbol.synbio.dom.Command;
 import static ed.biordm.sbol.synbio.dom.Command.*;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
 import java.io.Console;
-import java.util.Arrays;
-import java.util.List;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.StringJoiner;
 import java.util.regex.Pattern;
 import org.springframework.boot.ApplicationArguments;
@@ -84,7 +85,17 @@ public class UserInputPrompter {
 
     CommandOptions promptDepositOptions(CommandOptions options) {
 
-        console.printf("... depositing desings into SynBioHub%n");
+        console.printf("... depositing designs into SynBioHub%n");
+
+        if (options.dir == null) {
+            options.dir = console.readLine("Please enter the directory path to upload [default is current directory]: ");
+
+            if (!validateDirPath(options.dir)) {
+                throw new IllegalArgumentException("Invalid directory path: "+options.dir);
+            }
+        } else {
+            console.printf("Directory: %s", options.dir);
+        }
 
         if (options.user == null) {
             options.user = console.readLine("Please enter SynBioHub username (email address): ");
@@ -137,12 +148,6 @@ public class UserInputPrompter {
             } else {
                 console.printf("Collection URL: %s", options.url);
             }
-        } 
-
-        if (options.dir == null) {
-            options.dir = console.readLine("Please enter the directory path to upload: ");
-        } else {
-            console.printf("Directory: %s", options.dir);
         }
 
         return options;
@@ -165,4 +170,11 @@ public class UserInputPrompter {
 
     }
 
+    boolean validateDirPath(String dirPath) {
+        Path path = Paths.get(dirPath);
+
+        File dirFile = path.toFile();
+
+        return dirFile.exists();
+    }
 }
