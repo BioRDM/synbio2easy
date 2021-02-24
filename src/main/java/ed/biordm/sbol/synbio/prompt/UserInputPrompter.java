@@ -65,7 +65,7 @@ public class UserInputPrompter {
             command = args.getNonOptionArgs().get(0);
         }
 
-        switch(Command.valueOf(command)) {
+        switch(Command.valueOf(command.toUpperCase())) {
             case DEPOSIT: return DEPOSIT;
             default: throw new MissingOptionException("Uknown command "+command);
         }
@@ -77,7 +77,7 @@ public class UserInputPrompter {
         StringJoiner joiner = new StringJoiner("|", "", "");
 
         for (Command cmd : Command.values()) {
-            joiner.add(String.valueOf(cmd));
+            joiner.add(String.valueOf(cmd).toLowerCase());
         }
         // Arrays.asList(Command.values()).forEach(joiner::add);
 
@@ -267,7 +267,7 @@ public class UserInputPrompter {
             try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, filter)) {
                 for (Path subPath : stream) {
                     // Iterate over the paths in the directory and print filenames
-                    System.out.println(subPath.getFileName());
+                    //System.out.println(subPath.getFileName());
                     isSubs = true;
                 }
             } catch (IOException e) {
