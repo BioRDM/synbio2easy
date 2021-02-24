@@ -99,9 +99,9 @@ public class UserInputPrompter {
         }
 
         if (options.multipleCollections == false) {
-            String multipleAns = new String(console.readLine("Do you wish to create multiple collections: Y|N%n").strip());
+            String multipleAns = console.readLine("Do you wish to create multiple collections: Y|N%n").strip();
             while(!Y_N_PATTERN.matcher(multipleAns).matches()) {
-                multipleAns = new String(console.readLine("Do you wish to create multiple collections: Y|N%n").strip());
+                multipleAns = console.readLine("Do you wish to create multiple collections: Y|N%n").strip();
             }
 
             if (multipleAns.equals("Y")) {
@@ -110,9 +110,9 @@ public class UserInputPrompter {
         }
 
         if (options.crateNew == false) {
-            String createNewAns = new String(console.readLine("Do you wish to create a new collection: Y|N%n").strip());
+            String createNewAns = console.readLine("Do you wish to create a new collection: Y|N%n").strip();
             while(!Y_N_PATTERN.matcher(createNewAns).matches()) {
-                createNewAns = new String(console.readLine("Do you wish to create a new collection: Y|N%n").strip());
+                createNewAns = console.readLine("Do you wish to create a new collection: Y|N%n").strip();
             }
 
             if (createNewAns.equals("Y")) {
@@ -122,25 +122,25 @@ public class UserInputPrompter {
 
         if (options.crateNew == true) {
             if (options.collectionName == null) {
-                options.collectionName = new String(console.readLine("Please enter a name for the new collection: "));
+                options.collectionName = console.readLine("Please enter a name for the new collection: ");
             } else {
                 console.printf("New collection name: %s", options.collectionName);
             }
             if (options.url == null) {
-                options.url = new String(console.readLine("Please enter the URL of the SynBioHub server: "));
+                options.url = console.readLine("Please enter the URL of the SynBioHub server: ");
             } else {
                 console.printf("SynBioHub URL: %s", options.url);
             }
         } else {
             if (options.url == null) {
-                options.url = new String(console.readLine("Please enter the URL for the existing collection: "));
+                options.url = console.readLine("Please enter the URL for the existing collection: ");
             } else {
                 console.printf("Collection URL: %s", options.url);
             }
         } 
 
         if (options.dir == null) {
-            options.dir = new String(console.readLine("Please enter the directory path to upload: "));
+            options.dir = console.readLine("Please enter the directory path to upload: ");
         } else {
             console.printf("Directory: %s", options.dir);
         }
