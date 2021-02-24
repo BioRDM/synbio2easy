@@ -12,7 +12,7 @@ import java.util.Objects;
  * @author tzielins
  */
 public class CommandOptions implements Cloneable {
-    
+
     public Command command;
     public String sessionToken;
     public String url;
@@ -22,7 +22,8 @@ public class CommandOptions implements Cloneable {
     public boolean crateNew;
     public String collectionName;
     public String dir;
-    
+    public String fileExtFilter;
+
     public CommandOptions(Command command) {
         Objects.requireNonNull(command);
         this.command = command;
@@ -31,11 +32,9 @@ public class CommandOptions implements Cloneable {
     @Override
     public CommandOptions clone() {
         try  {
-            return (CommandOptions)super.clone(); 
+            return (CommandOptions)super.clone();
         } catch (CloneNotSupportedException e) {
             throw new IllegalStateException(e);
         }
     }
-    
-    
 }
