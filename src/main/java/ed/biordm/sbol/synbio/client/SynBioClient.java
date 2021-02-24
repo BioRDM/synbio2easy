@@ -219,7 +219,7 @@ public class SynBioClient {
 
         RestTemplate template = restBuilder.build();
 
-        String url = hubUrl + "/manage";
+        String url = hubUrl + "manage";
         logger.info("GETting from URL: {}", url);
         String responseData = null;
 
@@ -241,7 +241,7 @@ public class SynBioClient {
 
     public String searchMetadata(String hubUrl, String requestParams, String sessionToken) {
         HttpHeaders headers = authenticatedHeaders(sessionToken);
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        //headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Arrays.asList(MediaType.TEXT_PLAIN));
 
         // build the request
@@ -249,13 +249,13 @@ public class SynBioClient {
 
         RestTemplate template = restBuilder.build();
 
-        String url = hubUrl + "/search";
+        String url = hubUrl + "search";
         url = url + requestParams;
         logger.info("GETting from URL: {}", url);
         String responseData = null;
 
         try {
-            ResponseEntity<String> response = template.exchange(url, HttpMethod.GET, request, String.class, 1);
+            ResponseEntity<String> response = template.exchange(url, HttpMethod.GET, request, String.class);
 
             if (response.getStatusCode() == HttpStatus.OK) {
                 logger.debug("Request Successful.");
