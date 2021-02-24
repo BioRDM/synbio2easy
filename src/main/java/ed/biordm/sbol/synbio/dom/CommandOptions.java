@@ -23,6 +23,8 @@ public class CommandOptions implements Cloneable {
     public String collectionName;
     public String dir;
     public String fileExtFilter;
+    public String version;
+    public boolean overwrite;
 
     public CommandOptions(Command command) {
         Objects.requireNonNull(command);
