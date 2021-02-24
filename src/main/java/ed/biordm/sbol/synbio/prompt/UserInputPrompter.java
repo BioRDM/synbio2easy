@@ -140,7 +140,7 @@ public class UserInputPrompter {
                         options.multipleCollections = true;
                     }
                 } else {
-                    console.printf("Only the files in the top level directory (no sub-directories) will be submitted to SynBioHub");
+                    console.printf("Only the files in the top level directory (no sub-directories) will be submitted to SynBioHub%n");
                 }
             }
         }
