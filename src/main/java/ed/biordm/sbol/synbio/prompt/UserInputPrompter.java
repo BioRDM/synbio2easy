@@ -10,6 +10,9 @@ import static ed.biordm.sbol.synbio.dom.Command.*;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
 import java.io.Console;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.StringJoiner;
@@ -27,6 +30,7 @@ public class UserInputPrompter {
     final Console console;
 
     private static final Pattern Y_N_PATTERN = Pattern.compile("[Y|N]{1}");
+    private static final Pattern FILE_EXT_PATTERN = Pattern.compile("\\.[a-zA-Z0-9]{1,6}");
 
     public UserInputPrompter() {
         this(System.console());
@@ -91,10 +95,42 @@ public class UserInputPrompter {
             options.dir = console.readLine("Please enter the directory path to upload [default is current directory]: ");
 
             if (!validateDirPath(options.dir)) {
-                throw new IllegalArgumentException("Invalid directory path: "+options.dir);
+                if(options.dir.isEmpty()) {
+                    options.dir = System.getProperty("user.dir");
+                } else {
+                    throw new IllegalArgumentException("Invalid directory path argument: "+options.dir);
+                }
             }
         } else {
             console.printf("Directory: %s", options.dir);
+        }
+
+        if (options.fileExtFilter == null) {
+            options.fileExtFilter = console.readLine("Which file extensions to upload [default is '.*', all]: ");
+
+            if (!validateString(FILE_EXT_PATTERN, options.fileExtFilter)) {
+                if(options.fileExtFilter.isEmpty()) {
+                    options.fileExtFilter = ".*";
+                } else {
+                    throw new IllegalArgumentException("Invalid file extension filter argument: "+options.fileExtFilter);
+                }
+            }
+        } else {
+            console.printf("File extension filter: %s", options.fileExtFilter);
+        }
+
+        if (options.multipleCollections == false) {
+            String multipleAns = console.readLine("Do you wish to create multiple collections: Y|N%n").strip();
+            while(!Y_N_PATTERN.matcher(multipleAns).matches()) {
+                multipleAns = console.readLine("Do you wish to create multiple collections: Y|N%n").strip();
+            }
+
+            if (multipleAns.equals("Y")) {
+                options.multipleCollections = true;
+
+                // check for sub-folders
+                boolean isSubFolders = isSubFolders(options.dir);
+            }
         }
 
         if (options.user == null) {
@@ -107,17 +143,6 @@ public class UserInputPrompter {
             options.password = new String(console.readPassword("Please enter your SynBioHub password: "));
         } else {
             console.printf("Password: *****");
-        }
-
-        if (options.multipleCollections == false) {
-            String multipleAns = console.readLine("Do you wish to create multiple collections: Y|N%n").strip();
-            while(!Y_N_PATTERN.matcher(multipleAns).matches()) {
-                multipleAns = console.readLine("Do you wish to create multiple collections: Y|N%n").strip();
-            }
-
-            if (multipleAns.equals("Y")) {
-                options.multipleCollections = true;
-            }
         }
 
         if (options.crateNew == false) {
@@ -176,5 +201,38 @@ public class UserInputPrompter {
         File dirFile = path.toFile();
 
         return dirFile.exists();
+    }
+
+    boolean validateString(Pattern pattern, String str) {
+        return pattern.matcher(str).matches();
+    }
+
+    boolean isSubFolders(String dirPath) {
+        Path path = Paths.get(dirPath);
+
+        File dirFile = path.toFile();
+
+        boolean isSubs = false;
+
+        if (dirFile.isDirectory()) {
+            DirectoryStream.Filter<Path> filter = new DirectoryStream.Filter<Path>() {
+                @Override
+                public boolean accept(Path file) throws IOException {
+                    return (Files.isDirectory(file));
+                }
+            };
+
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, filter)) {
+                for (Path subPath : stream) {
+                    // Iterate over the paths in the directory and print filenames
+                    System.out.println(subPath.getFileName());
+                    isSubs = true;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return isSubs;
     }
 }
