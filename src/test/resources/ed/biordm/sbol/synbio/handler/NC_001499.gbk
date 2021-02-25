@@ -1,0 +1,323 @@
+LOCUS       NC_001499               5894 bp ss-RNA     linear   VRL 10-FEB-2015
+DEFINITION  Abelson murine leukemia virus, complete genome.
+ACCESSION   NC_001499
+VERSION     NC_001499.1  GI:9626953
+DBLINK      BioProject: PRJNA14654
+KEYWORDS    RefSeq.
+SOURCE      Abelson murine leukemia virus
+  ORGANISM  Abelson murine leukemia virus
+            Viruses; Retro-transcribing viruses; Retroviridae;
+            Orthoretrovirinae; Gammaretrovirus; unclassified Gammaretrovirus.
+REFERENCE   1  (bases 1 to 5894)
+  AUTHORS   Petropoulos,C.J.
+  TITLE     Appendix 2: Retroviral taxonomy, protein structure, sequences, and
+            genetic maps
+  JOURNAL   (in) Coffin,J.M. (Ed.);
+            RETROVIRUSES: 757;
+            Cold Spring Harbor Laboratory Press, Cold Spring Harbor, New York,
+            NY, USA (1997)
+REFERENCE   2  (bases 1 to 5894)
+  CONSRTM   NCBI Genome Project
+  TITLE     Direct Submission
+  JOURNAL   Submitted (01-AUG-2000) National Center for Biotechnology
+            Information, NIH, Bethesda, MD 20894, USA
+REFERENCE   3  (bases 1 to 5894)
+  AUTHORS   Chappey,C.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (12-NOV-1997) NIH, NLM, Rockville Pike, Bethesda, MD
+            20894, USA
+COMMENT     VALIDATED REFSEQ: This record has undergone validation or
+            preliminary review. The reference sequence was derived from
+            AF033812.
+            This record and its underlying record are identical to V01541
+            except that the sequences has been rotated to start with R (the
+            transcription initiation site) at the 5' end.  This means that
+            downstream of the 3' LTR are mouse flanking sequences and the U3
+            region of the 5' LTR.
+            COMPLETENESS: full length.
+FEATURES             Location/Qualifiers
+     source          1..5894
+                     /organism="Abelson murine leukemia virus"
+                     /mol_type="genomic RNA"
+                     /db_xref="taxon:11788"
+     LTR             1..68
+                     /standard_name="R"
+     mRNA            69..5070
+                     /product="p120 polyprotein"
+     LTR             69..145
+                     /standard_name="U5"
+     misc_feature    145..163
+                     /standard_name="tRNA primer binding site"
+                     /function="priming of negative strand synthesis by RT"
+     gene            621..3566
+                     /gene="gag-abl"
+                     /locus_tag="AbMLVgp1"
+                     /db_xref="GeneID:1491873"
+     CDS             621..3566
+                     /gene="gag-abl"
+                     /locus_tag="AbMLVgp1"
+                     /codon_start=1
+                     /product="p120 Gag-Abl polyprotein"
+                     /protein_id="NP_057866.1"
+                     /db_xref="GI:9626954"
+                     /db_xref="GeneID:1491873"
+                     /translation="MGQTVTTPLSLTLGHWKDVERIAHNQSVDVKKRRWVTFCSAEWP
+                     TFNVGWPRDGTFNRDLITQVKIKVFSPGPHGHPDQVPYIVTWEALAFDPPPWVKPFVH
+                     PKPPPPLPPSAPSLPLEPPLSTPPRSSLYPALTPSLGAKPKPQVLSDSGGPLIDLLTE
+                     DPPPYRDPRPPPSDRDGNGGEATPAGEAPDPSPMASRLRGRREPPVADSTTSQAFPLR
+                     TGGNGQLQYWPFSSSDLYITPVNSLEKHSWYHGPVSRNAAEYLLSSGINGSFLVRESE
+                     SSPGQRSISLRYEGRVYHYRINTASDGKLYVSSESRFNTLAELVHHHSTVADGLITTL
+                     HYPAPKRNKPTIYGVSPNYDKWEMERTDITMKHKLGGGQYGEVYEGVWKKYSLTVAVK
+                     TLKEDTMEVEEFLKEAAVMKEIKHPNLVQLLGVCTREPPFYIITEFMTYGNLLDYLRE
+                     CNRQEVSAVVLLYMATQISSAMEYLEKKNFIHRDLAARNCLVGENHLVKVADFGLSRL
+                     MTGDTYTAHAGAKFPIKWTAPESLAYNKFSIKSDVWAFGVLLWEIATYGMSPYPGIDL
+                     SQVYELLEKDYRMERPEGCPEKVYELMRACWQWNPSDRPSFAEIHQAFETMFQESSIS
+                     DEVEKELGKRGTRGGAGSMLQAPELPTKTRTCRRAAEQKASPPSLTPKLLRRQVTASP
+                     SSGLSHKKEATKGSASGMGTPATAEPAPPSNKVGLSKASSEEMRVRRHKHSSESPGRD
+                     KGRLAKLKPAPPPPPACTGKAGKPAQSPSQEAGEAGGPTKTKCTSLAMDAVNTDPTKA
+                     GPPGEGLRKPVPPSVPKPQSTAKPPGTPTSPVSTPSTAPAPSPLAGDQQPSSAAFIPL
+                     ISTRVSLRKTRQPPERIASGTITKGVVLDSTEALCLAISRNSEQMASHSAVLEAGKNL
+                     YTFCVSYVDSIQQMRNKFAFREAINKLESNLRELQICPATASSGPAATQDFSKLLSSV
+                     KEISDIVRR"
+     mat_peptide     624..1013
+                     /gene="gag-abl"
+                     /locus_tag="AbMLVgp1"
+                     /product="MA"
+                     /note="Note: AbMLV does not express a retroviral protease;
+                     cleavage site is hypothetical"
+                     /protein_id="NP_955593.1"
+                     /db_xref="GI:40796140"
+     misc_feature    624..998
+                     /gene="gag-abl"
+                     /locus_tag="AbMLVgp1"
+                     /note="Matrix protein (MA), p15; Region: Gag_MA;
+                     pfam01140"
+                     /db_xref="CDD:279482"
+     mat_peptide     1014..1268
+                     /gene="gag-abl"
+                     /locus_tag="AbMLVgp1"
+                     /product="CA"
+                     /note="Note: AbMLV does not express a retroviral protease;
+                     cleavage site is hypothetical"
+                     /protein_id="NP_955594.1"
+                     /db_xref="GI:40796141"
+     misc_feature    1014..1265
+                     /gene="gag-abl"
+                     /locus_tag="AbMLVgp1"
+                     /note="Gag polyprotein, inner coat protein p12; Region:
+                     Gag_p12; pfam01141"
+                     /db_xref="CDD:279483"
+     mat_peptide     1326..3563
+                     /gene="gag-abl"
+                     /locus_tag="AbMLVgp1"
+                     /product="ABL"
+                     /note="Note: AbMLV does not express a retroviral protease;
+                     cleavage site is hypothetical"
+                     /protein_id="NP_955595.1"
+                     /db_xref="GI:40796142"
+     misc_feature    1350..1631
+                     /gene="gag-abl"
+                     /locus_tag="AbMLVgp1"
+                     /note="Src homology 2 (SH2) domain found in Abelson murine
+                     lymphosarcoma virus (ABL) proteins; Region: SH2_ABL;
+                     cd09935"
+                     /db_xref="CDD:198189"
+     misc_feature    order(1383..1385,1467..1469,1506..1508)
+                     /gene="gag-abl"
+                     /locus_tag="AbMLVgp1"
+                     /note="phosphotyrosine binding pocket [polypeptide
+                     binding]; other site"
+                     /db_xref="CDD:198189"
+     misc_feature    1686..2474
+                     /gene="gag-abl"
+                     /locus_tag="AbMLVgp1"
+                     /note="Catalytic domain of the Protein Tyrosine Kinase,
+                     Abelson kinase; Region: PTKc_Abl; cd05052"
+                     /db_xref="CDD:270645"
+     misc_feature    1707..2462
+                     /gene="gag-abl"
+                     /locus_tag="AbMLVgp1"
+                     /note="Protein tyrosine kinase; Region: Pkinase_Tyr;
+                     pfam07714"
+                     /db_xref="CDD:285015"
+     misc_feature    order(1725..1727,1731..1739,1788..1790,1794..1796,
+                     1929..1931,1935..1937,1947..1949,2091..2093,2124..2126,
+                     2178..2186,2190..2192,2214..2216,2316..2318,2328..2330)
+                     /gene="gag-abl"
+                     /locus_tag="AbMLVgp1"
+                     /note="active site"
+                     /db_xref="CDD:270645"
+     misc_feature    order(1725..1727,1731..1733,1740..1742,1788..1790,
+                     1794..1796,1839..1841,1851..1853,1878..1880,1926..1931,
+                     1935..1937,1947..1949,2091..2093,2121..2126)
+                     /gene="gag-abl"
+                     /locus_tag="AbMLVgp1"
+                     /note="ATP binding site [chemical binding]; other site"
+                     /db_xref="CDD:270645"
+     misc_feature    order(1770..1775,1863..1871,1881..1883,2007..2009,
+                     2103..2108,2460..2465)
+                     /gene="gag-abl"
+                     /locus_tag="AbMLVgp1"
+                     /note="SH3/SH2 domain interface [polypeptide binding];
+                     other site"
+                     /db_xref="CDD:270645"
+     misc_feature    order(2001..2006,2013..2015,2268..2270,2277..2282,
+                     2367..2372)
+                     /gene="gag-abl"
+                     /locus_tag="AbMLVgp1"
+                     /note="myristoyl binding site [chemical binding]; other
+                     site"
+                     /db_xref="CDD:270645"
+     misc_feature    2121..2195
+                     /gene="gag-abl"
+                     /locus_tag="AbMLVgp1"
+                     /note="activation loop (A-loop); other site"
+                     /db_xref="CDD:270645"
+     misc_feature    order(2178..2186,2190..2192,2214..2216,2316..2318,
+                     2328..2330)
+                     /gene="gag-abl"
+                     /locus_tag="AbMLVgp1"
+                     /note="polypeptide substrate binding site [polypeptide
+                     binding]; other site"
+                     /db_xref="CDD:270645"
+     misc_feature    3189..3563
+                     /gene="gag-abl"
+                     /locus_tag="AbMLVgp1"
+                     /note="F-actin binding domain (FABD); Region: FABD;
+                     smart00808"
+                     /db_xref="CDD:197885"
+     misc_recomb     1330..1331
+                     /gene="gag-abl"
+                     /locus_tag="AbMLVgp1"
+                     /note="5' v-abl helper virus junction"
+     CDS             3708..4199
+                     /codon_start=1
+                     /product="hypothetical protein"
+                     /protein_id="NP_598369.1"
+                     /db_xref="GI:19431082"
+                     /translation="MEPGGVGSSSCVVHQLPCTFPAQPRRQPPLLTACGWVSCSEDYI
+                     WPAWPPGFSLPGASDPAPRSAWSALPCPCRTTSSDGPSCHQGMGAPVLTVPAPLMLTN
+                     CPREPVLTVFSLEGSCRFKGHEVLKPGAQMGGHWKQELGSVVCHLLSVSSAVCPADLG
+                     QQA"
+     misc_recomb     4419..4420
+                     /note="3' v-abl helper virus junction"
+     CDS             4425..4580
+                     /inference="similar to AA sequence:RefSeq:NP_955589.1"
+                     /note="Predicted by GeneMark"
+                     /codon_start=1
+                     /product="env p15E protein fragment"
+                     /protein_id="NP_598370.1"
+                     /db_xref="GI:19431083"
+                     /translation="MGPLIVLLMILLFGPCILNRLVQFVKDRISVVQALVLTQQYHQL
+                     KPIEYEP"
+     misc_feature    <4425..4502
+                     /note="ENV polyprotein (coat polyprotein); Region:
+                     TLV_coat; pfam00429"
+                     /db_xref="CDD:278837"
+     LTR             4621..5069
+                     /standard_name="U3"
+     LTR             5070..5137
+                     /standard_name="R"
+     LTR             5138..5213
+                     /standard_name="U5"
+ORIGIN      
+        1 gcgccagtcc tccgagtgac tgagtcgccc gggtacccgt gtatccaata aaccctcttg
+       61 cagttgcatc cgacttgtgg tctcgctgtt ccttgggagg gtctcctctg agtgattgac
+      121 tacccgtcag cgggggtctt tcatttgggg gctcgtccgg gatcgggaga cccctgccca
+      181 gggaccaccg acccaccacc gggaggtaag ctggccagca acttatctgt gtctgtccga
+      241 ttgtctagtg tctatgactg attttatgcg cctgcgtcgg tactagttag ctaactagct
+      301 ctgtatctgg cggacccgtg gtggaactga cgagttcgga acacccggcc gcaaccctgg
+      361 gagacgtcca agggacttcg ggggccgttt ttgtggcccg acctgagtcc aaaaatcccg
+      421 atcgttttgg actctttggt gcacccccct tagaggaggg atatgtggtt ctggtaggag
+      481 acgagaacct aaaacagttc ccgcctccgt ctgaattttt gctttcggtt tggaaccgaa
+      541 gccgcgccgc gcgtcttgtc tgctgcagca tcgttctgtg ttgtctctgt ctgactgtgt
+      601 ttctgtagtt gtctgaaaat atgggccaga ctgttaccac tcccttaagt ttgactttag
+      661 gtcactggaa agatgtcgag cggatcgctc acaaccagtc ggttgatgtc aagaagagac
+      721 gttgggttac cttctgctct gcagaatggc caacctttaa cgtcggatgg ccgcgagacg
+      781 gcacctttaa ccgagacctc atcacccagg ttaagatcaa ggtcttttca cctggcccgc
+      841 atggacaccc agaccaggtc ccctacatcg tgacctggga agccttggct tttgaccccc
+      901 ctccctgggt caagcccttt gtacacccta agcctccgcc tcctcttcct ccatccgccc
+      961 cgtctctccc ccttgaacct cctctttcga ccccgcctcg atcctccctt tatccagccc
+     1021 tcactccttc tctaggcgcc aaacctaaac ctcaagttct ttctgacagt ggggggccgc
+     1081 tcatcgacct acttacagaa gaccccccgc cttataggga cccaagacca cccccttccg
+     1141 acagggacgg aaatggtgga gaagcgaccc ctgcgggaga ggcaccggac ccctccccaa
+     1201 tggcatctcg cctgcgtggg agacgggagc ccccagtggc cgactccact acctcgcagg
+     1261 cattccccct ccgcacagga ggaaacggac agcttcaata ctggccgttc tcctcttctg
+     1321 acctttacat cacccccgtc aacagcctgg agaaacattc ctggtatcat ggccctgtat
+     1381 ctcggaatgc tgctgagtat ctgctgagca gcggaatcaa cggcagcttc ttagtgcggg
+     1441 agagtgagag tagccctggc cagagatcca tctcgctgcg gtatgaaggg agggtgtacc
+     1501 actacaggat caacactgcc tctgatggca agctgtacgt gtcctccgag agccgcttca
+     1561 acactctggc tgagttagtt caccatcact ccacggtggc tgatggcctc atcaccacac
+     1621 tccactaccc agctcccaag cgcaacaagc ccactatcta cggtgtgtcc cccaactacg
+     1681 acaagtggga aatggagcgc accgacatca ccatgaagca caagttgggt ggaggccagt
+     1741 acggggaggt gtacgagggc gtttggaaga agtacagcct cactgtggcc gtgaagacct
+     1801 tgaaggagga caccatggag gtggaggagt tcctgaagga agcggcggtg atgaaggaga
+     1861 tcaaacaccc taacctggtg cagctgctag gggtgtgtac ccgggaacca ccattctaca
+     1921 taatcactga gttcatgacc tatgggaacc tgctggacta cctgagggag tgtaaccggc
+     1981 aggaggtgag cgccgtggta ctgctctaca tggccacaca gatctcatca gccatggagt
+     2041 acttggagaa gaagaacttc atccacagag accttgctgc ccggaactgc ctggtagggg
+     2101 aaaaccactt ggtgaaggtg gctgattttg gcctgagcag gttgatgaca ggggacacct
+     2161 acacggccca tgctggagcc aaattcccca tcaaatggac cgcacctgag agcctggcct
+     2221 acaacaagtt ctccatcaag tcggacgtgt gggcatttgg agtattgctc tgggagattg
+     2281 ctacctatgg catgtcacct tacccgggaa ttgacctgtc tcaggtttat gagctgctgg
+     2341 aaaaagacta ccgcatggag cgccctgaag gctgcccgga gaaggtctac gagctcatgc
+     2401 gagcatgttg gcagtggaac ccctctgacc ggccctcctt tgctgaaatc caccaagcct
+     2461 ttgaaaccat gttccaggaa tccagtatct cagatgaggt ggagaaggag ctggggaaac
+     2521 gaggcacgag aggaggtgct gggagtatgc tgcaggcccc agagctgccc accaagacca
+     2581 gaacctgcag gagagcagct gagcagaaag ccagccctcc cagcttgact cccaaactcc
+     2641 tccgcaggca ggtcactgcc tctccttcct ctggcctctc tcacaagaaa gaggccacca
+     2701 agggcagtgc ctcaggcatg gggactccgg ccactgcaga gccagcaccc cccagcaaca
+     2761 aagtgggcct cagcaaggcc tcctctgagg agatgcgcgt aaggaggcac aagcacagct
+     2821 cggagtcccc agggagagac aaggggcgac tggctaagct caagcctgcc ccgccgcctc
+     2881 ctcctgcctg cacaggaaaa gcaggcaagc ccgcacagag ccccagccaa gaggccgggg
+     2941 aggcaggggg gcccacaaag acaaaatgca cgagtctggc tatggatgct gtgaacactg
+     3001 accccaccaa ggccggccca cctggagaag gactgagaaa gcctgtgccc ccatctgtgc
+     3061 caaagcccca gtcgacggct aagcctccag ggactcccac cagcccggtc tccaccccct
+     3121 ccacagcacc agctccttca cccctggctg gggaccagca gccatcttct gccgccttca
+     3181 tccccctcat atcaacccgt gtgtctctta ggaagacccg ccagccgcca gagcgcattg
+     3241 ccagtggcac catcaccaag ggtgtggttc tggacagtac tgaggccctg tgccttgcca
+     3301 tctcccggaa ctcagagcag atggccagcc acagtgctgt actggaggct ggcaagaacc
+     3361 tgtacacttt ctgtgtgagc tatgtggact ctatccagca gatgaggaac aagtttgcct
+     3421 tccgtgaggc tatcaacaag ctggagagca acctccgaga gctgcagatc tgccctgcca
+     3481 cagcctccag tgggccagct gccacccaag acttcagcaa gctgctcagc tctgtgaagg
+     3541 agatcagcga cattgtccgg aggtagcagc aaccagtgta tgtcagcaag agatgttgca
+     3601 gttcacaggg ctcttgtgcc tataaagatg gggacagggg actggggagc tggcgtcttt
+     3661 ccccaggagc tttaaagaga gacaagcaga gcctgaggga gacctggatg gagcctggtg
+     3721 gagttggctc ttcctcctgt gttgtgcacc agctgccctg cacctttcct gcccagccca
+     3781 ggcgtcagcc acctctcctc actgcctgtg gatgggtctc ctgctctgaa gactacatct
+     3841 ggcctgcctg gccaccaggc ttctcactcc ccggtgcctc agacccagct cccaggtcag
+     3901 cctggagtgc tcttccctgt ccttgcagaa cgacctcctc tgatggacct tcttgtcacc
+     3961 aaggcatggg agcccctgtg cttactgtac ctgcaccttt gatgcttaca aactgtcccc
+     4021 gagagcctgt gctcactgtg ttttcattgg aaggaagctg tcgctttaag ggtcatgagg
+     4081 tgctaaagcc aggggcccag atgggtgggc actggaaaca ggagctgggc agtgtggtct
+     4141 gtcacctgct ctcagtatct tcagcagtgt gcccggcaga tcttggacag caagcttgag
+     4201 ttttatgggt ggcagtcact ggctggctag gcacatagcc aggccaaacc taggcctcca
+     4261 agggctcccc aaaatctgaa tttctgagta gtcttcatcc cctctcctgc tctaaggtca
+     4321 ggtccatcct ctctggtcct taccttgatg acaaggatcc agccttctgg tgtttttgag
+     4381 catttcaaag gtctgcatag aaaggaacag ccactaggtc cattatggga cccctcattg
+     4441 tactcctaat gattttgctc ttcggaccct gcattcttaa tcgattagtc caatttgtta
+     4501 aagacaggat atcagtggtc caggctctag ttttgactca acaatatcac cagctgaagc
+     4561 ctatagagta cgagccatag ataaaataaa agattttatt tagtctccag aaaaaggggg
+     4621 aatgaaagac cccacctgta ggtttggcaa gctagcttaa gtaacgccat tttgcaaggc
+     4681 atggaaaaat acataactga gaatagagaa gttcagatca aggtcaggaa cagagaaaca
+     4741 gctgaatatg ggccaaacag gatatgctgt ggtaagcagt tcctgccccg gctcagggcc
+     4801 aagaacagtt ggaacagctg aatatgggcc aaacaggata tctgtggtaa gcagttcctg
+     4861 ccccggctca gggccaagaa cagatggtcc ccagatgcgg tccagccctc agcagtttct
+     4921 agagaaccat cagatgtttc cagggtgccc caaggacctg aaatgaccct gtgccttatt
+     4981 tgaactaacc aatcagttcg cttctcgctt ctgttcgcgc gcttctgctc cccgagctca
+     5041 ataaaagagc ccacaacccc tcactcggcg cgccagtcct ccgagtgact gagtcgcccg
+     5101 ggtacccgtg tatccaataa accctcttgc agttgcatcc gacttgtggt ctcgctgttc
+     5161 cttgggaggg tctcctctga gtgattgact acccgtcagc gggggtcttt catgggtaac
+     5221 agtttcttga agttggagaa caacattctg agggtaggag tcgaatatta agtaatcctg
+     5281 actcaattag ccactgtttt gaatccacat actccaatac tcctgaaata gttcattatg
+     5341 gacagcgcag aagagctggg gagaattccc caagcaatta atttcaatgg ggtcagtaag
+     5401 gagcaccctg cagtcttgaa aactgtatat ctttgcacga ttctgggtga aagaccccac
+     5461 ctgtaggttt ggcaagctag cttaagtaac gccattttgc aaggcatgga aaaatacata
+     5521 actgagaata gagaagttca gatcaaggtc aggaacagag aaacagctga atatgggcca
+     5581 aacaggatat gctgtggtaa gcagttcctg ccccggctca gggccaagaa cagttggaac
+     5641 agctgaatat gggccaaaca ggatatctgt ggtaagcagt tcctgccccg gctcagggcc
+     5701 aagaacagat ggtccccaga tgcggtccag ccctcagcag tttctagaga accatcagat
+     5761 gtttccaggg tgccccaagg acctgaaatg accctgtgcc ttatttgaac taaccaatca
+     5821 gttcgcttct cgcttctgtt cgcgcgcttc tgctccccga gctcaataaa agagcccaca
+     5881 acccctcact cggc
+//
