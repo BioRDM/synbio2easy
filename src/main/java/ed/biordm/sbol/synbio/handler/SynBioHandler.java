@@ -71,7 +71,7 @@ public class SynBioHandler {
 
         String prefix = orgParameters.collectionName;
 
-        orgParameters.collectionName = orgParameters.dir;
+        orgParameters.collectionName = prefix+"_"+orgParameters.dir;
 
         // check whether collection exists first?
         String rootCollUrl = createNewCollection(orgParameters);
@@ -93,7 +93,7 @@ public class SynBioHandler {
 
             depositSingleCollection(params);
 
-            logger.info("Adding child to root URL: {}", rootCollUrl);
+            logger.info("Adding child {} to root URL: {}", collUrl, rootCollUrl);
             addSubCollection(params, rootCollUrl, collUrl);
         }
     }
@@ -141,14 +141,6 @@ public class SynBioHandler {
                 overwriteMerge = 2;
             }
         }
-
-        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
-        requestMap.add("id", id);
-        requestMap.add("version", version);
-        requestMap.add("name", name);
-        requestMap.add("description", desc);
-        requestMap.add("citations", citations);
-        requestMap.add("overwrite_merge", overwriteMerge);
 
         logger.info("URL in parameters: {}", parameters.url);
 
