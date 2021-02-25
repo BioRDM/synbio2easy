@@ -6,24 +6,29 @@
 package ed.biordm.sbol.synbio.handler;
 
 import ed.biordm.sbol.synbio.client.SynBioClient;
-import ed.biordm.sbol.synbio.dom.Command;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.json.JsonParser;
+import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 /**
  *
@@ -38,7 +43,7 @@ public class SynBioHandler {
 
     @Autowired
     public SynBioHandler(SynBioClient client) {
-       this.client = client; 
+       this.client = client;
     }
 
     public void handle(CommandOptions command) throws URISyntaxException {
@@ -54,7 +59,7 @@ public class SynBioHandler {
         }
 
         if (parameters.multipleCollections) {
-            depositMultipleCollections(parameters);            
+            depositMultipleCollections(parameters);
         } else {
             depositSingleCollection(parameters);
         }
@@ -158,7 +163,7 @@ public class SynBioHandler {
 
         try (Stream<Path> files = Files.list(Paths.get(dir))) {
             return  files.filter( f -> Files.isDirectory(f))
-                    .collect(Collectors.toList());            
+                    .collect(Collectors.toList());
         } catch (IOException e) {
             throw new IllegalStateException("Could not read directories of "+dir, e);
         }
@@ -203,5 +208,61 @@ public class SynBioHandler {
     protected String sanitizeName(String name) {
         String cleanName = name.replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit}]", "_");
         return cleanName;
+    }
+
+    void readExcel(CommandOptions parameters, String filename) throws URISyntaxException,IOException {
+        FeaturesReader featuresReader = new FeaturesReader();
+        String url = client.hubFromUrl(parameters.url);
+
+        final String collUrl = URLEncoder.encode("<"+parameters.url+">", StandardCharsets.UTF_8.name());
+        //collUrl = URLEncoder.encode(collUrl, StandardCharsets.UTF_8.name());
+
+        final String objType = "ComponentDefinition";
+
+        final String dispIdType = URLEncoder.encode("<http://sbols.org/v2#displayId>", StandardCharsets.UTF_8.name());
+        //dispIdType = URLEncoder.encode(dispIdType, StandardCharsets.UTF_8.name());
+
+        File file = new File(filename);
+
+        JsonParser springParser = JsonParserFactory.getJsonParser();
+
+        try (Workbook workbook = WorkbookFactory.create(file, null, true)) {
+            Sheet sheet = workbook.getSheetAt(0);
+
+            Map<String, List<String>> rows = featuresReader.readWorksheetRows(sheet, 0);
+
+            rows.forEach((key, value) -> {
+                List<String> colVals = (List<String>) value;
+
+                final String displayId = key;
+                final String attachFilename = colVals.get(1);
+                final String description = colVals.get(2);
+                final String notes = colVals.get(3);
+
+                String requestParams = "/objectType="+objType+"&collection="+collUrl+
+                    "&"+dispIdType+"='"+displayId+"'&/?offset=0&limit=10";
+
+                String metadata = client.searchMetadata(url, requestParams, parameters.sessionToken);
+                //Object design = client.getSubmissionByDisplayId();
+                List<Object> designList = springParser.parseList(metadata);
+
+                Object design = designList.get(0);
+                String designUri = null;
+                
+                if(design instanceof Map) {
+                    Map<String,Object> map = (Map<String,Object>) design;
+                    System.out.println("Items found: " + map.size());
+                    designUri = (String)map.get("uri");
+
+                    client.attachFile(parameters.sessionToken, designUri, attachFilename);
+                    
+                    client.updateDesignDescription(parameters.sessionToken, designUri, description);
+                    
+                    client.updateDesignNotes(parameters.sessionToken, designUri, notes);
+                }
+            });
+
+
+        }
     }
 }

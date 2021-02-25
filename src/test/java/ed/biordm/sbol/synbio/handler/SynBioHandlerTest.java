@@ -13,6 +13,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -106,5 +107,10 @@ public class SynBioHandlerTest {
         files = handler.getFiles(params);
         assertEquals(2, files.size());
         assertEquals(newFileName, files.get(files.size()-1).getFileName().toString());
+    }
+
+    @Test
+    public void testReadExcel() {
+
     }
 }

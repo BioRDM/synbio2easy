@@ -9,6 +9,7 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -97,6 +98,10 @@ public class SynBioClient {
             throw reportError("Could not derive base SynBioHub server URL", e);
         }
         
+        doDeposit(url, sessionToken, collectionUrl, file);
+    }
+
+    public void doDeposit(String url, String sessionToken, String collectionUrl, Path file) {
         HttpHeaders headers = authenticatedHeaders(sessionToken);
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN));
@@ -252,6 +257,7 @@ public class SynBioClient {
         // build the request
         HttpEntity request = new HttpEntity(headers);
 
+        // Prevent the template doing any conversion
         DefaultUriBuilderFactory defaultUriBuilderFactory = new DefaultUriBuilderFactory();
         defaultUriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
         RestTemplate template = new RestTemplate();
@@ -312,5 +318,65 @@ public class SynBioClient {
         return new IllegalStateException(msg);
     }    
 
-    
+    public void attachFile(String sessionToken, String designUri, String attachFilename) {
+        String url;
+        try {
+            url = hubFromUrl(designUri) + "attach";
+        } catch (URISyntaxException e) {
+            throw reportError("Could not derive base SynBioHub server URL", e);
+        }
+
+        Path file = Paths.get(attachFilename);
+        
+        doDeposit(url, sessionToken, designUri, file);
+    }
+
+    public void updateDesignDescription(String sessionToken, String designUri, String description) {       
+        String url;
+        try {
+            url = hubFromUrl(designUri) + "updateMutableDescription";
+        } catch (URISyntaxException e) {
+            throw reportError("Could not derive base SynBioHub server URL", e);
+        }
+
+        doEditPost(sessionToken, url, designUri, description);
+    }
+
+    public void updateDesignNotes(String sessionToken, String designUri, String notes) {       
+        String url;
+        try {
+            url = hubFromUrl(designUri) + "updateMutableNotes";
+        } catch (URISyntaxException e) {
+            throw reportError("Could not derive base SynBioHub server URL", e);
+        }
+
+        doEditPost(sessionToken, url, designUri, notes);
+    }
+
+    protected void doEditPost(String sessionToken, String url, String designUri, String data) {
+        HttpHeaders headers = authenticatedHeaders(sessionToken);
+        //headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Arrays.asList(MediaType.TEXT_PLAIN));
+
+        // build the request
+        HttpEntity request = new HttpEntity(headers);
+
+        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
+        requestMap.add("uri", designUri);
+        requestMap.add("value", data);
+
+        final HttpEntity<MultiValueMap<String, Object>> reqEntity = new HttpEntity<>(requestMap, headers);
+
+        RestTemplate template = restBuilder.build();
+
+        logger.info("POSTting to URL: {}", url);
+        String responseData = null;
+        
+        try {
+            String response = template.postForObject(url, reqEntity, String.class);
+            logger.debug("Response from add child collection request: "+response);
+        } catch (RuntimeException e) {
+            throw reportError("Could not add child collection", e);
+        }
+    }
 }

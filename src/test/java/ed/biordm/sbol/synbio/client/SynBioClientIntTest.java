@@ -197,4 +197,19 @@ public class SynBioClientIntTest {
         String metadata = client.searchMetadata(synBioUrl, requestParams, token);
         System.out.println(metadata);
     }
+
+    @Test
+    public void testAttachFile() {
+        
+    }
+
+    @Test
+    public void testUpdateDesignDescription() {
+        
+    }
+    
+    @Test
+    public void testUpdateDesignNotes() {
+        
+    }
 }
