@@ -94,6 +94,39 @@ public class SynBioClientIntTest {
     }
 
     @Test
+    public void multiCollectionDeposit() {
+        String token = client.login(synBioUrl, synBioUser, synBioPassword);
+        System.out.println(token);
+        assertNotNull(token);
+
+        // Create the child collection and upload a file initially
+        String subCollName = "Johnny Child Collection";
+        String subCollId = "johnny_child_collection";
+
+        String submitUrl = synBioUrl + "submit";
+
+        String subCollUrl = client.createCollection(token, submitUrl, "Johnny",
+                subCollId, 1, subCollName, subCollName, "", 3);
+
+        client.deposit(token, subCollUrl, sbolFilePath);
+
+        // Create the parent collection and upload a file
+        String parentCollName = "Johnny Parent Collection";
+        String parentCollId = "johnny_parent_collection";
+
+        String parentCollUrl = client.createCollection(token, submitUrl, "Johnny",
+                parentCollId, 1, parentCollName, parentCollName, "", 1);
+
+        client.deposit(token, parentCollUrl, sbolFilePath);
+
+        // now add the sub collection to the parent collection
+        client.addChildCollection(token, parentCollUrl, subCollUrl+"/");
+
+        // now submit a new object to the sub-collection
+        client.deposit(token, subCollUrl, sbolFilePath);
+    }
+
+    @Test
     public void addSubCollectionDeposit() {
         String token = client.login(synBioUrl, synBioUser, synBioPassword);
         System.out.println(token);
