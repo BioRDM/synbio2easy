@@ -120,6 +120,15 @@ public class SynBioClient {
             String citations, int overwriteMerge) {
 
         String newUrl = null;
+        logger.debug(sessionToken);
+        logger.debug(url);
+        logger.debug(user);
+        logger.debug(id);
+        logger.debug(String.valueOf(version));
+        logger.debug(name);
+        logger.debug(description);
+        logger.debug(citations);
+        logger.debug(String.valueOf(overwriteMerge));
 
         HttpHeaders headers = authenticatedHeaders(sessionToken);
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -145,17 +154,12 @@ public class SynBioClient {
             URI uri = URI.create(url);
             final ResponseEntity<String> responseEntity = template.postForEntity(uri, reqEntity, String.class);
             String resBody = responseEntity.getBody();
-            logger.info("Response from deposit request: {}", resBody);
+            logger.info("Response from create collection request: {}", resBody);
 
             if (responseEntity.getStatusCode().is2xxSuccessful() ||
                     responseEntity.getStatusCode().is3xxRedirection()) {
                 // build the collection URL
                 newUrl = this.hubFromUrl(url);
-                /*newUrl = newUrl.concat("user/");
-                newUrl = newUrl.concat(user+"/");
-                newUrl = newUrl.concat(id+"/");
-                newUrl = newUrl.concat(id+"_collection/");
-                newUrl = newUrl.concat(String.valueOf(version));*/
 
                 // When the request is made to accept only HTML rather than TEXT,
                 // the new collection URL is returned in the 'Location' header
@@ -193,7 +197,7 @@ public class SynBioClient {
 
         logger.info("Parent coll URL: {}", parentCollectionUrl);
         logger.info("Child coll URL: {}", childCollectionUrl);
-        String url = childCollectionUrl+"/addToCollection";
+        String url = childCollectionUrl+"addToCollection";
 
         logger.info("POSTing to URL: {}", url);
         /*try {
