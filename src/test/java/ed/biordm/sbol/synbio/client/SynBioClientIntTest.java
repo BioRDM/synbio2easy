@@ -5,6 +5,7 @@
  */
 package ed.biordm.sbol.synbio.client;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -211,16 +212,72 @@ public class SynBioClientIntTest {
 
     @Test
     public void testAttachFile() {
-        
+        String attachFilename = "../handler/NC_001499.gbk";
+        File file = new File(getClass().getResource(attachFilename).getFile());
+        attachFilename = file.getAbsolutePath();
+
+        String token = client.login(synBioUrl, synBioUser, synBioPassword);
+        System.out.println(token);
+        assertNotNull(token);
+
+        String designUri = "http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km/1.0.0/";
+
+        client.attachFile(token, designUri, attachFilename);
     }
 
     @Test
-    public void testUpdateDesignDescription() {
+    public void testUpdateDesignDescription() throws UnsupportedEncodingException {
+        String newDesc = "This is a new description, please concatenate";
+
+        String token = client.login(synBioUrl, synBioUser, synBioPassword);
+        System.out.println(token);
+        assertNotNull(token);
+
+        String collUrl = "<http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection/1>";
+        collUrl = URLEncoder.encode(collUrl, StandardCharsets.UTF_8.name());
+
+        String objType = "http://sbols.org/v2#ComponentDefinition";
+        objType = "ComponentDefinition";
         
+        String dispIdType = "<http://sbols.org/v2#displayId>";
+        dispIdType = URLEncoder.encode(dispIdType, StandardCharsets.UTF_8.name());
+        String searchStr = "cyano_codA_Km";
+
+        // retrieve existing design and description
+        String requestParams = "/objectType="+objType+"&collection="+collUrl+"&"+dispIdType+"='"+searchStr+"'&/?offset=0&limit=10";
+
+        String metadata = client.searchMetadata(synBioUrl, requestParams, token);
+        System.out.println(metadata);
+
+        String designUri = "http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km/1.0.0/";
+        client.updateDesignText(token, designUri, newDesc, "updateMutableDescription");
     }
     
     @Test
-    public void testUpdateDesignNotes() {
+    public void testUpdateDesignNotes() throws UnsupportedEncodingException {
+        String newNote = "This is a new note, please concatenate";
+
+        String token = client.login(synBioUrl, synBioUser, synBioPassword);
+        System.out.println(token);
+        assertNotNull(token);
+
+        String collUrl = "<http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection/1>";
+        collUrl = URLEncoder.encode(collUrl, StandardCharsets.UTF_8.name());
+
+        String objType = "http://sbols.org/v2#ComponentDefinition";
+        objType = "ComponentDefinition";
         
+        String dispIdType = "<http://sbols.org/v2#displayId>";
+        dispIdType = URLEncoder.encode(dispIdType, StandardCharsets.UTF_8.name());
+        String searchStr = "cyano_codA_Km";
+
+        // retrieve existing design and description
+        String requestParams = "/objectType="+objType+"&collection="+collUrl+"&"+dispIdType+"='"+searchStr+"'&/?offset=0&limit=10";
+
+        String metadata = client.searchMetadata(synBioUrl, requestParams, token);
+        System.out.println(metadata);
+
+        String designUri = "http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km/1.0.0/";
+        client.updateDesignText(token, designUri, newNote, "updateMutableNotes");
     }
 }

@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -318,38 +319,26 @@ public class SynBioClient {
     }    
 
     public void attachFile(String sessionToken, String designUri, String attachFilename) {
-        String url;
-        try {
-            url = hubFromUrl(designUri) + "attach";
-        } catch (URISyntaxException e) {
-            throw reportError("Could not derive base SynBioHub server URL", e);
-        }
+        String url = designUri + "attach";
 
         Path file = Paths.get(attachFilename);
-        
+
         doDeposit(url, sessionToken, designUri, file);
     }
 
-    public void updateDesignDescription(String sessionToken, String designUri, String description) {       
+    public void updateDesignText(String sessionToken, String designUri, String description, String endpoint) {
         String url;
         try {
-            url = hubFromUrl(designUri) + "updateMutableDescription";
+            url = hubFromUrl(designUri) + endpoint;
         } catch (URISyntaxException e) {
             throw reportError("Could not derive base SynBioHub server URL", e);
         }
 
+        // Need to remove any trailing slash as it will return a 401 otherwise
+        if(designUri.endsWith("/")) {
+            designUri = removeLastCharOptional(designUri);
+        }
         doEditPost(sessionToken, url, designUri, description);
-    }
-
-    public void updateDesignNotes(String sessionToken, String designUri, String notes) {       
-        String url;
-        try {
-            url = hubFromUrl(designUri) + "updateMutableNotes";
-        } catch (URISyntaxException e) {
-            throw reportError("Could not derive base SynBioHub server URL", e);
-        }
-
-        doEditPost(sessionToken, url, designUri, notes);
     }
 
     protected void doEditPost(String sessionToken, String url, String designUri, String data) {
@@ -358,7 +347,7 @@ public class SynBioClient {
         headers.setAccept(Arrays.asList(MediaType.TEXT_PLAIN));
 
         // build the request
-        HttpEntity request = new HttpEntity(headers);
+        //HttpEntity request = new HttpEntity(headers);
 
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
         requestMap.add("uri", designUri);
@@ -377,5 +366,12 @@ public class SynBioClient {
         } catch (RuntimeException e) {
             throw reportError("Could not add child collection", e);
         }
+    }
+
+    protected String removeLastCharOptional(String s) {
+        return Optional.ofNullable(s)
+            .filter(str -> str.length() != 0)
+            .map(str -> str.substring(0, str.length() - 1))
+            .orElse(s);
     }
 }
