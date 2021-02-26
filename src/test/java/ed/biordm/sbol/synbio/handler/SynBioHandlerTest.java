@@ -73,6 +73,28 @@ public class SynBioHandlerTest {
         List<Path> dirs = handler.subfolders(tmpDir.toString());
         assertEquals(2, dirs.size());
     }
+    
+    /*@Test
+    public void depositsSingleCollection() throws Exception {
+        assertNotNull(tmpDir);
+        
+        Path dir1 = Files.createDirectory(tmpDir.resolve("dir1"));
+        Path dir2 = Files.createDirectory(tmpDir.resolve("dir2"));
+        Files.createFile(dir1.resolve("file11.xml"));
+        Files.createFile(dir1.resolve("file12.xml"));
+        Files.createFile(dir2.resolve("file21.xml"));
+        
+        CommandOptions parameters = new CommandOptions(Command.DEPOSIT);
+        parameters.url = "https://synbiohub.org/";
+        
+        parameters.crateNew = true;
+        parameters.dir = tmpDir.toString();
+        parameters.collectionName = "test1";
+        parameters.sessionToken = "token1";
+        
+        List<Path> dirs = handler.subfolders(tmpDir.toString());
+        assertEquals(2, dirs.size());
+    }*/    
 
     @Test
     public void testGetFiles() throws Exception {
@@ -88,6 +110,7 @@ public class SynBioHandlerTest {
         params.url = url;
         params.user = user;
         params.password = pass;
+        params.fileExtFilter = "xml";
         params.dir = tmpDir.toString();
 
         List<Path> files = handler.getFiles(params);
@@ -99,14 +122,19 @@ public class SynBioHandlerTest {
 
         files = handler.getFiles(params);
         assertEquals(2, files.size());
-        assertEquals(newFileName, files.get(files.size()-1).getFileName().toString());
+        //no guarantee don the list order without orderig
+        //assertEquals(newFileName, files.get(files.size()-1).getFileName().toString());
 
         String badFileName = "test_file2.xml2";
         Files.createFile(tmpDir.resolve(badFileName));
 
         files = handler.getFiles(params);
         assertEquals(2, files.size());
-        assertEquals(newFileName, files.get(files.size()-1).getFileName().toString());
+        //assertEquals(newFileName, files.get(files.size()-1).getFileName().toString());
+        
+        params.fileExtFilter = "*";
+        files = handler.getFiles(params);
+        assertEquals(3, files.size());        
     }
 
     @Test

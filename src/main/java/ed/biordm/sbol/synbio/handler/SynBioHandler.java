@@ -76,10 +76,9 @@ public class SynBioHandler {
 
         String prefix = orgParameters.collectionName;
 
-        orgParameters.collectionName = prefix+"_"+orgParameters.dir;
-
-        // check whether collection exists first?
-        String rootCollUrl = createNewCollection(orgParameters);
+        // orgParameters.collectionName = prefix+"_"+orgParameters.dir;
+        // we dont deal with subcollections here we leave it for UI
+        // String rootCollUrl = createNewCollection(orgParameters);
 
         List<Path> subCollections = subfolders(orgParameters.dir);
 
@@ -91,23 +90,20 @@ public class SynBioHandler {
             params.collectionName = name;
             params.dir = col.toString();
             params.multipleCollections = false;
-            params.crateNew = false;
+            params.crateNew = true;
 
-            String collUrl = createNewCollection(params);
-            params.url = collUrl;
 
             depositSingleCollection(params);
 
-            logger.info("Adding child {} to root URL: {}", collUrl, rootCollUrl);
-            addSubCollection(params, rootCollUrl, collUrl);
+            // we dont deal with subcollections here we leave it for UI
+            //logger.info("Adding child {} to root URL: {}", collUrl, rootCollUrl);
+            //addSubCollection(params, rootCollUrl, collUrl);
         }
     }
 
     void depositSingleCollection(CommandOptions parameters) {
         String collectionUrl = parameters.url;
         if (parameters.crateNew) {
-            // woudl be cool if new collection could be created with api or by empty depoist
-            // the deposit code would be cleaner;
             collectionUrl = createNewCollection(parameters);
         }
 
@@ -116,6 +112,7 @@ public class SynBioHandler {
         for (Path file: files) {
 
             // some other params as needed by the API
+            // for example overwrite is needed here not only for the creation
             client.deposit(parameters.sessionToken, collectionUrl, file);
         }
     }
@@ -127,7 +124,7 @@ public class SynBioHandler {
 
         String id = sanitizeName(name);
         //int version = 1;
-        int version = Integer.parseInt(parameters.version);
+        //int version = Integer.parseInt(parameters.version);
         String citations = "";
 
         boolean isOverwrite = parameters.overwrite;
@@ -150,7 +147,7 @@ public class SynBioHandler {
         logger.info("URL in parameters: {}", parameters.url);
 
         String newUrl = client.createCollection(parameters.sessionToken, parameters.url+"submit",
-                parameters.user, id, version, name, desc, citations, overwriteMerge);
+                id, parameters.version, name, desc, citations, overwriteMerge);
 
         return newUrl;
     }
@@ -168,41 +165,34 @@ public class SynBioHandler {
             throw new IllegalStateException("Could not read directories of "+dir, e);
         }
     }
+    
+    Predicate<Path> extensionFilter(String ext) {
+        
+        if (ext.equals("*") || ext.equals(".*")) {
+             return (Path p) -> true;
+        }
+        if (!ext.startsWith(".")) 
+            ext = "."+ext;
+        
+        final String end = ext;
+        return (Path p) -> p.getFileName().toString().endsWith(end);
+    }
 
     List<Path> getFiles(CommandOptions parameters) {
         String dirPath = parameters.dir;
-        String fileExtFilter = "xml";
-        File directory = new File(dirPath);
 
-        List<Path> fileNamesList = new ArrayList<>();
-
-        if (directory.isFile()) {
-            fileNamesList.add(Paths.get(dirPath));
-        } else {
-            Predicate<String> fileExtCondition = (String filename) -> {
-                if (filename.toLowerCase().endsWith(".".concat(fileExtFilter))) {
-                    return true;
-                }
-                return false;
-            };
-
-            // Reading the folder and getting Stream.
+        // Reading the folder and getting Stream.
             try (Stream<Path> list = Files.list(Paths.get(dirPath))) {
-
-                // Filtering the paths by a regular file and adding into a list.
-                fileNamesList = list.filter(Files::isRegularFile)
-                        .map(x -> x.toString()).filter(fileExtCondition)
-                        .map(x -> Paths.get(x))
+                 // Filtering the paths by a regular file and adding into a list.
+                return list.filter(Files::isRegularFile)
+                        .filter(extensionFilter(parameters.fileExtFilter))
                         .collect(Collectors.toList());
 
-                // printing the file nams
-                //fileNamesList.forEach(System.out::println);
             } catch (IOException e) {
                 logger.error("Error locating files for upload", e);
+                throw new IllegalStateException("Error locating files for upload", e);
             }
-        }
 
-        return fileNamesList;
     }
 
     protected String sanitizeName(String name) {

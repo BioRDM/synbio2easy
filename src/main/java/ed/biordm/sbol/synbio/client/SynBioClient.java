@@ -98,6 +98,7 @@ public class SynBioClient {
             throw reportError("Could not derive base SynBioHub server URL", e);
         }
         
+        
         doDeposit(url, sessionToken, collectionUrl, file);
     }
 
@@ -120,16 +121,15 @@ public class SynBioClient {
         }
     }
 
-    public String createCollection(String sessionToken, String url, String user,
-            String id, int version, String name, String description,
+    public String createCollection(String sessionToken, String url, 
+            String id, String version, String name, String description,
             String citations, int overwriteMerge) {
 
         String newUrl = null;
         logger.debug(sessionToken);
         logger.debug(url);
-        logger.debug(user);
         logger.debug(id);
-        logger.debug(String.valueOf(version));
+        logger.debug(version);
         logger.debug(name);
         logger.debug(description);
         logger.debug(citations);
