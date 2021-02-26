@@ -105,25 +105,36 @@ public class SynBioClientIntTest {
 
         String submitUrl = synBioUrl + "submit";
 
-        String subCollUrl = client.createCollection(token, submitUrl, "Johnny",
-                subCollId, 1, subCollName, subCollName, "", 3);
+        String subCollUrl = client.createCollection(token, submitUrl,
+                subCollId, "1", subCollName, subCollName, "", 3);
 
         client.deposit(token, subCollUrl, sbolFilePath);
+        // thos one will fail without overwriting
+        client.deposit(token, subCollUrl, sbolFilePath);
 
+        subCollName+="2";
+        subCollId+="2";
+        subCollUrl = client.createCollection(token, submitUrl,
+                subCollId, "1", subCollName, subCollName, "", 3);        
+
+        // second collection submit
+        client.deposit(token, subCollUrl, sbolFilePath);
+        
+        // not needed
         // Create the parent collection and upload a file
-        String parentCollName = "Johnny Parent Collection";
-        String parentCollId = "johnny_parent_collection";
+        //String parentCollName = "Johnny Parent Collection";
+        //String parentCollId = "johnny_parent_collection";
 
-        String parentCollUrl = client.createCollection(token, submitUrl, "Johnny",
-                parentCollId, 1, parentCollName, parentCollName, "", 1);
+        //String parentCollUrl = client.createCollection(token, submitUrl, "Johnny",
+        //        parentCollId, "1", parentCollName, parentCollName, "", 1);
 
-        client.deposit(token, parentCollUrl, sbolFilePath);
+        //client.deposit(token, parentCollUrl, sbolFilePath);
 
         // now add the sub collection to the parent collection
-        client.addChildCollection(token, parentCollUrl, subCollUrl+"/");
+        //client.addChildCollection(token, parentCollUrl, subCollUrl+"/");
 
         // now submit a new object to the sub-collection
-        client.deposit(token, subCollUrl, sbolFilePath);
+        
     }
 
     @Test
@@ -138,8 +149,8 @@ public class SynBioClientIntTest {
 
         String submitUrl = synBioUrl + "submit";
 
-        String subCollUrl = client.createCollection(token, submitUrl, "Johnny", 
-                subCollId, 1, subCollName, subCollName, "", 1);
+        String subCollUrl = client.createCollection(token, submitUrl, 
+                subCollId, "1", subCollName, subCollName, "", 1);
 
         client.deposit(token, subCollUrl, sbolFilePath);
 
@@ -147,8 +158,8 @@ public class SynBioClientIntTest {
         String parentCollName = "Johnny Parent Collection";
         String parentCollId = "johnny_parent_collection";
 
-        String parentCollUrl = client.createCollection(token, submitUrl, "Johnny", 
-                parentCollId, 1, parentCollName, parentCollName, "", 1);
+        String parentCollUrl = client.createCollection(token, submitUrl, 
+                parentCollId, "1", parentCollName, parentCollName, "", 1);
 
         client.deposit(token, parentCollUrl, sbolFilePath);
 
