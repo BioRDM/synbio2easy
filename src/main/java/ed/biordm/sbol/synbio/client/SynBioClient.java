@@ -340,7 +340,7 @@ public class SynBioClient {
 
     public void appendToDescription(String sessionToken, String designUri, String description) throws XPathExpressionException, SAXException, IOException {
         String designXml = getDesign(sessionToken, designUri);
-        String currentDesc = getDesignDataElement(designXml, designUri, "/sbh:mutableDescription");
+        String currentDesc = getDesignDataElement(designXml, designUri, "sbh:mutableDescription");
 
         String newDesc = currentDesc.concat("\n"+description);
 
@@ -349,7 +349,7 @@ public class SynBioClient {
 
     public void appendToNotes(String sessionToken, String designUri, String notes) throws XPathExpressionException, SAXException, IOException {
         String designXml = getDesign(sessionToken, designUri);
-        String currentNotes = getDesignDataElement(designXml, designUri, "/sbh:mutableNotes");
+        String currentNotes = getDesignDataElement(designXml, designUri, "sbh:mutableNotes");
 
         String newNotes = currentNotes.concat("\n"+notes);
 
@@ -420,9 +420,9 @@ public class SynBioClient {
         
         try {
             String response = template.postForObject(url, reqEntity, String.class);
-            logger.debug("Response from add child collection request: "+response);
+            logger.debug("Response from edit design request: "+response);
         } catch (RuntimeException e) {
-            throw reportError("Could not add child collection", e);
+            throw reportError("Could not edit design", e);
         }
     }
 
@@ -451,6 +451,7 @@ public class SynBioClient {
         // http://www.xpathtester.com/xpath
         // e.g. /rdf:RDF/sbol:ComponentDefinition[@rdf:about='https://synbiohub.org/public/igem/BBa_K318030/1']/sbh:mutableDescription
         String expression = "/rdf:RDF/sbol:ComponentDefinition[@rdf:about='"+removeLastCharOptional(designUri)+"']/"+xmlTag;
+        logger.debug("XPATH EXPRESSION: "+expression);
 
         String dataElement = xPath.compile(expression).evaluate(document);
 
