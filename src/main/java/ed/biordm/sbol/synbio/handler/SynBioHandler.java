@@ -15,12 +15,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.xml.xpath.XPathExpressionException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.stereotype.Service;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -199,7 +200,7 @@ public class SynBioHandler {
         return cleanName;
     }
 
-    void readExcel(CommandOptions parameters, String filename) throws URISyntaxException,IOException {
+    void readExcel(CommandOptions parameters, String filename) throws URISyntaxException, IOException {
         FeaturesReader featuresReader = new FeaturesReader();
         String url = client.hubFromUrl(parameters.url);
 
@@ -245,13 +246,23 @@ public class SynBioHandler {
 
                     client.attachFile(parameters.sessionToken, designUri, attachFilename);
 
-                    client.updateDesignDescription(parameters.sessionToken, designUri, description);
-
-                    client.updateDesignNotes(parameters.sessionToken, designUri, notes);
+                    try {
+                        client.appendToDescription(parameters.sessionToken, designUri, description);
+                        client.appendToNotes(parameters.sessionToken, designUri, notes);
+                    } catch (XPathExpressionException | SAXException | IOException e) {
+                        logger.error(e.getMessage());
+                    }
                 }
             });
-
-
         }
+    }
+
+    String getDesignXml(CommandOptions parameters, String designUri) throws URISyntaxException {
+        String token = login(parameters);
+
+        // String designUri = "http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km/1.0.0/";
+        String designXml = client.getDesign(token, designUri);
+
+        return designXml;
     }
 }

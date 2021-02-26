@@ -280,4 +280,24 @@ public class SynBioClientIntTest {
         String designUri = "http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km/1.0.0/";
         client.updateDesignText(token, designUri, newNote, "updateMutableNotes");
     }
+
+    @Test
+    public void testGetDesign() throws Exception {
+        String token = client.login(synBioUrl, synBioUser, synBioPassword);
+        System.out.println(token);
+        assertNotNull(token);
+
+        String designUri = "http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km/1.0.0/";
+        String designXml = client.getDesign(token, designUri);
+
+        // SBOL method - doesn't work cos the notes/description are sbh namespace
+        /*InputStream is = new ByteArrayInputStream(designXml.getBytes(StandardCharsets.UTF_8));
+        SBOLDocument doc = SBOLReader.read(is);
+
+        Set<ComponentDefinition> cmpDefs = doc.getComponentDefinitions();
+
+        for(ComponentDefinition cmpDef: cmpDefs) {
+            System.out.println(cmpDef.getDescription());
+        }*/
+    }
 }
