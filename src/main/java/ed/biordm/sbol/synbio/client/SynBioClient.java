@@ -97,8 +97,7 @@ public class SynBioClient {
         } catch (URISyntaxException e) {
             throw reportError("Could not derive base SynBioHub server URL", e);
         }
-        
-        
+
         doDeposit(url, sessionToken, collectionUrl, file);
     }
 

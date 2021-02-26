@@ -5,21 +5,18 @@
  */
 package ed.biordm.sbol.synbio.handler;
 
-import ed.biordm.sbol.synbio.client.SynBioClient;
 import ed.biordm.sbol.synbio.dom.Command;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.io.TempDir;
-import static org.mockito.Mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.client.HttpClientErrorException;
 
 /**
  *
@@ -58,11 +55,163 @@ public class SynBioHandlerIntTest {
     }
 
     @Test
+    public void testDepositSingleCollection() throws URISyntaxException {
+        CommandOptions parameters = new CommandOptions(Command.DEPOSIT);
+
+        parameters.collectionName = "johnny";
+        parameters.crateNew = true;
+        parameters.dir = "D:\\temp\\sbol\\";
+        parameters.url = synBioUrl;
+        parameters.overwrite = true;
+        parameters.version = "1";
+        parameters.fileExtFilter = ".xml";
+        parameters.multipleCollections = false;
+        parameters.user = synBioUser;
+        parameters.password = synBioPassword;
+
+        String token = handler.login(parameters);
+        System.out.println(token);
+        assertNotNull(token);
+
+        parameters.sessionToken = token;
+
+        handler.depositSingleCollection(parameters);
+    }
+
+    @Test
+    public void testDepositSingleCollectionNoOverwrite() throws URISyntaxException {
+        CommandOptions parameters = new CommandOptions(Command.DEPOSIT);
+
+        parameters.collectionName = "johnny";
+        parameters.crateNew = true;
+        parameters.dir = "D:\\temp\\sbol\\";
+        parameters.url = synBioUrl;
+        parameters.overwrite = false;
+        parameters.version = "1";
+        parameters.fileExtFilter = ".xml";
+        parameters.multipleCollections = false;
+        parameters.user = synBioUser;
+        parameters.password = synBioPassword;
+
+        String token = handler.login(parameters);
+        System.out.println(token);
+        assertNotNull(token);
+
+        parameters.sessionToken = token;
+
+        try {
+            handler.depositSingleCollection(parameters);
+            // this should fail because the collection already exists but overwrite is 0
+            assertTrue(false);
+        } catch(Exception e) {
+            /*assertEquals(HttpClientErrorException.class, e.getClass());
+            assertEquals("Submission id and version do not exist", e.getMessage());*/
+            System.out.println("Single deposit failed");
+        }
+    }
+
+    @Test
+    public void testDepositSingleCollectionNoOverwriteNewVersion() throws URISyntaxException {
+        CommandOptions parameters = new CommandOptions(Command.DEPOSIT);
+
+        parameters.collectionName = "johnny";
+        parameters.crateNew = true;
+        parameters.dir = "D:\\temp\\sbol\\";
+        parameters.url = synBioUrl;
+        parameters.overwrite = false;
+        parameters.version = "2";
+        parameters.fileExtFilter = ".xml";
+        parameters.multipleCollections = false;
+        parameters.user = synBioUser;
+        parameters.password = synBioPassword;
+
+        String token = handler.login(parameters);
+        System.out.println(token);
+        assertNotNull(token);
+
+        parameters.sessionToken = token;
+
+        handler.depositSingleCollection(parameters);
+    }
+
+    @Test
+    public void testDepositSingleCollectionNoCreateNew() throws URISyntaxException {
+        CommandOptions parameters = new CommandOptions(Command.DEPOSIT);
+
+        parameters.collectionName = "johnny";
+        parameters.crateNew = false;
+        parameters.dir = "D:\\temp\\sbol\\";
+        parameters.url = "http://localhost:7777/user/Johnny/johnny_parent_collection/johnny_parent_collection_collection/1";
+        parameters.overwrite = false;
+        parameters.version = "1";
+        parameters.fileExtFilter = ".xml";
+        parameters.multipleCollections = false;
+        parameters.user = synBioUser;
+        parameters.password = synBioPassword;
+
+        String token = handler.login(parameters);
+        System.out.println(token);
+        assertNotNull(token);
+
+        parameters.sessionToken = token;
+
+        handler.depositSingleCollection(parameters);
+    }
+
+    @Test
+    public void testDepositSingleCollectionNoCreateNewDoOverwrite() throws URISyntaxException {
+        CommandOptions parameters = new CommandOptions(Command.DEPOSIT);
+
+        parameters.collectionName = "johnny";
+        parameters.crateNew = false;
+        parameters.dir = "D:\\temp\\sbol\\";
+        parameters.url = "http://localhost:7777/user/Johnny/johnny_parent_collection/johnny_parent_collection_collection/1";
+        parameters.overwrite = true;
+        parameters.version = "1";
+        parameters.fileExtFilter = ".xml";
+        parameters.multipleCollections = false;
+        parameters.user = synBioUser;
+        parameters.password = synBioPassword;
+
+        String token = handler.login(parameters);
+        System.out.println(token);
+        assertNotNull(token);
+
+        parameters.sessionToken = token;
+
+        handler.depositSingleCollection(parameters);
+    }
+
+    @Test
     public void testDepositMultipleCollections() throws URISyntaxException {
         CommandOptions parameters = new CommandOptions(Command.DEPOSIT);
 
         parameters.collectionName = "johnny";
         parameters.crateNew = true;
+        parameters.dir = "D:\\temp\\sbol\\";
+        parameters.url = synBioUrl;
+        parameters.overwrite = true;
+        parameters.version = "1";
+        parameters.fileExtFilter = ".xml";
+        parameters.multipleCollections = true;
+        parameters.user = synBioUser;
+        parameters.password = synBioPassword;
+
+        String token = handler.login(parameters);
+        System.out.println(token);
+        assertNotNull(token);
+
+        parameters.sessionToken = token;
+
+        handler.depositMultipleCollections(parameters);
+    }
+
+    @Test
+    public void testDepositMultipleCollectionsNoCreateNew() throws URISyntaxException {
+        CommandOptions parameters = new CommandOptions(Command.DEPOSIT);
+
+        parameters.collectionName = "johnny";
+        parameters.crateNew = false;
         parameters.dir = "D:\\temp\\sbol\\";
         parameters.url = synBioUrl;
         parameters.overwrite = true;
