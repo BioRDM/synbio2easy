@@ -165,15 +165,15 @@ public class SynBioHandler {
             throw new IllegalStateException("Could not read directories of "+dir, e);
         }
     }
-    
+
     Predicate<Path> extensionFilter(String ext) {
-        
+
         if (ext.equals("*") || ext.equals(".*")) {
              return (Path p) -> true;
         }
-        if (!ext.startsWith(".")) 
+        if (!ext.startsWith("."))
             ext = "."+ext;
-        
+
         final String end = ext;
         return (Path p) -> p.getFileName().toString().endsWith(end);
     }
@@ -182,17 +182,16 @@ public class SynBioHandler {
         String dirPath = parameters.dir;
 
         // Reading the folder and getting Stream.
-            try (Stream<Path> list = Files.list(Paths.get(dirPath))) {
-                 // Filtering the paths by a regular file and adding into a list.
-                return list.filter(Files::isRegularFile)
-                        .filter(extensionFilter(parameters.fileExtFilter))
-                        .collect(Collectors.toList());
+        try (Stream<Path> list = Files.list(Paths.get(dirPath))) {
+             // Filtering the paths by a regular file and adding into a list.
+            return list.filter(Files::isRegularFile)
+                    .filter(extensionFilter(parameters.fileExtFilter))
+                    .collect(Collectors.toList());
 
-            } catch (IOException e) {
-                logger.error("Error locating files for upload", e);
-                throw new IllegalStateException("Error locating files for upload", e);
-            }
-
+        } catch (IOException e) {
+            logger.error("Error locating files for upload", e);
+            throw new IllegalStateException("Error locating files for upload", e);
+        }
     }
 
     protected String sanitizeName(String name) {
@@ -238,16 +237,16 @@ public class SynBioHandler {
 
                 Object design = designList.get(0);
                 String designUri = null;
-                
+
                 if(design instanceof Map) {
                     Map<String,Object> map = (Map<String,Object>) design;
                     System.out.println("Items found: " + map.size());
                     designUri = (String)map.get("uri");
 
                     client.attachFile(parameters.sessionToken, designUri, attachFilename);
-                    
+
                     client.updateDesignDescription(parameters.sessionToken, designUri, description);
-                    
+
                     client.updateDesignNotes(parameters.sessionToken, designUri, notes);
                 }
             });
