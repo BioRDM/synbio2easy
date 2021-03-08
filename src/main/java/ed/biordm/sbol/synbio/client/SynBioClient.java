@@ -15,20 +15,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Level;
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
+import org.sbolstandard.core2.Annotation;
 import org.sbolstandard.core2.ComponentDefinition;
 import org.sbolstandard.core2.SBOLConversionException;
 import org.sbolstandard.core2.SBOLDocument;
@@ -51,7 +43,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
@@ -352,6 +343,10 @@ public class SynBioClient {
         String designXml = getDesign(sessionToken, designUri);
         String currentDesc = getDesignAnnotation(designXml, designUri, CommonAnnotations.SBH_DESCRIPTION);
 
+        if(currentDesc == null) {
+            currentDesc = "";
+        }
+
         String newDesc = currentDesc.concat("\n"+description);
 
         updateDesignText(sessionToken, designUri, newDesc, "updateMutableDescription");
@@ -360,6 +355,10 @@ public class SynBioClient {
     public void appendToNotes(String sessionToken, String designUri, String notes) throws XPathExpressionException, SAXException, IOException {
         String designXml = getDesign(sessionToken, designUri);
         String currentNotes = getDesignAnnotation(designXml, designUri, CommonAnnotations.SBH_NOTES);
+
+        if(currentNotes == null) {
+            currentNotes = "";
+        }
 
         String newNotes = currentNotes.concat("\n"+notes);
 
@@ -454,7 +453,11 @@ public class SynBioClient {
             doc = SBOLReader.read(is);
             doc.setDefaultURIprefix("http://bio.ed.ac.uk/a_mccormick/cyano_source/");
             ComponentDefinition cmpDef = doc.getComponentDefinition(new URI(removeLastMatchingChar(designUri, "/")));
-            dataValue = cmpDef.getAnnotation(qname).getStringValue();
+            Annotation anno = cmpDef.getAnnotation(qname);
+
+            if(anno != null) {
+                dataValue = anno.getStringValue();
+            }
         } catch (SBOLValidationException | IOException | SBOLConversionException e) {
             logger.error("Unable to read SBOL document", e);
         } catch (URISyntaxException e) {
