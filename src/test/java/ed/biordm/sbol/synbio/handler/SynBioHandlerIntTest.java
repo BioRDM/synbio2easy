@@ -7,6 +7,8 @@ package ed.biordm.sbol.synbio.handler;
 
 import ed.biordm.sbol.synbio.dom.Command;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
+import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -228,5 +230,24 @@ public class SynBioHandlerIntTest {
         parameters.sessionToken = token;
 
         handler.depositMultipleCollections(parameters);
+    }
+
+    @Test
+    public void testReadExcel() throws URISyntaxException, IOException {
+        File file = new File(getClass().getResource("update_designs_test.xlsx").getFile());
+        CommandOptions parameters = new CommandOptions(Command.DEPOSIT);
+
+        parameters.url = "http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection/1";
+        parameters.user = synBioUser;
+        parameters.password = synBioPassword;
+
+        String token = handler.login(parameters);
+        System.out.println(token);
+        assertNotNull(token);
+
+        parameters.sessionToken = token;
+        String filename = file.getAbsolutePath();
+
+        handler.readExcel(parameters, filename);
     }
 }
