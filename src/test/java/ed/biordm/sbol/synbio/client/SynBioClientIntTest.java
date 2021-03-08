@@ -313,9 +313,9 @@ public class SynBioClientIntTest {
         // System.out.println(designXml);
 
         // get the existing description and notes from the document
-        String curDesc = client.getDesignDataElement(designXml, designUri, "sbh:mutableDescription");
+        String curDesc = client.getDesignAnnotation(designXml, designUri, CommonAnnotations.SBH_DESCRIPTION);
         System.out.println("curdesc: "+curDesc);
-        String curNotes = client.getDesignDataElement(designXml, designUri, "sbh:mutableNotes");
+        String curNotes = client.getDesignAnnotation(designXml, designUri, CommonAnnotations.SBH_NOTES);
 
         String descToAppend = "Here's a new line in the description";
         String notesToAppend = "Here's a new line in the notes";
@@ -326,15 +326,15 @@ public class SynBioClientIntTest {
         // verify the update was successful
         String newDesignXml = client.getDesign(token, designUri);
         // System.out.println(newDesignXml);
-        String newDesc = client.getDesignDataElement(newDesignXml, designUri, "sbh:mutableDescription");
-        String newNotes = client.getDesignDataElement(newDesignXml, designUri, "sbh:mutableNotes");
+        String newDesc = client.getDesignAnnotation(newDesignXml, designUri, CommonAnnotations.SBH_DESCRIPTION);
+        String newNotes = client.getDesignAnnotation(newDesignXml, designUri, CommonAnnotations.SBH_NOTES);
 
         assertEquals(curDesc + "\n" + descToAppend, newDesc);
         assertEquals(curNotes + "\n" + notesToAppend, newNotes);
     }
 
     @Test
-    public void testGetDesignDataElementSBOL() throws Exception {
+    public void testGetDesignAnnotation() throws Exception {
         String token = client.login(synBioUrl, synBioUser, synBioPassword);
         assertNotNull(token);
 
@@ -343,7 +343,7 @@ public class SynBioClientIntTest {
         // get the SBOL document
         String designXml = client.getDesign(token, designUri);
 
-        String description = client.getDesignDataElementSBOL(designXml, designUri, CommonAnnotations.SBH_DESCRIPTION);
+        String description = client.getDesignAnnotation(designXml, designUri, CommonAnnotations.SBH_DESCRIPTION);
         
         assertTrue(description.contains("Here's a new line in the description"));
     }

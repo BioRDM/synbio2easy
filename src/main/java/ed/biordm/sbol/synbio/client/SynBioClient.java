@@ -350,7 +350,7 @@ public class SynBioClient {
 
     public void appendToDescription(String sessionToken, String designUri, String description) throws XPathExpressionException, SAXException, IOException {
         String designXml = getDesign(sessionToken, designUri);
-        String currentDesc = getDesignDataElement(designXml, designUri, "sbh:mutableDescription");
+        String currentDesc = getDesignAnnotation(designXml, designUri, CommonAnnotations.SBH_DESCRIPTION);
 
         String newDesc = currentDesc.concat("\n"+description);
 
@@ -359,7 +359,7 @@ public class SynBioClient {
 
     public void appendToNotes(String sessionToken, String designUri, String notes) throws XPathExpressionException, SAXException, IOException {
         String designXml = getDesign(sessionToken, designUri);
-        String currentNotes = getDesignDataElement(designXml, designUri, "sbh:mutableNotes");
+        String currentNotes = getDesignAnnotation(designXml, designUri, CommonAnnotations.SBH_NOTES);
 
         String newNotes = currentNotes.concat("\n"+notes);
 
@@ -444,60 +444,7 @@ public class SynBioClient {
             .orElse(s);
     }
 
-    protected String getDesignDataElement(String designXml, String designUri, String xmlTag) throws XPathExpressionException, SAXException, IOException {
-        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-        builderFactory.setNamespaceAware(true);
-        DocumentBuilder builder = null;
-
-        try {
-            builder = builderFactory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            throw reportError("Could not parse design at "+designUri, e);
-        }
-
-        InputStream is = new ByteArrayInputStream(designXml.getBytes(StandardCharsets.UTF_8));
-        Document document = builder.parse(is);
-
-        XPath xPath =  XPathFactory.newInstance().newXPath();
-        xPath.setNamespaceContext(SBH_CTX);
-
-        // http://www.xpathtester.com/xpath
-        // e.g. /rdf:RDF/sbol:ComponentDefinition[@rdf:about='https://synbiohub.org/public/igem/BBa_K318030/1']/sbh:mutableDescription
-        String expression = "//rdf:RDF/sbol:ComponentDefinition[@rdf:about='"+removeLastMatchingChar(designUri, "/")+"']/"+xmlTag+"/text()";
-        logger.debug("XPATH EXPRESSION: "+expression);
-
-        String dataElement = (String)xPath.compile(expression).evaluate(document, XPathConstants.STRING);
-        logger.debug("Found data element with XPATH: "+dataElement);
-
-        return dataElement;
-    }
-
-    private static final NamespaceContext SBH_CTX = new NamespaceContext() {
-        public String getNamespaceURI(String prefix) {
-            String uri;
-            if (prefix.equals("rdf"))
-                uri = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-            else if (prefix.equals("sbol"))
-                uri = "http://sbols.org/v2#";
-            else if (prefix.equals("sbh"))
-                uri = "http://wiki.synbiohub.org/wiki/Terms/synbiohub#";
-            else
-                uri = null;
-            return uri;
-        }
-
-        // Dummy implementation - not used!
-        public Iterator getPrefixes(String val) {
-            return null;
-        }
-
-        // Dummy implemenation - not used!
-        public String getPrefix(String uri) {
-            return null;
-        }
-    };
-
-    protected String getDesignDataElementSBOL(String designXml, String designUri, QName qname) {
+    protected String getDesignAnnotation(String designXml, String designUri, QName qname) {
         String dataValue = null;
 
         InputStream is = new ByteArrayInputStream(designXml.getBytes(StandardCharsets.UTF_8));
