@@ -339,7 +339,7 @@ public class SynBioClient {
         doDeposit(url, sessionToken, designUri, file);
     }
 
-    public void appendToDescription(String sessionToken, String designUri, String description) throws XPathExpressionException, SAXException, IOException {
+    public void appendToDescription(String sessionToken, String designUri, String description) {
         String designXml = getDesign(sessionToken, designUri);
         String currentDesc = getDesignAnnotation(designXml, designUri, CommonAnnotations.SBH_DESCRIPTION);
 
@@ -352,7 +352,7 @@ public class SynBioClient {
         updateDesignText(sessionToken, designUri, newDesc, "updateMutableDescription");
     }
 
-    public void appendToNotes(String sessionToken, String designUri, String notes) throws XPathExpressionException, SAXException, IOException {
+    public void appendToNotes(String sessionToken, String designUri, String notes) {
         String designXml = getDesign(sessionToken, designUri);
         String currentNotes = getDesignAnnotation(designXml, designUri, CommonAnnotations.SBH_NOTES);
 
@@ -410,11 +410,7 @@ public class SynBioClient {
 
     protected void doEditPost(String sessionToken, String url, String designUri, String data) {
         HttpHeaders headers = authenticatedHeaders(sessionToken);
-        //headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Arrays.asList(MediaType.TEXT_PLAIN));
-
-        // build the request
-        //HttpEntity request = new HttpEntity(headers);
 
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
         requestMap.add("uri", designUri);

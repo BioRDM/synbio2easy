@@ -205,12 +205,10 @@ public class SynBioHandler {
         String url = client.hubFromUrl(parameters.url);
 
         final String collUrl = URLEncoder.encode("<"+parameters.url+">", StandardCharsets.UTF_8.name());
-        //collUrl = URLEncoder.encode(collUrl, StandardCharsets.UTF_8.name());
 
         final String objType = "ComponentDefinition";
 
         final String dispIdType = URLEncoder.encode("<http://sbols.org/v2#displayId>", StandardCharsets.UTF_8.name());
-        //dispIdType = URLEncoder.encode(dispIdType, StandardCharsets.UTF_8.name());
 
         File file = new File(filename);
 
@@ -245,23 +243,18 @@ public class SynBioHandler {
 
                 if(design instanceof Map) {
                     Map<String,Object> map = (Map<String,Object>) design;
-                    System.out.println("Items found: " + map.size());
                     designUri = (String)map.get("uri");
 
                     if (attachFilename != null && !attachFilename.isEmpty()) {
                         client.attachFile(parameters.sessionToken, designUri+"/", attachFilename);
                     }
 
-                    try {
-                        if (description != null && !description.isEmpty()) {
-                            client.appendToDescription(parameters.sessionToken, designUri+"/", description);
-                        }
+                    if (description != null && !description.isEmpty()) {
+                        client.appendToDescription(parameters.sessionToken, designUri+"/", description);
+                    }
 
-                        if (notes != null && !notes.isEmpty()) {
-                            client.appendToNotes(parameters.sessionToken, designUri+"/", notes);
-                        }
-                    } catch (XPathExpressionException | SAXException | IOException e) {
-                        logger.error(e.getMessage());
+                    if (notes != null && !notes.isEmpty()) {
+                        client.appendToNotes(parameters.sessionToken, designUri+"/", notes);
                     }
                 }
             });
