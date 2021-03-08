@@ -41,6 +41,14 @@
             <artifactId>poi-ooxml</artifactId>
             <version>4.1.2</version>
         </dependency>
+
+       <dependency>
+            <!-- manually added to nexus from fat-jar -->
+            <groupId>org.sbolstandard</groupId>
+            <artifactId>libSBOLj</artifactId>
+            <version>2.4.0</version>
+            <classifier>withDependencies</classifier>
+        </dependency>
     </dependencies>
 
     <build>

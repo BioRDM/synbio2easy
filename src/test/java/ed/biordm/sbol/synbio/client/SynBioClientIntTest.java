@@ -332,4 +332,19 @@ public class SynBioClientIntTest {
         assertEquals(curDesc + "\n" + descToAppend, newDesc);
         assertEquals(curNotes + "\n" + notesToAppend, newNotes);
     }
+
+    @Test
+    public void testGetDesignDataElementSBOL() throws Exception {
+        String token = client.login(synBioUrl, synBioUser, synBioPassword);
+        assertNotNull(token);
+
+        String designUri = "http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km/1.0.0/";
+
+        // get the SBOL document
+        String designXml = client.getDesign(token, designUri);
+
+        String description = client.getDesignDataElementSBOL(designXml, designUri, CommonAnnotations.SBH_DESCRIPTION);
+        
+        assertTrue(description.contains("Here's a new line in the description"));
+    }
 }
