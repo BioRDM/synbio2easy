@@ -219,15 +219,15 @@ public class SynBioHandler {
         try (Workbook workbook = WorkbookFactory.create(file, null, true)) {
             Sheet sheet = workbook.getSheetAt(0);
 
-            Map<String, List<String>> rows = featuresReader.readWorksheetRows(sheet, 0);
+            Map<String, List<String>> rows = featuresReader.readWorksheetRows(sheet, 1);
 
             rows.forEach((key, value) -> {
                 List<String> colVals = (List<String>) value;
 
                 final String displayId = key;
-                final String attachFilename = colVals.get(1);
-                final String description = colVals.get(2);
-                final String notes = colVals.get(3);
+                final String attachFilename = colVals.get(0);
+                final String description = colVals.get(1);
+                final String notes = colVals.get(2);
 
                 String requestParams = "/objectType="+objType+"&collection="+collUrl+
                     "&"+dispIdType+"='"+displayId+"'&/?offset=0&limit=10";
@@ -235,6 +235,10 @@ public class SynBioHandler {
                 String metadata = client.searchMetadata(url, requestParams, parameters.sessionToken);
                 //Object design = client.getSubmissionByDisplayId();
                 List<Object> designList = springParser.parseList(metadata);
+
+                if(designList == null || designList.isEmpty()) {
+                    return;
+                }
 
                 Object design = designList.get(0);
                 String designUri = null;
@@ -244,11 +248,18 @@ public class SynBioHandler {
                     System.out.println("Items found: " + map.size());
                     designUri = (String)map.get("uri");
 
-                    client.attachFile(parameters.sessionToken, designUri, attachFilename);
+                    if (attachFilename != null && !attachFilename.isEmpty()) {
+                        client.attachFile(parameters.sessionToken, designUri+"/", attachFilename);
+                    }
 
                     try {
-                        client.appendToDescription(parameters.sessionToken, designUri, description);
-                        client.appendToNotes(parameters.sessionToken, designUri, notes);
+                        if (description != null && !description.isEmpty()) {
+                            client.appendToDescription(parameters.sessionToken, designUri+"/", description);
+                        }
+
+                        if (notes != null && !notes.isEmpty()) {
+                            client.appendToNotes(parameters.sessionToken, designUri+"/", notes);
+                        }
                     } catch (XPathExpressionException | SAXException | IOException e) {
                         logger.error(e.getMessage());
                     }
