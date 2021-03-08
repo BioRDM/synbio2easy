@@ -19,7 +19,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
 import javax.xml.namespace.NamespaceContext;
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -27,6 +29,11 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import org.sbolstandard.core2.ComponentDefinition;
+import org.sbolstandard.core2.SBOLConversionException;
+import org.sbolstandard.core2.SBOLDocument;
+import org.sbolstandard.core2.SBOLReader;
+import org.sbolstandard.core2.SBOLValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -369,7 +376,7 @@ public class SynBioClient {
 
         // Need to remove any trailing slash as it will return a 401 otherwise
         if(designUri.endsWith("/")) {
-            designUri = removeLastCharOptional(designUri);
+            designUri = removeLastMatchingChar(designUri, "/");
         }
         doEditPost(sessionToken, url, designUri, text);
     }
@@ -429,9 +436,10 @@ public class SynBioClient {
         }
     }
 
-    protected String removeLastCharOptional(String s) {
+    protected String removeLastMatchingChar(String s, String lastChar) {
         return Optional.ofNullable(s)
             .filter(str -> str.length() != 0)
+            .filter(str -> str.endsWith(lastChar))
             .map(str -> str.substring(0, str.length() - 1))
             .orElse(s);
     }
@@ -455,7 +463,7 @@ public class SynBioClient {
 
         // http://www.xpathtester.com/xpath
         // e.g. /rdf:RDF/sbol:ComponentDefinition[@rdf:about='https://synbiohub.org/public/igem/BBa_K318030/1']/sbh:mutableDescription
-        String expression = "//rdf:RDF/sbol:ComponentDefinition[@rdf:about='"+removeLastCharOptional(designUri)+"']/"+xmlTag+"/text()";
+        String expression = "//rdf:RDF/sbol:ComponentDefinition[@rdf:about='"+removeLastMatchingChar(designUri, "/")+"']/"+xmlTag+"/text()";
         logger.debug("XPATH EXPRESSION: "+expression);
 
         String dataElement = (String)xPath.compile(expression).evaluate(document, XPathConstants.STRING);
@@ -488,4 +496,24 @@ public class SynBioClient {
             return null;
         }
     };
+
+    protected String getDesignDataElementSBOL(String designXml, String designUri, QName qname) {
+        String dataValue = null;
+
+        InputStream is = new ByteArrayInputStream(designXml.getBytes(StandardCharsets.UTF_8));
+
+        SBOLDocument doc;
+        try {
+            doc = SBOLReader.read(is);
+            doc.setDefaultURIprefix("http://bio.ed.ac.uk/a_mccormick/cyano_source/");
+            ComponentDefinition cmpDef = doc.getComponentDefinition(new URI(removeLastMatchingChar(designUri, "/")));
+            dataValue = cmpDef.getAnnotation(qname).getStringValue();
+        } catch (SBOLValidationException | IOException | SBOLConversionException e) {
+            logger.error("Unable to read SBOL document", e);
+        } catch (URISyntaxException e) {
+            logger.error("Unable to set SBOL document prefix", e);
+        }
+
+        return dataValue;
+    }
 }
