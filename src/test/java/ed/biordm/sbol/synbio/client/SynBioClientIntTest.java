@@ -310,7 +310,7 @@ public class SynBioClientIntTest {
 
         // get the SBOL document
         String designXml = client.getDesign(token, designUri);
-        System.out.println(designXml);
+        // System.out.println(designXml);
 
         // get the existing description and notes from the document
         String curDesc = client.getDesignDataElement(designXml, designUri, "sbh:mutableDescription");
@@ -325,7 +325,7 @@ public class SynBioClientIntTest {
 
         // verify the update was successful
         String newDesignXml = client.getDesign(token, designUri);
-        System.out.println(newDesignXml);
+        // System.out.println(newDesignXml);
         String newDesc = client.getDesignDataElement(newDesignXml, designUri, "sbh:mutableDescription");
         String newNotes = client.getDesignDataElement(newDesignXml, designUri, "sbh:mutableNotes");
 
