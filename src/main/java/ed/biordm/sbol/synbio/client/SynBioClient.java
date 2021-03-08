@@ -15,13 +15,16 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import org.slf4j.Logger;
@@ -435,6 +438,7 @@ public class SynBioClient {
 
     protected String getDesignDataElement(String designXml, String designUri, String xmlTag) throws XPathExpressionException, SAXException, IOException {
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+        builderFactory.setNamespaceAware(true);
         DocumentBuilder builder = null;
 
         try {
@@ -447,14 +451,41 @@ public class SynBioClient {
         Document document = builder.parse(is);
 
         XPath xPath =  XPathFactory.newInstance().newXPath();
+        xPath.setNamespaceContext(SBH_CTX);
 
         // http://www.xpathtester.com/xpath
         // e.g. /rdf:RDF/sbol:ComponentDefinition[@rdf:about='https://synbiohub.org/public/igem/BBa_K318030/1']/sbh:mutableDescription
-        String expression = "/rdf:RDF/sbol:ComponentDefinition[@rdf:about='"+removeLastCharOptional(designUri)+"']/"+xmlTag;
+        String expression = "//rdf:RDF/sbol:ComponentDefinition[@rdf:about='"+removeLastCharOptional(designUri)+"']/"+xmlTag+"/text()";
         logger.debug("XPATH EXPRESSION: "+expression);
 
-        String dataElement = xPath.compile(expression).evaluate(document);
+        String dataElement = (String)xPath.compile(expression).evaluate(document, XPathConstants.STRING);
+        logger.debug("Found data element with XPATH: "+dataElement);
 
         return dataElement;
     }
+
+    private static final NamespaceContext SBH_CTX = new NamespaceContext() {
+        public String getNamespaceURI(String prefix) {
+            String uri;
+            if (prefix.equals("rdf"))
+                uri = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+            else if (prefix.equals("sbol"))
+                uri = "http://sbols.org/v2#";
+            else if (prefix.equals("sbh"))
+                uri = "http://wiki.synbiohub.org/wiki/Terms/synbiohub#";
+            else
+                uri = null;
+            return uri;
+        }
+
+        // Dummy implementation - not used!
+        public Iterator getPrefixes(String val) {
+            return null;
+        }
+
+        // Dummy implemenation - not used!
+        public String getPrefix(String uri) {
+            return null;
+        }
+    };
 }
