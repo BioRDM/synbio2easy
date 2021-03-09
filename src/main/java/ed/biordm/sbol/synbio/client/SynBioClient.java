@@ -172,7 +172,7 @@ public class SynBioClient {
             URI uri = URI.create(url);
             final ResponseEntity<String> responseEntity = template.postForEntity(uri, reqEntity, String.class);
             String resBody = responseEntity.getBody();
-            logger.info("Response from create collection request: {}", resBody);
+            logger.debug("Response from create collection request: {}", resBody);
 
             if (responseEntity.getStatusCode().is2xxSuccessful() ||
                     responseEntity.getStatusCode().is3xxRedirection()) {
@@ -213,11 +213,11 @@ public class SynBioClient {
 
         RestTemplate template = restBuilder.build();
 
-        logger.info("Parent coll URL: {}", parentCollectionUrl);
-        logger.info("Child coll URL: {}", childCollectionUrl);
+        logger.debug("Parent coll URL: {}", parentCollectionUrl);
+        logger.debug("Child coll URL: {}", childCollectionUrl);
         String url = childCollectionUrl+"addToCollection";
 
-        logger.info("POSTing to URL: {}", url);
+        logger.debug("POSTing to URL: {}", url);
         /*try {
             url = hubFromUrl(parentCollectionUrl) + "addToCollection";
         } catch (URISyntaxException e) {
