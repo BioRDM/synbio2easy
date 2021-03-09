@@ -30,7 +30,7 @@ public class UserInputPrompter {
     final Console console;
 
     private static final Pattern Y_N_PATTERN = Pattern.compile("[Y|N]{1}");
-    private static final Pattern FILE_EXT_PATTERN = Pattern.compile("\\.[a-zA-Z0-9]{1,6}");
+    private static final Pattern FILE_EXT_PATTERN = Pattern.compile("\\.([a-zA-Z0-9]{1,6})|\\.(\\*{1})");
 
     public UserInputPrompter() {
         this(System.console());
