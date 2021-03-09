@@ -16,12 +16,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -227,6 +226,7 @@ public class SynBioHandler {
 
         File file = new File(filename);
         String cwd = file.getParent();
+        Map<String, String> updatedDesigns = new LinkedHashMap();
 
         try (Workbook workbook = WorkbookFactory.create(file, null, true)) {
             Sheet sheet = workbook.getSheetAt(0);
@@ -238,9 +238,19 @@ public class SynBioHandler {
             rows.forEach((key, value) -> {
                 List<String> colVals = (List<String>) value;
 
-                processRow(parameters, cwd, collUrl, url, colHeaders, colVals);
+                try {
+                    final String displayId = colVals.get(colHeaders.indexOf(DISP_ID_HEADER));
+                    processRow(parameters, cwd, collUrl, url, displayId,
+                            colHeaders, colVals, updatedDesigns);
+                } catch(Exception e) {
+                    // abort the run and print out all the successful rows up to this point
+                    outputDesigns(updatedDesigns);
+                    throw(e);
+                }
             });
         }
+
+        outputDesigns(updatedDesigns);
     }
 
     String getDesignXml(CommandOptions parameters, String designUri) throws URISyntaxException {
@@ -253,9 +263,8 @@ public class SynBioHandler {
     }
 
     protected void processRow(CommandOptions parameters, String cwd, 
-            String collUrl, String url, List<String> colHeaders,
-            List<String> colVals) {
-        final String displayId = colVals.get(colHeaders.indexOf(DISP_ID_HEADER));;
+            String collUrl, String url, String displayId, List<String> colHeaders,
+            List<String> colVals, Map<String, String> updatedDesigns) {
         String attachFilename = colVals.get(colHeaders.indexOf(ATTACH_FILE_HEADER));
         final String description = colVals.get(colHeaders.indexOf(DESC_HEADER));
         final String notes = colVals.get(colHeaders.indexOf(NOTES_HEADER));
@@ -272,7 +281,7 @@ public class SynBioHandler {
             logger.info(userMessage, displayId, collUrl);
 
             // replace with UI logger
-            System.out.printf("No design found with displayId %s in collection %s", displayId, collUrl);
+            System.out.printf("No design found with displayId %s in collection %s%n", displayId, collUrl);
             return;
         }
 
@@ -287,6 +296,8 @@ public class SynBioHandler {
             updateDesignDescription(parameters, cwd, designUri, description);
 
             updateDesignNotes(parameters, cwd, designUri, notes);
+
+            updatedDesigns.put(displayId, collUrl);
         }
     }
 
@@ -319,5 +330,14 @@ public class SynBioHandler {
         if (notes != null && !notes.isEmpty()) {
             client.appendToNotes(parameters.sessionToken, designUri+"/", notes);
         }
+    }
+
+    protected void outputDesigns(Map<String, String> updatedDesigns) {
+        // replace this with UI logger
+        System.out.println("Successfully updated the following designs");
+
+        updatedDesigns.forEach((key, value) -> {
+            System.out.printf("DisplayId: %s in collection %s%n", key, value);
+        });
     }
 }
