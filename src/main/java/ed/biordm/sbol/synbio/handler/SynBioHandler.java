@@ -272,34 +272,47 @@ public class SynBioHandler {
         }
 
         Object design = designList.get(0);
-        String designUri = null;
 
-        // refactor this into a separate method for dealing with one row
-        if(design instanceof Map) {
+        if (design instanceof Map) {
             Map<String,Object> map = (Map<String,Object>) design;
-            designUri = (String)map.get("uri");
+            String designUri = (String)map.get("uri");
 
-            if (attachFilename != null && !attachFilename.isEmpty()) {
-                File attachFile = new File(attachFilename);
+            attachFileToDesign(parameters, cwd, designUri, attachFilename);
 
-                if (!attachFile.exists()) {
-                    // assume this must be a relative file path, so prepend parent dir path
-                    attachFilename = cwd+System.getProperty("file.separator")+attachFilename;
-                    attachFile = new File(attachFilename);
-                }
+            updateDesignDescription(parameters, cwd, designUri, description);
 
-                if (attachFile.exists()) {
-                    client.attachFile(parameters.sessionToken, designUri+"/", attachFilename);
-                }
+            updateDesignNotes(parameters, cwd, designUri, notes);
+        }
+    }
+
+    protected void attachFileToDesign(CommandOptions parameters, String cwd,
+            String designUri, String attachFilename) {
+        if (attachFilename != null && !attachFilename.isEmpty()) {
+            File attachFile = new File(attachFilename);
+
+            if (!attachFile.exists()) {
+                // assume this must be a relative file path, so prepend parent dir path
+                attachFilename = cwd+System.getProperty("file.separator")+attachFilename;
+                attachFile = new File(attachFilename);
             }
 
-            if (description != null && !description.isEmpty()) {
-                client.appendToDescription(parameters.sessionToken, designUri+"/", description);
+            if (attachFile.exists()) {
+                client.attachFile(parameters.sessionToken, designUri+"/", attachFilename);
             }
+        }
+    }
 
-            if (notes != null && !notes.isEmpty()) {
-                client.appendToNotes(parameters.sessionToken, designUri+"/", notes);
-            }
+    protected void updateDesignDescription(CommandOptions parameters, String cwd,
+            String designUri, String description) {
+        if (description != null && !description.isEmpty()) {
+            client.appendToDescription(parameters.sessionToken, designUri+"/", description);
+        }
+    }
+
+    protected void updateDesignNotes(CommandOptions parameters, String cwd,
+            String designUri, String notes) {
+        if (notes != null && !notes.isEmpty()) {
+            client.appendToNotes(parameters.sessionToken, designUri+"/", notes);
         }
     }
 }
