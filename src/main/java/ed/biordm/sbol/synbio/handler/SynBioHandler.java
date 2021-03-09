@@ -9,6 +9,7 @@ import ed.biordm.sbol.synbio.client.SynBioClient;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -19,6 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -41,9 +44,26 @@ public class SynBioHandler {
 
     final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    // Excel column header strings - worksheet headers must match these to work
+    private static final String DISP_ID_HEADER = "display_id";
+    private static final String ATTACH_FILE_HEADER = "attachment_filename";
+    private static final String DESC_HEADER = "description";
+    private static final String NOTES_HEADER = "notes";
+
+    private static final String SBOL_OBJ_TYPE = "ComponentDefinition";
+    private static String SBOL_DISP_ID_TYPE;
+
+    private static final JsonParser JSON_PARSER = JsonParserFactory.getJsonParser();
+
     @Autowired
     public SynBioHandler(SynBioClient client) {
-       this.client = client;
+        this.client = client;
+
+        try {
+            SBOL_DISP_ID_TYPE = URLEncoder.encode("<http://sbols.org/v2#displayId>", StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            logger.error("Failed to initialise SynBioHandler properly", e);
+        }
     }
 
     public void handle(CommandOptions command) throws URISyntaxException {
@@ -205,19 +225,8 @@ public class SynBioHandler {
 
         final String collUrl = URLEncoder.encode("<"+parameters.url+">", StandardCharsets.UTF_8.name());
 
-        final String objType = "ComponentDefinition";
-
-        final String dispIdType = URLEncoder.encode("<http://sbols.org/v2#displayId>", StandardCharsets.UTF_8.name());
-
-        // Excel column header strings - worksheet headers must match these to work
-        final String dispIdHeader = "display_id";
-        final String attachFileHeader = "attachment_filename";
-        final String descHeader = "description";
-        final String notesHeader = "notes";
-
         File file = new File(filename);
-
-        JsonParser springParser = JsonParserFactory.getJsonParser();
+        String cwd = file.getParent();
 
         try (Workbook workbook = WorkbookFactory.create(file, null, true)) {
             Sheet sheet = workbook.getSheetAt(0);
@@ -229,53 +238,7 @@ public class SynBioHandler {
             rows.forEach((key, value) -> {
                 List<String> colVals = (List<String>) value;
 
-                final String displayId = colVals.get(colHeaders.indexOf(dispIdHeader));;
-                String attachFilename = colVals.get(colHeaders.indexOf(attachFileHeader));
-                final String description = colVals.get(colHeaders.indexOf(descHeader));
-                final String notes = colVals.get(colHeaders.indexOf(notesHeader));
-
-                String requestParams = "/objectType="+objType+"&collection="+collUrl+
-                    "&"+dispIdType+"='"+displayId+"'&/?offset=0&limit=10";
-
-                String metadata = client.searchMetadata(url, requestParams, parameters.sessionToken);
-                //Object design = client.getSubmissionByDisplayId();
-                List<Object> designList = springParser.parseList(metadata);
-
-                if(designList == null || designList.isEmpty()) {
-                    return;
-                }
-
-                Object design = designList.get(0);
-                String designUri = null;
-
-                // refactor this into a separate method for dealing with one row
-                if(design instanceof Map) {
-                    Map<String,Object> map = (Map<String,Object>) design;
-                    designUri = (String)map.get("uri");
-
-                    if (attachFilename != null && !attachFilename.isEmpty()) {
-                        File attachFile = new File(attachFilename);
-
-                        if (!attachFile.exists()) {
-                            // assume this must be a relative file path, so prepend parent dir path
-                            String cwd = file.getParent();
-                            attachFilename = cwd+System.getProperty("file.separator")+attachFilename;
-                            attachFile = new File(attachFilename);
-                        }
-
-                        if (attachFile.exists()) {
-                            client.attachFile(parameters.sessionToken, designUri+"/", attachFilename);
-                        }
-                    }
-
-                    if (description != null && !description.isEmpty()) {
-                        client.appendToDescription(parameters.sessionToken, designUri+"/", description);
-                    }
-
-                    if (notes != null && !notes.isEmpty()) {
-                        client.appendToNotes(parameters.sessionToken, designUri+"/", notes);
-                    }
-                }
+                processRow(parameters, cwd, collUrl, url, colHeaders, colVals);
             });
         }
     }
@@ -287,5 +250,56 @@ public class SynBioHandler {
         String designXml = client.getDesign(token, designUri);
 
         return designXml;
+    }
+
+    protected void processRow(CommandOptions parameters, String cwd, 
+            String collUrl, String url, List<String> colHeaders,
+            List<String> colVals) {
+        final String displayId = colVals.get(colHeaders.indexOf(DISP_ID_HEADER));;
+        String attachFilename = colVals.get(colHeaders.indexOf(ATTACH_FILE_HEADER));
+        final String description = colVals.get(colHeaders.indexOf(DESC_HEADER));
+        final String notes = colVals.get(colHeaders.indexOf(NOTES_HEADER));
+
+        String requestParams = "/objectType="+SBOL_OBJ_TYPE+"&collection="+collUrl+
+            "&"+SBOL_DISP_ID_TYPE+"='"+displayId+"'&/?offset=0&limit=10";
+
+        String metadata = client.searchMetadata(url, requestParams, parameters.sessionToken);
+        //Object design = client.getSubmissionByDisplayId();
+        List<Object> designList = JSON_PARSER.parseList(metadata);
+
+        if(designList == null || designList.isEmpty()) {
+            return;
+        }
+
+        Object design = designList.get(0);
+        String designUri = null;
+
+        // refactor this into a separate method for dealing with one row
+        if(design instanceof Map) {
+            Map<String,Object> map = (Map<String,Object>) design;
+            designUri = (String)map.get("uri");
+
+            if (attachFilename != null && !attachFilename.isEmpty()) {
+                File attachFile = new File(attachFilename);
+
+                if (!attachFile.exists()) {
+                    // assume this must be a relative file path, so prepend parent dir path
+                    attachFilename = cwd+System.getProperty("file.separator")+attachFilename;
+                    attachFile = new File(attachFilename);
+                }
+
+                if (attachFile.exists()) {
+                    client.attachFile(parameters.sessionToken, designUri+"/", attachFilename);
+                }
+            }
+
+            if (description != null && !description.isEmpty()) {
+                client.appendToDescription(parameters.sessionToken, designUri+"/", description);
+            }
+
+            if (notes != null && !notes.isEmpty()) {
+                client.appendToNotes(parameters.sessionToken, designUri+"/", notes);
+            }
+        }
     }
 }

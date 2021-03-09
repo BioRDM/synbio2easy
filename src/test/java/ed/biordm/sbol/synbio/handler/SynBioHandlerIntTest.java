@@ -235,7 +235,7 @@ public class SynBioHandlerIntTest {
     @Test
     public void testReadExcel() throws URISyntaxException, IOException {
         File file = new File(getClass().getResource("update_designs_test.xlsx").getFile());
-        CommandOptions parameters = new CommandOptions(Command.DEPOSIT);
+        CommandOptions parameters = new CommandOptions(Command.ATTACH_SEQUENCE);
 
         parameters.url = "http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection/1";
         parameters.user = synBioUser;
@@ -254,7 +254,7 @@ public class SynBioHandlerIntTest {
     @Test
     public void testReadExcelUnsorted() throws URISyntaxException, IOException {
         File file = new File(getClass().getResource("update_designs_test_unsorted.xlsx").getFile());
-        CommandOptions parameters = new CommandOptions(Command.DEPOSIT);
+        CommandOptions parameters = new CommandOptions(Command.ATTACH_SEQUENCE);
 
         parameters.url = "http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection/1";
         parameters.user = synBioUser;
