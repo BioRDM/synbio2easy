@@ -41,7 +41,7 @@ public class FeaturesReader {
      * @return map with id, value pairs from the read rows
      */
     public Map<String, String> readSimpleFeatures(Path file, int skipRows,
-            int sheetNr) throws IOException {
+            int sheetNr, int numCols) throws IOException {
 
         try (Workbook workbook = WorkbookFactory.create(file.toFile(), null, true)) {
 
@@ -52,7 +52,7 @@ public class FeaturesReader {
 
             Sheet sheet = workbook.getSheetAt(sheetNr);
 
-            Map<String, List<String>> rows = readWorksheetRows(sheet, skipRows);
+            Map<String, List<String>> rows = readWorksheetRows(sheet, skipRows, numCols);
 
             rows.forEach((key, value) -> {
                 List<String> colVals = (List<String>) value;
@@ -82,7 +82,7 @@ public class FeaturesReader {
      * @return map with id and the list of read features values
      */
     public Map<String, List<String>> readMultiFeatures(Path file, int skipRows,
-            int sheetNr) throws IOException {
+            int sheetNr, int numCols) throws IOException {
 
         try (Workbook workbook = WorkbookFactory.create(file.toFile(), null, true)) {
             Map<String, List<String>> features = new HashMap<>();
@@ -92,7 +92,7 @@ public class FeaturesReader {
 
             Sheet sheet = workbook.getSheetAt(sheetNr);
 
-            features = readWorksheetRows(sheet, skipRows);
+            features = readWorksheetRows(sheet, skipRows, numCols);
             return features;
         } catch (IllegalArgumentException | NotOLE2FileException e) {
             throw new IOException("Not valid excel: " + e.getMessage(), e);
@@ -107,7 +107,7 @@ public class FeaturesReader {
      * @param skipRows: the number of rows to skip, e.g. '1' for skipping header
      * @return map with id and the list of read column values
      */
-    protected Map<String, List<String>> readWorksheetRows(Sheet worksheet, int skipRows) {
+    protected Map<String, List<String>> readWorksheetRows(Sheet worksheet, int skipRows, int numCols) {
         Map<String, List<String>> rows = new HashMap<>();
 
         // https://knpcode.com/java-programs/read-excel-file-java-using-apache-poi/
@@ -120,10 +120,7 @@ public class FeaturesReader {
             }
             List<String> colVals = new ArrayList<>();
 
-            // Iterate each cell in a row
-            int lastColumn = row.getLastCellNum();
-
-            for (int cn = 0; cn < lastColumn; cn++) {
+            for (int cn = 0; cn < numCols; cn++) {
                 Cell cell = row.getCell(cn, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
                 int index = cell.getColumnIndex();
 
@@ -131,6 +128,7 @@ public class FeaturesReader {
 
                 if (index == 0) {
                     rows.put(cellValue, colVals);
+                    colVals.add(cellValue);
                 } else {
                     colVals.add(cellValue);
                 }
@@ -138,6 +136,30 @@ public class FeaturesReader {
         }
 
         return rows;
+    }
+
+    public List<String> readWorksheetHeader(Sheet worksheet, int numCols) {
+        Iterator<Row> rowItr = worksheet.iterator();
+        List<String> colNames = new ArrayList();
+
+        while (rowItr.hasNext()) {
+            Row row = rowItr.next();
+
+            if (row.getRowNum() > 0) {
+                break;
+            }
+
+            for (int cn = 0; cn < numCols; cn++) {
+                Cell cell = row.getCell(cn, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                int index = cell.getColumnIndex();
+
+                String cellValue = getStringValueFromCell(cell);
+
+                colNames.add(cellValue);
+            }
+        }
+
+        return colNames;
     }
 
     // Utility method to get String value of cell based on cell type
