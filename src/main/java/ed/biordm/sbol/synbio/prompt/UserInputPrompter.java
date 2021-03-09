@@ -51,7 +51,7 @@ public class UserInputPrompter {
 
         switch (command) {
             case DEPOSIT: return promptDepositOptions(options);
-            case ATTACH_SEQUENCE: return promptUpdateOptions(options);
+            case UPDATE: return promptUpdateOptions(options);
             default: throw new IllegalArgumentException("Unsupported command: "+command);
         }
     }
@@ -68,6 +68,7 @@ public class UserInputPrompter {
 
         switch(Command.valueOf(command.toUpperCase())) {
             case DEPOSIT: return DEPOSIT;
+            case UPDATE: return UPDATE;
             default: throw new MissingOptionException("Uknown command "+command);
         }
     }

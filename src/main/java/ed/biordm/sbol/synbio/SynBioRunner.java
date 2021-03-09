@@ -9,8 +9,8 @@ import ed.biordm.sbol.synbio.dom.CommandOptions;
 import ed.biordm.sbol.synbio.handler.SynBioHandler;
 import ed.biordm.sbol.synbio.prompt.MissingOptionException;
 import ed.biordm.sbol.synbio.prompt.UserInputPrompter;
+import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ public class SynBioRunner implements ApplicationRunner{
             CommandOptions command = prompter.getCommandOptions(args);             
             handler.handle(command);
 
-        } catch (MissingOptionException | URISyntaxException e) {
+        } catch (MissingOptionException | URISyntaxException | IOException e) {
             System.out.println(e.getMessage());
             System.out.println(prompter.getUsageTxt());
         } 

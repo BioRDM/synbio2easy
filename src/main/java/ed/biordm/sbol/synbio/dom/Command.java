@@ -10,7 +10,8 @@ package ed.biordm.sbol.synbio.dom;
  * @author tzielins
  */
 public enum Command {
-    
+
     DEPOSIT,
-    ATTACH_SEQUENCE
+    ATTACH_SEQUENCE,
+    UPDATE
 }

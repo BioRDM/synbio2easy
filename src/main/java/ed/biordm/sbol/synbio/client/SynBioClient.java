@@ -243,7 +243,7 @@ public class SynBioClient {
         RestTemplate template = restBuilder.build();
 
         String url = hubUrl + "manage";
-        logger.info("GETting from URL: {}", url);
+        logger.debug("GETting from URL: {}", url);
         String responseData = null;
 
         try {
@@ -278,7 +278,7 @@ public class SynBioClient {
 
         String url = hubUrl + "search";
         url = url + requestParams;
-        logger.info("GETting from URL: {}", url);
+        logger.debug("GETting from URL: {}", url);
         String responseData = null;
 
         try {
@@ -382,7 +382,6 @@ public class SynBioClient {
 
     public String getDesign(String sessionToken, String designUri) {
         HttpHeaders headers = authenticatedHeaders(sessionToken);
-        //headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Arrays.asList(MediaType.TEXT_PLAIN));
 
         // build the request
@@ -420,7 +419,7 @@ public class SynBioClient {
 
         RestTemplate template = restBuilder.build();
 
-        logger.info("POSTting to URL: {}", url);
+        logger.debug("POSTting to URL: {}", url);
         String responseData = null;
         
         try {
