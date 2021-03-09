@@ -38,13 +38,13 @@ public class FeaturesReaderTest {
         String expValue = "NC_001499.gbk";
 
         // Test worksheet 1 (Left flank)
-        Map<String, String> result = featuresReader.readSimpleFeatures(file.toPath(), 0, 0);
+        Map<String, String> result = featuresReader.readSimpleFeatures(file.toPath(), 0, 0, 4);
         assertEquals(expValue, result.get(expKey));
 
         expKey = "sll0199_right";
         expValue = "NC_035470.gbk";
 
-        result = featuresReader.readSimpleFeatures(file.toPath(), 1, 0);
+        result = featuresReader.readSimpleFeatures(file.toPath(), 1, 0, 4);
         assertEquals(expValue, result.get(expKey));
     }
 
@@ -59,13 +59,13 @@ public class FeaturesReaderTest {
         List<String> expValue = Arrays.asList("NC_001499.gbk","this is the left flank of cyano_codA_Km plasmid","The attached genbank file is from ftp://ftp.ncbi.nlm.nih.gov/genomes/Viruses/abelson_murine_leukemia_virus_uid14654/NC_001499.gbk");
 
         // Test worksheet 1 (Left flank)
-        Map<String, List<String>> result = featuresReader.readMultiFeatures(file.toPath(), 0, 0);
+        Map<String, List<String>> result = featuresReader.readMultiFeatures(file.toPath(), 0, 0, 4);
         assertEquals(expValue, result.get(expKey));
 
         expKey = "sll0199_right";
         expValue = Arrays.asList("NC_035470.gbk","this is the right flank of cyano_codA_Km plasmid","The attached genbank file is from ftp://ftp.ncbi.nlm.nih.gov/genomes/Viruses/abisko_virus_uid399942/NC_035470.gbk");
 
-        result = featuresReader.readMultiFeatures(file.toPath(), 1, 0);
+        result = featuresReader.readMultiFeatures(file.toPath(), 1, 0, 4);
         assertEquals(expValue, result.get(expKey));
     }
 
@@ -74,7 +74,7 @@ public class FeaturesReaderTest {
         File file = new File(getClass().getResource("update_designs_test.xlsx").getFile());
 
         // Test worksheet 1 (Right flank)
-        Map<String, List<String>> result = featuresReader.readMultiFeatures(file.toPath(), 0, 0);
+        Map<String, List<String>> result = featuresReader.readMultiFeatures(file.toPath(), 0, 0, 4);
         String expKey = "0001_slr0611_right";
         List<String> expValue = List.of("", "this is a row with an empty attachment file", "this is a row with an empty attachment file");
 
@@ -98,7 +98,7 @@ public class FeaturesReaderTest {
             // Test worksheet 1 (Left flank)
             Sheet sheet = workbook.getSheetAt(0);
 
-            Map<String, List<String>> rows = featuresReader.readWorksheetRows(sheet, 0);
+            Map<String, List<String>> rows = featuresReader.readWorksheetRows(sheet, 0, 4);
 
             String expKey = "sll0199_left";
             List<String> expValue = Arrays.asList("NC_001499.gbk","this is the left flank of cyano_codA_Km plasmid","The attached genbank file is from ftp://ftp.ncbi.nlm.nih.gov/genomes/Viruses/abelson_murine_leukemia_virus_uid14654/NC_001499.gbk");
@@ -108,19 +108,19 @@ public class FeaturesReaderTest {
             expKey = "sll0199_right";
             expValue = Arrays.asList("NC_035470.gbk","this is the right flank of cyano_codA_Km plasmid","The attached genbank file is from ftp://ftp.ncbi.nlm.nih.gov/genomes/Viruses/abisko_virus_uid399942/NC_035470.gbk");
 
-            rows = featuresReader.readWorksheetRows(sheet, 1);
+            rows = featuresReader.readWorksheetRows(sheet, 1, 4);
             assertEquals(expValue, rows.get(expKey));
 
             expKey = "0001_slr0611_right";
             expValue = Arrays.asList("","this is a row with an empty attachment file","this is a row with an empty attachment file");
 
-            rows = featuresReader.readWorksheetRows(sheet, 2);
+            rows = featuresReader.readWorksheetRows(sheet, 2, 4);
             assertEquals(expValue, rows.get(expKey));
 
             expKey = "0003_slr0613_left";
             expValue = Arrays.asList("NC_014139.gbk","","This is a row with an empty description");
 
-            rows = featuresReader.readWorksheetRows(sheet, 3);
+            rows = featuresReader.readWorksheetRows(sheet, 3, 4);
             assertEquals(expValue, rows.get(expKey));
         }
     }
