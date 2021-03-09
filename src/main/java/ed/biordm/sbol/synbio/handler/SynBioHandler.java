@@ -110,23 +110,29 @@ public class SynBioHandler {
 
         List<Path> subCollections = subfolders(orgParameters.dir);
 
+        Path parentDirPath = Paths.get(orgParameters.dir);
+        processUploadDir(orgParameters, parentDirPath, prefix);
         for (Path col: subCollections) {
-            String suffix = col.getFileName().toString();
-            String name = prefix+"_"+suffix;
-
-            CommandOptions params = orgParameters.clone();
-            params.collectionName = name;
-            params.dir = col.toString();
-            params.multipleCollections = false;
-            params.crateNew = true;
-
-
-            depositSingleCollection(params);
+            processUploadDir(orgParameters, col, prefix);
 
             // we dont deal with subcollections here we leave it for UI
             //logger.info("Adding child {} to root URL: {}", collUrl, rootCollUrl);
             //addSubCollection(params, rootCollUrl, collUrl);
         }
+    }
+
+    void processUploadDir(CommandOptions origParameters, Path dirPath, String prefix) {
+
+        String suffix = dirPath.getFileName().toString();
+        String name = prefix+"_"+suffix;
+
+        CommandOptions params = origParameters.clone();
+        params.collectionName = name;
+        params.dir = dirPath.toString();
+        params.multipleCollections = false;
+        params.crateNew = true;
+
+        depositSingleCollection(params);
     }
 
     void depositSingleCollection(CommandOptions parameters) {
