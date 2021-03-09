@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.xml.xpath.XPathExpressionException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -29,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.stereotype.Service;
-import org.xml.sax.SAXException;
 
 /**
  *
@@ -223,7 +221,7 @@ public class SynBioHandler {
                 List<String> colVals = (List<String>) value;
 
                 final String displayId = key;
-                final String attachFilename = colVals.get(0);
+                String attachFilename = colVals.get(0);
                 final String description = colVals.get(1);
                 final String notes = colVals.get(2);
 
@@ -246,7 +244,18 @@ public class SynBioHandler {
                     designUri = (String)map.get("uri");
 
                     if (attachFilename != null && !attachFilename.isEmpty()) {
-                        client.attachFile(parameters.sessionToken, designUri+"/", attachFilename);
+                        File attachFile = new File(attachFilename);
+
+                        if (!attachFile.exists()) {
+                            // assume this must be a relative file path, so prepend parent dir path
+                            String cwd = file.getParent();
+                            attachFilename = cwd+System.getProperty("file.separator")+attachFilename;
+                            attachFile = new File(attachFilename);
+                        }
+
+                        if (attachFile.exists()) {
+                            client.attachFile(parameters.sessionToken, designUri+"/", attachFilename);
+                        }
                     }
 
                     if (description != null && !description.isEmpty()) {
