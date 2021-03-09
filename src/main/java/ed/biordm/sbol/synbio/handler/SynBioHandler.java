@@ -65,9 +65,10 @@ public class SynBioHandler {
         }
     }
 
-    public void handle(CommandOptions command) throws URISyntaxException {
+    public void handle(CommandOptions command) throws URISyntaxException, IOException {
         switch (command.command) {
             case DEPOSIT: handleDeposit(command); break;
+            case UPDATE: handleUpdate(command); break;
             default: throw new IllegalArgumentException("Unsuported command: "+command.command);
         }
     }
@@ -82,6 +83,14 @@ public class SynBioHandler {
         } else {
             depositSingleCollection(parameters);
         }
+    }
+
+    void handleUpdate(CommandOptions parameters) throws URISyntaxException, IOException {
+        if (parameters.sessionToken == null) {
+            parameters.sessionToken = login(parameters);
+        }
+
+        readExcel(parameters);
     }
 
     String login(CommandOptions parameters) throws URISyntaxException {
@@ -218,12 +227,13 @@ public class SynBioHandler {
         return cleanName;
     }
 
-    void readExcel(CommandOptions parameters, String filename) throws URISyntaxException, IOException {
+    void readExcel(CommandOptions parameters) throws URISyntaxException, IOException {
         FeaturesReader featuresReader = new FeaturesReader();
         String url = client.hubFromUrl(parameters.url);
 
         final String collUrl = URLEncoder.encode("<"+parameters.url+">", StandardCharsets.UTF_8.name());
 
+        String filename = parameters.xslFile;
         File file = new File(filename);
         String cwd = file.getParent();
         Map<String, String> updatedDesigns = new LinkedHashMap();

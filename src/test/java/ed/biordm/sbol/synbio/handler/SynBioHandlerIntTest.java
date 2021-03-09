@@ -247,8 +247,9 @@ public class SynBioHandlerIntTest {
 
         parameters.sessionToken = token;
         String filename = file.getAbsolutePath();
+        parameters.xslFile = filename;
 
-        handler.readExcel(parameters, filename);
+        handler.readExcel(parameters);
     }
 
     @Test
@@ -266,7 +267,8 @@ public class SynBioHandlerIntTest {
 
         parameters.sessionToken = token;
         String filename = file.getAbsolutePath();
+        parameters.xslFile = filename;
 
-        handler.readExcel(parameters, filename);
+        handler.readExcel(parameters);
     }
 }
