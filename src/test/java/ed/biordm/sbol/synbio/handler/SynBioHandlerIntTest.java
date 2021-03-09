@@ -250,4 +250,23 @@ public class SynBioHandlerIntTest {
 
         handler.readExcel(parameters, filename);
     }
+
+    @Test
+    public void testReadExcelUnsorted() throws URISyntaxException, IOException {
+        File file = new File(getClass().getResource("update_designs_test_unsorted.xlsx").getFile());
+        CommandOptions parameters = new CommandOptions(Command.DEPOSIT);
+
+        parameters.url = "http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection/1";
+        parameters.user = synBioUser;
+        parameters.password = synBioPassword;
+
+        String token = handler.login(parameters);
+        System.out.println(token);
+        assertNotNull(token);
+
+        parameters.sessionToken = token;
+        String filename = file.getAbsolutePath();
+
+        handler.readExcel(parameters, filename);
+    }
 }
