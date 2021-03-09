@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -208,6 +209,12 @@ public class SynBioHandler {
 
         final String dispIdType = URLEncoder.encode("<http://sbols.org/v2#displayId>", StandardCharsets.UTF_8.name());
 
+        // Excel column header strings - worksheet headers must match these to work
+        final String dispIdHeader = "display_id";
+        final String attachFileHeader = "attachment_filename";
+        final String descHeader = "description";
+        final String notesHeader = "notes";
+
         File file = new File(filename);
 
         JsonParser springParser = JsonParserFactory.getJsonParser();
@@ -215,15 +222,17 @@ public class SynBioHandler {
         try (Workbook workbook = WorkbookFactory.create(file, null, true)) {
             Sheet sheet = workbook.getSheetAt(0);
 
-            Map<String, List<String>> rows = featuresReader.readWorksheetRows(sheet, 1);
+            // assume always 4 column names in header
+            List<String> colHeaders = featuresReader.readWorksheetHeader(sheet, 4);
+            Map<String, List<String>> rows = featuresReader.readWorksheetRows(sheet, 1, 4);
 
             rows.forEach((key, value) -> {
                 List<String> colVals = (List<String>) value;
 
-                final String displayId = key;
-                String attachFilename = colVals.get(0);
-                final String description = colVals.get(1);
-                final String notes = colVals.get(2);
+                final String displayId = colVals.get(colHeaders.indexOf(dispIdHeader));;
+                String attachFilename = colVals.get(colHeaders.indexOf(attachFileHeader));
+                final String description = colVals.get(colHeaders.indexOf(descHeader));
+                final String notes = colVals.get(colHeaders.indexOf(notesHeader));
 
                 String requestParams = "/objectType="+objType+"&collection="+collUrl+
                     "&"+dispIdType+"='"+displayId+"'&/?offset=0&limit=10";
@@ -239,6 +248,7 @@ public class SynBioHandler {
                 Object design = designList.get(0);
                 String designUri = null;
 
+                // refactor this into a separate method for dealing with one row
                 if(design instanceof Map) {
                     Map<String,Object> map = (Map<String,Object>) design;
                     designUri = (String)map.get("uri");
