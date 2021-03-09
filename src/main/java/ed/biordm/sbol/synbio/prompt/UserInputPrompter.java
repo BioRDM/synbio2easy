@@ -51,6 +51,7 @@ public class UserInputPrompter {
 
         switch (command) {
             case DEPOSIT: return promptDepositOptions(options);
+            case ATTACH_SEQUENCE: return promptUpdateOptions(options);
             default: throw new IllegalArgumentException("Unsupported command: "+command);
         }
     }
@@ -203,6 +204,40 @@ public class UserInputPrompter {
             }
         } else {
             console.printf("Overwrite: %s", options.overwrite);
+        }
+
+        if (options.user == null) {
+            options.user = console.readLine("Please enter SynBioHub username (email address): ");
+        } else {
+            console.printf("Username: %s", options.user);
+        }
+
+        if (options.password == null) {
+            options.password = new String(console.readPassword("Please enter your SynBioHub password: "));
+        } else {
+            console.printf("Password: *****");
+        }
+
+        return options;
+    }
+
+    CommandOptions promptUpdateOptions(CommandOptions options) {
+        console.printf("... updating existing designs in SynBioHub%n");
+
+        if (options.xslFile == null) {
+            options.xslFile = console.readLine("Please enter the path to the Excel file containing data to attach [default is current directory]: ");
+
+            if (!validateDirPath(options.xslFile)) {
+                throw new IllegalArgumentException("Invalid Excel file path argument: "+options.xslFile);
+            }
+        } else {
+            console.printf("Excel File: %s", options.xslFile);
+        }
+
+        if (options.url == null) {
+            options.url = console.readLine("Please enter the URL for the existing collection: ");
+        } else {
+            console.printf("Collection URL: %s", options.url);
         }
 
         if (options.user == null) {

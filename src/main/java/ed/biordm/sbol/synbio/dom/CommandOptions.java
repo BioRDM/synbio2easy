@@ -13,18 +13,24 @@ import java.util.Objects;
  */
 public class CommandOptions implements Cloneable {
 
+    // General options
     public Command command;
     public String sessionToken;
     public String url;
     public String user;
     public String password;
+
+    // Deposit command options
     public boolean multipleCollections;
-    public boolean crateNew;
     public String collectionName;
+    public boolean crateNew;
     public String dir;
     public String fileExtFilter;
     public String version;
     public boolean overwrite;
+
+    // Attachment command options
+    public String xslFile;
 
     public CommandOptions(Command command) {
         Objects.requireNonNull(command);
