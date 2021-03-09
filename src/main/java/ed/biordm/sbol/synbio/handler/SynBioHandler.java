@@ -268,6 +268,11 @@ public class SynBioHandler {
         List<Object> designList = JSON_PARSER.parseList(metadata);
 
         if(designList == null || designList.isEmpty()) {
+            String userMessage = "No design found with displayId {} in collection {}";
+            logger.info(userMessage, displayId, collUrl);
+
+            // replace with UI logger
+            System.out.printf("No design found with displayId %s in collection %s", displayId, collUrl);
             return;
         }
 
