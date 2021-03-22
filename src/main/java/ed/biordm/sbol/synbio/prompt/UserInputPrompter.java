@@ -69,14 +69,14 @@ public class UserInputPrompter {
         switch(Command.valueOf(command.toUpperCase())) {
             case DEPOSIT: return DEPOSIT;
             case UPDATE: return UPDATE;
-            default: throw new MissingOptionException("Uknown command "+command);
+            default: throw new MissingOptionException("Unknown command "+command);
         }
     }
 
     String promptForCommand() {
 
         console.printf("What operation do you want to perform?%n");
-        StringJoiner joiner = new StringJoiner("|", "", "");
+        StringJoiner joiner = new StringJoiner(" | ", "", "");
 
         for (Command cmd : Command.values()) {
             joiner.add(String.valueOf(cmd).toLowerCase());
@@ -94,7 +94,8 @@ public class UserInputPrompter {
         console.printf("... depositing designs into SynBioHub%n");
 
         if (options.dir == null) {
-            options.dir = console.readLine("Please enter the directory path to upload [default is current directory]: ");
+            console.printf("Please enter the directory path to upload? [default is current directory]%n");
+            options.dir = console.readLine("Directory path: ");
 
             if (!validateDirPath(options.dir)) {
                 if(options.dir.isEmpty()) {
@@ -108,7 +109,8 @@ public class UserInputPrompter {
         }
 
         if (options.fileExtFilter == null) {
-            options.fileExtFilter = console.readLine("Which file extensions to upload [default is '.*', all]: ");
+            console.printf("Which file extensions to upload? [default is '.*', all]%n");
+            options.fileExtFilter = console.readLine("File extension: ");
 
             if (!validateString(FILE_EXT_PATTERN, options.fileExtFilter)) {
                 if(options.fileExtFilter.isEmpty()) {
@@ -126,16 +128,18 @@ public class UserInputPrompter {
             boolean isSubFolders = isSubFolders(options.dir);
 
             if(isSubFolders) {
-                String multipleAns = console.readLine("Do you wish to create multiple collections: Y|N%n").strip();
+                console.printf("Do you wish to create multiple collections%n");
+                String multipleAns = console.readLine("Y | N: ").strip();
                 while(!Y_N_PATTERN.matcher(multipleAns).matches()) {
-                    multipleAns = console.readLine("Do you wish to create multiple collections: Y|N%n").strip();
+                    multipleAns = console.readLine("Y | N: ").strip();
                 }
 
                 if (multipleAns.equals("Y")) {
-                    String subFolderColls = console.readLine("Do you want to submit each sub-folder as a new collection?: Y|N%n").strip();
+                    console.printf("Do you want to submit each sub-folder as a new collection?%n");
+                    String subFolderColls = console.readLine("Y | N: ").strip();
 
                     while(!Y_N_PATTERN.matcher(multipleAns).matches()) {
-                        subFolderColls = console.readLine("Do you want to submit each sub-folder as a new collection?: Y|N%n").strip();
+                        subFolderColls = console.readLine("Y | N: ").strip();
                     }
 
                     if(subFolderColls.equals("Y")) {
@@ -148,9 +152,10 @@ public class UserInputPrompter {
         }
 
         if (options.crateNew == false) {
-            String createNewAns = console.readLine("Do you wish to create a new collection: Y|N%n").strip();
+            console.printf("Do you wish to create a new collection?%n");
+            String createNewAns = console.readLine("Y | N: ").strip();
             while(!Y_N_PATTERN.matcher(createNewAns).matches()) {
-                createNewAns = console.readLine("Do you wish to create a new collection: Y|N%n").strip();
+                createNewAns = console.readLine("Y | N: ").strip();
             }
 
             if (createNewAns.equals("Y")) {
@@ -163,41 +168,48 @@ public class UserInputPrompter {
         if (options.crateNew == true) {
             if (options.multipleCollections == false) {
                 if (options.collectionName == null) {
-                    options.collectionName = console.readLine("Please enter a name for the new collection: ");
+                    console.printf("Please enter a name for the new collection%n");
+                    options.collectionName = console.readLine("Name: ");
                 } else {
                     console.printf("New collection name: %s", options.collectionName);
                 }
             } else {
                 if (options.collectionName == null) {
-                    options.collectionName = console.readLine("Please enter a prefix for the new collections: ");
+                    console.printf("Please enter a prefix for the new collections%n");
+                    options.collectionName = console.readLine("Prefix: ");
                 } else {
                     console.printf("New collection prefix: %s", options.collectionName);
                 }  
             }
 
             if (options.url == null) {
-                options.url = console.readLine("Please enter the URL of the SynBioHub server: ");
+                console.printf("Please enter the URL of the SynBioHub server%n");
+                options.url = console.readLine("URL: ");
             } else {
                 console.printf("SynBioHub URL: %s", options.url);
             }
         } else {
             if (options.url == null) {
-                options.url = console.readLine("Please enter the URL for the existing collection: ");
+                console.printf("Please enter the URL for the existing collection%n");
+                options.url = console.readLine("URL: ");
             } else {
                 console.printf("Collection URL: %s", options.url);
             }
         }
 
         if (options.version == null) {
-            options.version = console.readLine("Please enter the version number: ");
+            console.printf("Please enter the version number%n");
+            options.version = console.readLine("Version: ");
         } else {
             console.printf("Version: %s", options.version);
         }
 
         if (options.overwrite == false) {
-            String overwriteAns = console.readLine("Do you wish to overwrite designs if they exist [default is merge and prevent if submission exists]: Y|N%n").strip();
+            console.printf("Do you wish to overwrite designs if they exist? [default is merge and prevent if submission exists]%n");
+            String overwriteAns = console.readLine("Y | N: ").strip();
+
             while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
-                overwriteAns = console.readLine("Do you wish to overwrite designs if they exist [default is merge and prevent if submission exists]: Y|N%n").strip();
+                overwriteAns = console.readLine("Y | N: ").strip();
             }
 
             if (overwriteAns.equals("Y")) {
@@ -208,13 +220,15 @@ public class UserInputPrompter {
         }
 
         if (options.user == null) {
-            options.user = console.readLine("Please enter SynBioHub username (email address): ");
+            console.printf("Please enter your SynBioHub username%n");
+            options.user = console.readLine("Username (email): ");
         } else {
             console.printf("Username: %s", options.user);
         }
 
         if (options.password == null) {
-            options.password = new String(console.readPassword("Please enter your SynBioHub password: "));
+            console.printf("Please enter your SynBioHub password%n");
+            options.password = new String(console.readPassword("Password: "));
         } else {
             console.printf("Password: *****");
         }
@@ -226,7 +240,8 @@ public class UserInputPrompter {
         console.printf("... updating existing designs in SynBioHub%n");
 
         if (options.xslFile == null) {
-            options.xslFile = console.readLine("Please enter the path to the Excel file containing data to attach [default is current directory]: ");
+            console.printf("Please enter the path to the Excel file with designs to update%n");
+            options.xslFile = console.readLine("Filename: ");
 
             if (!validateDirPath(options.xslFile)) {
                 throw new IllegalArgumentException("Invalid Excel file path argument: "+options.xslFile);
@@ -236,19 +251,22 @@ public class UserInputPrompter {
         }
 
         if (options.url == null) {
-            options.url = console.readLine("Please enter the URL for the existing collection: ");
+            console.printf("Please enter the URL for the collection to update%n");
+            options.url = console.readLine("URL: ");
         } else {
             console.printf("Collection URL: %s", options.url);
         }
 
         if (options.user == null) {
-            options.user = console.readLine("Please enter SynBioHub username (email address): ");
+            console.printf("Please enter your SynBioHub username%n");
+            options.user = console.readLine("Username (email): ");
         } else {
             console.printf("Username: %s", options.user);
         }
 
         if (options.password == null) {
-            options.password = new String(console.readPassword("Please enter your SynBioHub password: "));
+            console.printf("Please enter your SynBioHub password%n");
+            options.password = new String(console.readPassword("Password: "));
         } else {
             console.printf("Password: *****");
         }
