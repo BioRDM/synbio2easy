@@ -230,7 +230,7 @@ public class UserInputPrompter {
             console.printf("Please enter your SynBioHub password%n");
             options.password = new String(console.readPassword("Password: "));
         } else {
-            console.printf("Password: *****");
+            console.printf("Password: *****"); 
         }
 
         return options;
