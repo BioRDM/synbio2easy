@@ -18,8 +18,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
 import javax.xml.namespace.QName;
-import javax.xml.xpath.XPathExpressionException;
+import org.apache.tika.Tika;
 import org.sbolstandard.core2.Annotation;
 import org.sbolstandard.core2.ComponentDefinition;
 import org.sbolstandard.core2.SBOLConversionException;
@@ -43,7 +44,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import org.xml.sax.SAXException;
 
 /**
  *
@@ -311,10 +311,32 @@ public class SynBioClient {
         File fromPath = file.toFile();
         Resource fileResource = new FileSystemResource(fromPath);
 
+        HttpHeaders parts = new HttpHeaders();
+
+        Tika tika = new Tika();
+        String mimeType = null;
+
+        try {
+            mimeType = tika.detect(file.toFile());
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        logger.debug("Mime type for file {} is {}", file.toFile().getAbsolutePath(), mimeType);
+
+        if(mimeType == null) {
+            mimeType = "application/octet-stream";
+        }
+
+        parts.setContentType(MediaType.valueOf(mimeType));
+        logger.debug("This resolves to {}", MediaType.valueOf(mimeType));
+
+        final HttpEntity<Resource> partsEntity = new HttpEntity<>(fileResource, parts);
+
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
         requestMap.add("overwrite_merge", OVERWRITE_MERGE);
         requestMap.add("rootCollections", collectionUrl);
-        requestMap.add("file", fileResource);
+        requestMap.add("file", partsEntity);
 
         return requestMap;
     }
