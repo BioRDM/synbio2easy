@@ -9,6 +9,7 @@ import ed.biordm.sbol.synbio.dom.Command;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -234,7 +235,8 @@ public class SynBioHandlerIntTest {
 
     @Test
     public void testReadExcel() throws URISyntaxException, IOException {
-        File file = new File(getClass().getResource("update_designs_test.xlsx").getFile());
+        // File file = new File(getClass().getResource("update_designs_test.xlsx").getFile());
+        File file = new File(getClass().getResource("update_designs_tz.xlsx").getFile());
         CommandOptions parameters = new CommandOptions(Command.ATTACH_SEQUENCE);
 
         parameters.url = "http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection/1";
@@ -270,5 +272,25 @@ public class SynBioHandlerIntTest {
         parameters.xslFile = filename;
 
         handler.readExcel(parameters);
+    }
+
+    @Test
+    public void testVerifyCollectionUrlVersion() throws URISyntaxException, UnsupportedEncodingException {
+        CommandOptions parameters = new CommandOptions(Command.ATTACH_SEQUENCE);
+
+        String collPidUrl = "http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection";
+        parameters.url = collPidUrl;
+        parameters.user = synBioUser;
+        parameters.password = synBioPassword;
+
+        String token = handler.login(parameters);
+        System.out.println(token);
+        assertNotNull(token);
+
+        parameters.sessionToken = token;
+
+        String verCollUrl = handler.verifyCollectionUrlVersion(parameters);
+
+        assertEquals(collPidUrl.concat("/1"), verCollUrl);
     }
 }
