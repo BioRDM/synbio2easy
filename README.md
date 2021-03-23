@@ -2,7 +2,7 @@
 A collection of tools written in Java for interacting with SynBioHub
 
 ## Purpose
-The aim of this toolkit is to provide convenient solutions for streamlining common data management tasks performed by biological researchers who wish to upload their designs into an instance of [SynBioHub](https://github.com/SynBioHub/synbiohub), for example the public [synbiohub.org](https://synbiohub.org/) repository. There are two main components in the toolkit: 'SBOL Transformer' and 'SynBioHub CLI Client'.
+The aim of this toolkit is to provide convenient solutions for streamlining common data management tasks performed by biological researchers who wish to upload their designs into an instance of [SynBioHub](https://github.com/SynBioHub/synbiohub), for example the public [synbiohub.org](https://synbiohub.org/) repository. There are two main components in the toolkit: \'SBOL Transformer\' and \'SynBioHub CLI Client\'.
 
 ## SBOL Transformer Library Features
 ### SBOL Generation
@@ -48,7 +48,7 @@ To update existing data in SynBioHub, the user must specify the file path to an 
 The CLI client requires certain parameters to be specified at runtime, and will prompt the user for the following inputs:
 
 | Parameter            | Description           | Default  |
-| :-------------------- |---------------------| --------:|
+| :-------------------- |:---------------------------------------------------| --------:|
 | Filename             | The path in the file system to the Excel file containing design update data | -  |
 | URL                  | The URL of the existing collection in SynBioHub to update                   |  - |
 | Username             | Your username for the target SynBioHub server (usually your email address)    |   -    |
