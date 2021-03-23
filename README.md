@@ -1,23 +1,19 @@
-# synbio-toolkit
-Tools for interacting with SynBioHub
+# SynBio Toolkit
+A collection of tools written in Java for interacting with SynBioHub
 
-## Run the SynBioHub Docker Container Locally
+## Purpose
+The aim of this toolkit is to provide convenient solutions for streamlining common data management tasks performed by biological researchers who wish to upload their designs into an instance of [SynBioHub](https://github.com/SynBioHub/synbiohub), for example the public [synbiohub.org](https://synbiohub.org/) repository.
 
-1. Start the requisite Virtuoso DB container:
-```
-docker run --name my-virtuoso -p 8890:8890 -p 1111:1111 -e DBA_PASSWORD=dba -e SPARQL_UPDATE=true -e DEFAULT_GRAPH=http://www.example.com/my-graph -v './data/virtuoso:/data:rw' -d tenforce/virtuoso:virtuoso7.2.5
-```
-2. Start the SynBioHub container:
-```
-docker run -d --name synbiohub --link my-virtuoso:virtuoso -p 7777:7777 --entrypoint /synbiohub/entry.sh -v './data/virtuoso:/virtuoso' synbiohub/synbiohub:1.6.0-standalone
-```
+## Features
 
-### Configure SynBioHub
+### SBOL Generator
+The first component of the toolkit is a library containing utility methods for generating SBOL documents and [ComponentDefinition](https://dissys.github.io/sbol-owl/sbol-owl.html#ComponentDefinition) entities from pre-defined SBOL templates. It also provides methods for updating [SequenceAnnotation](https://dissys.github.io/sbol-owl/sbol-owl.html#SequenceAnnotation) elements within existing component definitions. Another principal function that the library provides is to 'flatten' the parent-child hierarchy of component definitions and their child sequences into one top-level component definition, which enables full visibility of all elements in the design on the SynBioHub visualisation web UI.
 
-1. After the Docker container has started, visit http://localhost:7777/ in a browser
-2. In the setup form, change the Virtuoso config fields as follows (these correspond to the volumes we mounted in the Virtuoso Docker run command above):
-  * virtuoso.ini = /data/virtuoso.ini
-  * virtuoso data = /data
+### Excel to SBOL Transformer
+Many biological researchers rely on MS Excel to 
+
+### SynBioHub CLI Client
+
 
 ## Building the CLI Application
 
