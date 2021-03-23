@@ -49,6 +49,13 @@
             <version>2.4.0</version>
             <classifier>withDependencies</classifier>
         </dependency>
+
+        <!-- Mime Type Detection -->
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+            <version>1.18</version>
+        </dependency>
     </dependencies>
 
     <build>
