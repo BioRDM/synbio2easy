@@ -1,15 +1,15 @@
 # SynBio Toolkit
-A collection of tools written in Java for interacting with SynBioHub
+A collection of biologist-friendly tools for interacting with SBOL and SynBioHub
 
 ## Purpose
-The aim of this toolkit is to provide convenient solutions for streamlining common data management tasks performed by biological researchers who wish to upload their designs into an instance of [SynBioHub](https://github.com/SynBioHub/synbiohub), for example the public [synbiohub.org](https://synbiohub.org/) repository. There are two main components in the toolkit: \'SBOL Transformer\' and \'SynBioHub CLI Client\'.
+The aim of this toolkit is to provide convenient solutions for streamlining common data management tasks performed by biological researchers who work with designs libraries rather than individual sbol files. For example, it helps with multifiles upload to an instance of [SynBioHub](https://github.com/SynBioHub/synbiohub) like the public [synbiohub.org](https://synbiohub.org/) repository or permits batch metadata data update. There are two main components in the toolkit: \'SBOL Transformer\' and \'SynBioHub CLI Client\'.
 
 ## SBOL Transformer Library Features
 ### SBOL Generation
 The first component of the toolkit is a library containing utility methods for generating SBOL documents and [ComponentDefinition](https://dissys.github.io/sbol-owl/sbol-owl.html#ComponentDefinition) entities from pre-defined SBOL templates. It also provides methods for updating [SequenceAnnotation](https://dissys.github.io/sbol-owl/sbol-owl.html#SequenceAnnotation) elements within existing component definitions. Another principal function that the library provides is to \'flatten\' the parent-child hierarchy of component definitions and their child sequences into one top-level component definition, which enables full visibility of all elements in the design on the SynBioHub visualisation web UI.
 
-### Excel to SBOL Conversion
-Many biological researchers rely on MS Excel spreadsheets to store their experimental data. Another feature of the library is the ability to convert xslx files into SBOL documents. Utility reader methods are offered that transform each row in a specified spreadsheet into a new SBOL component definition corresponding to the template structure defined previously. The current implementations of this transformer interface are specific to the data format and plasmid designs appropriate for a particular lab in the authors' research centre, but the option to extend these functions for other use cases will be available.
+### SBOL Annotation
+Many biological researchers rely on MS Excel spreadsheets to store their experimental data. Another feature of the library is the ability to convert descriptions in xslx files into annotations inside SBOL documents. The current implementations of this transformer interface are specific to the data format and plasmid designs appropriate for a particular lab in the authors' research centre, but the option to extend these functions for other use cases will be available.
 
 ## SynBioHub CLI Client
 Depositing multiple data files into a repository can be very tedious, repetitive and is a poor use of time for researchers. The SynBioHub CLI Client minimises obstacles to FAIR biological research data management by providing a command line tool that can be used to easily upload any number of SBOL files, metadata and attachments into a SynBioHub instance. Metadata and attachments for existing designs in SynBioHub can also be edited in batch processing using the client. The client interacts with the [SynBioHub API](https://wiki.synbiohub.org/api-docs) to perform these functions. The program is run as an [executable JAR](https://docs.spring.io/spring-boot/docs/2.4.4/reference/html/using-spring-boot.html#using-boot-running-as-a-packaged-application).
