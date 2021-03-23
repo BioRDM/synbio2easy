@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -53,6 +54,8 @@ public class SynBioHandler {
     private static String SBOL_DISP_ID_TYPE;
 
     private static final JsonParser JSON_PARSER = JsonParserFactory.getJsonParser();
+
+    private static final Pattern COLL_URL_VERSION_PATTERN = Pattern.compile(".*/[0-9]+.{0,1}[0-9]*.{0,1}[0-9]*");
 
     @Autowired
     public SynBioHandler(SynBioClient client) {
@@ -355,5 +358,50 @@ public class SynBioHandler {
         updatedDesigns.forEach((key, value) -> {
             System.out.printf("DisplayId: %s in collection %s%n", key, value);
         });
+    }
+
+    protected String verifyCollectionUrlVersion(CommandOptions parameters)
+            throws UnsupportedEncodingException, URISyntaxException {
+        String verCollUrl = parameters.url;
+
+        boolean hasVersion = COLL_URL_VERSION_PATTERN.matcher(verCollUrl).matches();
+
+        if(hasVersion == false) {
+            // retrieve the latest version as the default if none provided in URL
+            String requestParams = "/persistentIdentity=" +
+                    URLEncoder.encode("<"+verCollUrl+">", StandardCharsets.UTF_8.name()) +
+                    "&";
+
+            String metadata = client.searchMetadata(client.hubFromUrl(verCollUrl), requestParams, parameters.sessionToken);
+            List<Object> collList = JSON_PARSER.parseList(metadata);
+
+            if(collList == null || collList.isEmpty()) {
+                String userMessage = "No collection found with persistent ID {}";
+                logger.info(userMessage, verCollUrl);
+
+                // replace with UI logger
+                System.out.printf("No collection found with persistent ID {}%n", verCollUrl);
+                return null;
+            }
+
+            //Object collUrl = collList.get(0);
+            double maxVersion = 0;
+
+            // Find the latest version and return that URL
+            for(Object collObj: collList) {
+                if (collObj instanceof Map) {
+                    Map collObjMap = (Map) collObj;
+                    if(collObjMap.containsKey("version") && collObjMap.containsKey("uri")) {
+                        double version = Double.parseDouble((String)collObjMap.get("version"));
+                        if (version > maxVersion) {
+                            maxVersion = version;
+                            verCollUrl = (String)collObjMap.get("uri");
+                        }
+                    }
+                }
+            }
+        }
+
+        return verCollUrl;
     }
 }
