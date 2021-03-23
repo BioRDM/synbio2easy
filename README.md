@@ -58,14 +58,7 @@ The CLI client requires certain parameters to be specified at runtime, and will 
 ## Development
 ### Spring Boot
 The CLI Client is a Spring Boot application. Entry to the program is through the [ApplicationRunner](https://docs.spring.io/spring-boot/docs/2.4.4/api/org/springframework/boot/ApplicationRunner.html) interface.
+
 ### Building the CLI Application
-
-In NetBeans, right-click on the project in the Projects explorer window, and select 'Set Configuration' -> 'cli' from the context menu.
-
-### Launching the CLI Application
-
-```
-java -jar target/sbol-toolkit-web-1.0.0-SNAPSHOT.war --collection-url=http://localhost:7777/user/Johnny/a_random_id/a_random_id_collection/1 --username=<email> password=<password> --dir-path=D:\temp\sbol\codA_Km_0081_slr1130.xml --file-ext-filter=xml --overwrite=true
-```
-To see the CLI help command run `java -jar target/sbol-toolkit-web-1.0.0-SNAPSHOT.war --help`.
+In NetBeans, right-click on the project in the Projects explorer window, and select \'Run Maven\' -> \'Bundle\'
 
