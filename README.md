@@ -39,6 +39,20 @@ To deposit data into SynBioHub, the user must specify the file path to the direc
 
 
 ### Data Updates
+To update existing data in SynBioHub, the user must specify the file path to an Excel file that contains data organised into four columns as follows:
+
+| display_id            | attachment_filename           | description  | notes  |
+| :-------------------- |---------------------| --------|--------|
+| The sbol2:displayID of the design to update          | File path to an attachment file           | String content to append to the existing description  | String content to append to the existing notes  |
+
+The CLI client requires certain parameters to be specified at runtime, and will prompt the user for the following inputs:
+
+| Parameter            | Description           | Default  |
+| :-------------------- |---------------------| --------:|
+| Filename             | The path in the file system to the Excel file containing design update data | -  |
+| URL                  | The URL of the existing collection in SynBioHub to update                   |  - |
+| Username             | Your username for the target SynBioHub server (usually your email address)    |   -    |
+| Password             | The password for your user on the target SynBioHub server                     |   -    |
 
 
 ## Development
