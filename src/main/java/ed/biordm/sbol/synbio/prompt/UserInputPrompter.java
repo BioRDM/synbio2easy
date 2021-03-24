@@ -95,8 +95,8 @@ public class UserInputPrompter {
         console.printf("... depositing designs into SynBioHub%n");
 
         if (options.dir == null) {
-            console.printf("Please enter the directory path to upload? [default is current directory]%n");
-            options.dir = console.readLine("Directory path: ");
+            console.printf("Please enter the directory path to upload%n");
+            options.dir = console.readLine("Directory path [<ENTER> for current directory]: ");
 
             if (!validateDirPath(options.dir)) {
                 if(options.dir.isEmpty()) {
@@ -110,8 +110,8 @@ public class UserInputPrompter {
         }
 
         if (options.fileExtFilter == null) {
-            console.printf("Which file extensions to upload? [default is '.*', all]%n");
-            options.fileExtFilter = console.readLine("File extension: ");
+            console.printf("Which type of file extensions do you wish to upload?%n");
+            options.fileExtFilter = console.readLine("File extension [<ENTER> for any (.*)]: ");
 
             if (!validateString(FILE_EXT_PATTERN, options.fileExtFilter)) {
                 if(options.fileExtFilter.isEmpty()) {
@@ -185,7 +185,7 @@ public class UserInputPrompter {
 
             if (options.url == null) {
                 console.printf("Please enter the URL of the SynBioHub server%n");
-                options.url = console.readLine("URL: ");
+                options.url = console.readLine("URL [<ENTER> for https://synbiohub.org]: ");
                 options.url = sanitizeUrl(options.url);
             } else {
                 console.printf("SynBioHub URL: %s", options.url);
@@ -201,13 +201,13 @@ public class UserInputPrompter {
 
         if (options.version == null) {
             console.printf("Please enter the version number%n");
-            options.version = console.readLine("Version: ");
+            options.version = console.readLine("Version [<ENTER> for 1.0]: ");
         } else {
             console.printf("Version: %s", options.version);
         }
 
         if (options.overwrite == false) {
-            console.printf("Do you wish to overwrite designs if they exist? [default is merge and prevent if submission exists]%n");
+            console.printf("Do you wish to overwrite designs if they exist?%n");
             String overwriteAns = console.readLine("Y | N: ").strip();
 
             while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
