@@ -186,6 +186,7 @@ public class UserInputPrompter {
             if (options.url == null) {
                 console.printf("Please enter the URL of the SynBioHub server%n");
                 options.url = console.readLine("URL: ");
+                options.url = sanitizeUrl(options.url);
             } else {
                 console.printf("SynBioHub URL: %s", options.url);
             }
@@ -302,6 +303,15 @@ public class UserInputPrompter {
 
     boolean validateString(Pattern pattern, String str) {
         return pattern.matcher(str).matches();
+    }
+
+    String sanitizeUrl(String url) {
+        String sanitizedUrl = url;
+        if(!url.endsWith("/")) {
+            sanitizedUrl = url.concat("/");
+        }
+
+        return sanitizedUrl;
     }
 
     boolean isSubFolders(String dirPath) {
