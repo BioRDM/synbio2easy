@@ -240,7 +240,10 @@ public class SynBioHandler {
         FeaturesReader featuresReader = new FeaturesReader();
         String url = client.hubFromUrl(parameters.url);
 
-        final String collUrl = URLEncoder.encode("<"+parameters.url+">", StandardCharsets.UTF_8.name());
+        // ensure collection URL specifies version
+        String verCollUrl = verifyCollectionUrlVersion(parameters);
+
+        final String collUrl = URLEncoder.encode("<"+verCollUrl+">", StandardCharsets.UTF_8.name());
 
         String filename = parameters.xslFile;
         File file = new File(filename);
