@@ -170,7 +170,7 @@ public class UserInputPrompter {
             } else {
                 if (options.collectionName == null) {
                     console.printf("Please enter a prefix for the new collections%n");
-                    options.collectionName = console.readLine("Prefix: ");
+                    options.collectionName = console.readLine("Prefix [<ENTER> for no prefix]: ");
                 } else {
                     console.printf("New collection prefix: %s", options.collectionName);
                 }  
