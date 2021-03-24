@@ -136,16 +136,9 @@ public class UserInputPrompter {
                 }
 
                 if (Y_PATTERN.matcher(multipleAns).matches()) {
-                    console.printf("Do you want to submit each sub-folder as a new collection?%n");
-                    String subFolderColls = console.readLine("Y | N: ").strip();
-
-                    while(!Y_N_PATTERN.matcher(multipleAns).matches()) {
-                        subFolderColls = console.readLine("Y | N: ").strip();
-                    }
-
-                    if(Y_PATTERN.matcher(subFolderColls).matches()) {
-                        options.multipleCollections = true;
-                    }
+                    // set this automatically since we must create new collections for multiple collections
+                    options.crateNew = true;
+                    console.printf("Each sub-folder in the selected directory will be uploaded to SynBioHub as a separate collection%n");
                 } else {
                     console.printf("Only the files in the top level directory (no sub-directories) will be submitted to SynBioHub%n");
                 }
