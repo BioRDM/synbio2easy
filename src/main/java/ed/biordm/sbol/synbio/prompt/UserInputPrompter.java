@@ -29,7 +29,8 @@ public class UserInputPrompter {
 
     final Console console;
 
-    private static final Pattern Y_N_PATTERN = Pattern.compile("[Y|N]{1}");
+    private static final Pattern Y_N_PATTERN = Pattern.compile("^(Y|y|Yes|yes|N|n|No|no){1}$");
+    private static final Pattern Y_PATTERN = Pattern.compile("^(Y|y|Yes|yes){1}$");
     private static final Pattern FILE_EXT_PATTERN = Pattern.compile("\\.([a-zA-Z0-9]{1,6})|\\.(\\*{1})");
 
     public UserInputPrompter() {
@@ -134,7 +135,7 @@ public class UserInputPrompter {
                     multipleAns = console.readLine("Y | N: ").strip();
                 }
 
-                if (multipleAns.equals("Y")) {
+                if (Y_PATTERN.matcher(multipleAns).matches()) {
                     console.printf("Do you want to submit each sub-folder as a new collection?%n");
                     String subFolderColls = console.readLine("Y | N: ").strip();
 
@@ -142,7 +143,7 @@ public class UserInputPrompter {
                         subFolderColls = console.readLine("Y | N: ").strip();
                     }
 
-                    if(subFolderColls.equals("Y")) {
+                    if(Y_PATTERN.matcher(subFolderColls).matches()) {
                         options.multipleCollections = true;
                     }
                 } else {
@@ -158,7 +159,7 @@ public class UserInputPrompter {
                 createNewAns = console.readLine("Y | N: ").strip();
             }
 
-            if (createNewAns.equals("Y")) {
+            if (Y_PATTERN.matcher(createNewAns).matches()) {
                 options.crateNew = true;
             } else {
 
@@ -212,7 +213,7 @@ public class UserInputPrompter {
                 overwriteAns = console.readLine("Y | N: ").strip();
             }
 
-            if (overwriteAns.equals("Y")) {
+            if (Y_PATTERN.matcher(overwriteAns).matches()) {
                 options.overwrite = true;
             }
         } else {
