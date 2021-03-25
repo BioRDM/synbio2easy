@@ -29,7 +29,8 @@ public class UserInputPrompter {
 
     final Console console;
 
-    private static final Pattern Y_N_PATTERN = Pattern.compile("[Y|N]{1}");
+    private static final Pattern Y_N_PATTERN = Pattern.compile("^(Y|y|Yes|yes|N|n|No|no){1}$");
+    private static final Pattern Y_PATTERN = Pattern.compile("^(Y|y|Yes|yes){1}$");
     private static final Pattern FILE_EXT_PATTERN = Pattern.compile("\\.([a-zA-Z0-9]{1,6})|\\.(\\*{1})");
 
     public UserInputPrompter() {
@@ -94,8 +95,8 @@ public class UserInputPrompter {
         console.printf("... depositing designs into SynBioHub%n");
 
         if (options.dir == null) {
-            console.printf("Please enter the directory path to upload? [default is current directory]%n");
-            options.dir = console.readLine("Directory path: ");
+            console.printf("Please enter the directory path to upload%n");
+            options.dir = console.readLine("Directory path [<ENTER> for current directory]: ");
 
             if (!validateDirPath(options.dir)) {
                 if(options.dir.isEmpty()) {
@@ -109,8 +110,8 @@ public class UserInputPrompter {
         }
 
         if (options.fileExtFilter == null) {
-            console.printf("Which file extensions to upload? [default is '.*', all]%n");
-            options.fileExtFilter = console.readLine("File extension: ");
+            console.printf("Which type of file extensions do you wish to upload?%n");
+            options.fileExtFilter = console.readLine("File extension [<ENTER> for any (.*)]: ");
 
             if (!validateString(FILE_EXT_PATTERN, options.fileExtFilter)) {
                 if(options.fileExtFilter.isEmpty()) {
@@ -134,17 +135,10 @@ public class UserInputPrompter {
                     multipleAns = console.readLine("Y | N: ").strip();
                 }
 
-                if (multipleAns.equals("Y")) {
-                    console.printf("Do you want to submit each sub-folder as a new collection?%n");
-                    String subFolderColls = console.readLine("Y | N: ").strip();
-
-                    while(!Y_N_PATTERN.matcher(multipleAns).matches()) {
-                        subFolderColls = console.readLine("Y | N: ").strip();
-                    }
-
-                    if(subFolderColls.equals("Y")) {
-                        options.multipleCollections = true;
-                    }
+                if (Y_PATTERN.matcher(multipleAns).matches()) {
+                    // set this automatically since we must create new collections for multiple collections
+                    options.crateNew = true;
+                    console.printf("Each sub-folder in the selected directory will be uploaded to SynBioHub as a separate collection%n");
                 } else {
                     console.printf("Only the files in the top level directory (no sub-directories) will be submitted to SynBioHub%n");
                 }
@@ -158,7 +152,7 @@ public class UserInputPrompter {
                 createNewAns = console.readLine("Y | N: ").strip();
             }
 
-            if (createNewAns.equals("Y")) {
+            if (Y_PATTERN.matcher(createNewAns).matches()) {
                 options.crateNew = true;
             } else {
 
@@ -176,7 +170,7 @@ public class UserInputPrompter {
             } else {
                 if (options.collectionName == null) {
                     console.printf("Please enter a prefix for the new collections%n");
-                    options.collectionName = console.readLine("Prefix: ");
+                    options.collectionName = console.readLine("Prefix [<ENTER> for no prefix]: ");
                 } else {
                     console.printf("New collection prefix: %s", options.collectionName);
                 }  
@@ -184,7 +178,8 @@ public class UserInputPrompter {
 
             if (options.url == null) {
                 console.printf("Please enter the URL of the SynBioHub server%n");
-                options.url = console.readLine("URL: ");
+                options.url = console.readLine("URL [<ENTER> for https://synbiohub.org]: ");
+                options.url = sanitizeUrl(options.url);
             } else {
                 console.printf("SynBioHub URL: %s", options.url);
             }
@@ -198,21 +193,23 @@ public class UserInputPrompter {
         }
 
         if (options.version == null) {
-            console.printf("Please enter the version number%n");
-            options.version = console.readLine("Version: ");
+            if (options.crateNew == true) {
+                console.printf("Please enter the version number%n");
+                options.version = console.readLine("Version [<ENTER> for 1.0]: ");
+            }
         } else {
             console.printf("Version: %s", options.version);
         }
 
         if (options.overwrite == false) {
-            console.printf("Do you wish to overwrite designs if they exist? [default is merge and prevent if submission exists]%n");
+            console.printf("Do you wish to overwrite designs if they exist?%n");
             String overwriteAns = console.readLine("Y | N: ").strip();
 
             while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
                 overwriteAns = console.readLine("Y | N: ").strip();
             }
 
-            if (overwriteAns.equals("Y")) {
+            if (Y_PATTERN.matcher(overwriteAns).matches()) {
                 options.overwrite = true;
             }
         } else {
@@ -301,6 +298,15 @@ public class UserInputPrompter {
 
     boolean validateString(Pattern pattern, String str) {
         return pattern.matcher(str).matches();
+    }
+
+    String sanitizeUrl(String url) {
+        String sanitizedUrl = url;
+        if(!url.endsWith("/")) {
+            sanitizedUrl = url.concat("/");
+        }
+
+        return sanitizedUrl;
     }
 
     boolean isSubFolders(String dirPath) {

@@ -11,16 +11,19 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -55,7 +58,7 @@ public class SynBioHandler {
 
     private static final JsonParser JSON_PARSER = JsonParserFactory.getJsonParser();
 
-    private static final Pattern COLL_URL_VERSION_PATTERN = Pattern.compile(".*/[0-9]+.{0,1}[0-9]*.{0,1}[0-9]*");
+    private static final Pattern COLL_URL_VERSION_PATTERN = Pattern.compile(".*/[0-9]+.*");
 
     @Autowired
     public SynBioHandler(SynBioClient client) {
@@ -240,12 +243,17 @@ public class SynBioHandler {
         FeaturesReader featuresReader = new FeaturesReader();
         String url = client.hubFromUrl(parameters.url);
 
-        final String collUrl = URLEncoder.encode("<"+parameters.url+">", StandardCharsets.UTF_8.name());
+        // ensure collection URL specifies version
+        String verCollUrl = verifyCollectionUrlVersion(parameters);
+
+        final String collUrl = URLEncoder.encode("<"+verCollUrl+">", StandardCharsets.UTF_8.name());
 
         String filename = parameters.xslFile;
         File file = new File(filename);
         String cwd = file.getParent();
         Map<String, String> updatedDesigns = new LinkedHashMap();
+
+        System.out.println("");
 
         try (Workbook workbook = WorkbookFactory.create(file, null, true)) {
             Sheet sheet = workbook.getSheetAt(0);
@@ -296,12 +304,17 @@ public class SynBioHandler {
         List<Object> designList = JSON_PARSER.parseList(metadata);
 
         if(designList == null || designList.isEmpty()) {
-            String userMessage = "No design found with displayId {} in collection {}";
-            logger.info(userMessage, displayId, collUrl);
+            try {
+                String decCollUrl = URLDecoder.decode(collUrl, StandardCharsets.UTF_8.name());
+                String userMessage = "No design found with displayId {} in collection {}";
+                logger.info(userMessage, displayId, decCollUrl);
 
-            // replace with UI logger
-            System.out.printf("No design found with displayId %s in collection %s%n", displayId, collUrl);
-            return;
+                // replace with UI logger
+                System.out.printf("No design found with displayId %s in collection %s%n", displayId, decCollUrl);
+                return;
+            } catch (UnsupportedEncodingException e) {
+                logger.error(e.getMessage(), e);
+            }
         }
 
         Object design = designList.get(0);
@@ -353,11 +366,20 @@ public class SynBioHandler {
 
     protected void outputDesigns(Map<String, String> updatedDesigns) {
         // replace this with UI logger
-        System.out.println("Successfully updated the following designs");
+        System.out.println("");
+        System.out.println("Successfully updated the following designs...");
+        System.out.println("");
 
         updatedDesigns.forEach((key, value) -> {
-            System.out.printf("DisplayId: %s in collection %s%n", key, value);
+            try {
+                String decVal = URLDecoder.decode(value, StandardCharsets.UTF_8.name());
+                System.out.printf("DisplayId: %s in collection %s%n", key, decVal);
+            } catch (UnsupportedEncodingException e) {
+                logger.error(e.getMessage(), e);
+            }
         });
+
+        System.out.println("");
     }
 
     protected String verifyCollectionUrlVersion(CommandOptions parameters)
@@ -385,16 +407,22 @@ public class SynBioHandler {
             }
 
             //Object collUrl = collList.get(0);
-            double maxVersion = 0;
+            List<String> versions = new ArrayList();
+            String maxVersion = "";
 
             // Find the latest version and return that URL
             for(Object collObj: collList) {
                 if (collObj instanceof Map) {
                     Map collObjMap = (Map) collObj;
                     if(collObjMap.containsKey("version") && collObjMap.containsKey("uri")) {
-                        double version = Double.parseDouble((String)collObjMap.get("version"));
-                        if (version > maxVersion) {
-                            maxVersion = version;
+                        String curVersion = (String)collObjMap.get("version");
+                        versions.add(curVersion);
+
+                        // Sort the versions and take the first one
+                        versions.sort(NaturalOrderComparators.createNaturalOrderRegexComparator());
+                        String curMaxVersion = versions.get(0);
+
+                        if(!curMaxVersion.equals(maxVersion)) {
                             verCollUrl = (String)collObjMap.get("uri");
                         }
                     }
