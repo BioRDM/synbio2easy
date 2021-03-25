@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -21,6 +22,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -250,6 +253,8 @@ public class SynBioHandler {
         String cwd = file.getParent();
         Map<String, String> updatedDesigns = new LinkedHashMap();
 
+        System.out.println("");
+
         try (Workbook workbook = WorkbookFactory.create(file, null, true)) {
             Sheet sheet = workbook.getSheetAt(0);
 
@@ -299,12 +304,17 @@ public class SynBioHandler {
         List<Object> designList = JSON_PARSER.parseList(metadata);
 
         if(designList == null || designList.isEmpty()) {
-            String userMessage = "No design found with displayId {} in collection {}";
-            logger.info(userMessage, displayId, collUrl);
+            try {
+                String decCollUrl = URLDecoder.decode(collUrl, StandardCharsets.UTF_8.name());
+                String userMessage = "No design found with displayId {} in collection {}";
+                logger.info(userMessage, displayId, decCollUrl);
 
-            // replace with UI logger
-            System.out.printf("No design found with displayId %s in collection %s%n", displayId, collUrl);
-            return;
+                // replace with UI logger
+                System.out.printf("No design found with displayId %s in collection %s%n", displayId, decCollUrl);
+                return;
+            } catch (UnsupportedEncodingException e) {
+                logger.error(e.getMessage(), e);
+            }
         }
 
         Object design = designList.get(0);
@@ -356,11 +366,20 @@ public class SynBioHandler {
 
     protected void outputDesigns(Map<String, String> updatedDesigns) {
         // replace this with UI logger
-        System.out.println("Successfully updated the following designs");
+        System.out.println("");
+        System.out.println("Successfully updated the following designs...");
+        System.out.println("");
 
         updatedDesigns.forEach((key, value) -> {
-            System.out.printf("DisplayId: %s in collection %s%n", key, value);
+            try {
+                String decVal = URLDecoder.decode(value, StandardCharsets.UTF_8.name());
+                System.out.printf("DisplayId: %s in collection %s%n", key, decVal);
+            } catch (UnsupportedEncodingException e) {
+                logger.error(e.getMessage(), e);
+            }
         });
+
+        System.out.println("");
     }
 
     protected String verifyCollectionUrlVersion(CommandOptions parameters)
