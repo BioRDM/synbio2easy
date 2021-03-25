@@ -196,6 +196,10 @@ public class UserInputPrompter {
             if (options.crateNew == true) {
                 console.printf("Please enter the version number%n");
                 options.version = console.readLine("Version [<ENTER> for 1.0]: ");
+
+                if (options.version == null || options.version.trim().isEmpty()) {
+                    options.version = "1.0";
+                }
             }
         } else {
             console.printf("Version: %s", options.version);
