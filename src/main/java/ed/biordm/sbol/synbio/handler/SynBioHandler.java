@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +55,7 @@ public class SynBioHandler {
 
     private static final JsonParser JSON_PARSER = JsonParserFactory.getJsonParser();
 
-    private static final Pattern COLL_URL_VERSION_PATTERN = Pattern.compile(".*/[0-9]+.{0,1}[0-9]*.{0,1}[0-9]*");
+    private static final Pattern COLL_URL_VERSION_PATTERN = Pattern.compile(".*/[0-9]+.*");
 
     @Autowired
     public SynBioHandler(SynBioClient client) {
@@ -388,16 +388,22 @@ public class SynBioHandler {
             }
 
             //Object collUrl = collList.get(0);
-            double maxVersion = 0;
+            List<String> versions = new ArrayList();
+            String maxVersion = "";
 
             // Find the latest version and return that URL
             for(Object collObj: collList) {
                 if (collObj instanceof Map) {
                     Map collObjMap = (Map) collObj;
                     if(collObjMap.containsKey("version") && collObjMap.containsKey("uri")) {
-                        double version = Double.parseDouble((String)collObjMap.get("version"));
-                        if (version > maxVersion) {
-                            maxVersion = version;
+                        String curVersion = (String)collObjMap.get("version");
+                        versions.add(curVersion);
+
+                        // Sort the versions and take the first one
+                        versions.sort(NaturalOrderComparators.createNaturalOrderRegexComparator());
+                        String curMaxVersion = versions.get(0);
+
+                        if(!curMaxVersion.equals(maxVersion)) {
                             verCollUrl = (String)collObjMap.get("uri");
                         }
                     }
