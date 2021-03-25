@@ -289,6 +289,11 @@ public class SynBioClientIntTest {
 
         String designUri = "http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km/1.0.0/";
         String designXml = client.getDesign(token, designUri);
+        assertTrue(designXml.contains("<sbol:persistentIdentity rdf:resource=\"http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km/backbone\"/>"));
+
+        designUri = "http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km";
+        designXml = client.getDesign(token, designUri);
+        assertTrue(designXml.contains("<sbol:persistentIdentity rdf:resource=\"http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km\"/>"));
 
         // SBOL method - doesn't work cos the notes/description are sbh namespace
         /*InputStream is = new ByteArrayInputStream(designXml.getBytes(StandardCharsets.UTF_8));
