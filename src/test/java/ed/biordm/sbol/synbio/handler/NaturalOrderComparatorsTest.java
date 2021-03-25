@@ -80,4 +80,16 @@ public class NaturalOrderComparatorsTest {
         assertEquals(expected, testStrings);
     }
 
+    @Test
+    public void givenAlphaBetaVersionsAndDoubles_whenSortedByRegex_checkSortingCorrect() {
+
+        List<String> testStrings = Arrays.asList("1.0-beta", "1.0-alpha");
+
+        testStrings.sort(NaturalOrderComparators.createNaturalOrderRegexComparator());
+
+        List<String> expected = Arrays.asList("1.0-alpha", "1.0-beta");
+
+        assertEquals(expected, testStrings);
+
+    }
 }

@@ -15,6 +15,8 @@ public final class NaturalOrderComparators {
 
     private static final String DIGIT_AND_DECIMAL_REGEX = "[^\\d.]";
 
+    private static final String ALPHA_CHARS_REGEX = "[^a-zA-Z]";
+
     private NaturalOrderComparators() {
         throw new AssertionError("Let's keep this static");
     }
@@ -26,6 +28,8 @@ public final class NaturalOrderComparators {
     private static double parseStringToNumber(String input){
 
         final String digitsOnly = input.replaceAll(DIGIT_AND_DECIMAL_REGEX, "");
+
+        final String alphaCharsOnly = input.replaceAll(ALPHA_CHARS_REGEX, "");
 
         if("".equals(digitsOnly)) return 0;
 

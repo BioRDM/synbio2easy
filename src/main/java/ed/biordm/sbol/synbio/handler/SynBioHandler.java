@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -408,7 +409,7 @@ public class SynBioHandler {
 
             //Object collUrl = collList.get(0);
             List<String> versions = new ArrayList();
-            String maxVersion = "";
+            ComparableVersion maxCmpVersion = new ComparableVersion("0");
 
             // Find the latest version and return that URL
             for(Object collObj: collList) {
@@ -416,13 +417,10 @@ public class SynBioHandler {
                     Map collObjMap = (Map) collObj;
                     if(collObjMap.containsKey("version") && collObjMap.containsKey("uri")) {
                         String curVersion = (String)collObjMap.get("version");
-                        versions.add(curVersion);
+                        ComparableVersion curCmpVersion = new ComparableVersion(curVersion);
 
-                        // Sort the versions and take the first one
-                        versions.sort(NaturalOrderComparators.createNaturalOrderRegexComparator());
-                        String curMaxVersion = versions.get(0);
-
-                        if(!curMaxVersion.equals(maxVersion)) {
+                        if(curCmpVersion.compareTo(maxCmpVersion) > 0) {
+                            maxCmpVersion = curCmpVersion;
                             verCollUrl = (String)collObjMap.get("uri");
                         }
                     }
