@@ -294,7 +294,7 @@ public class SynBioHandlerIntTest {
 
         String verCollUrl = handler.verifyCollectionUrlVersion(parameters);
 
-        assertEquals(collPidUrl.concat("/1"), verCollUrl);
+        assertEquals(collPidUrl.concat("/1.1-alpha"), verCollUrl);
     }
 
     @Test
