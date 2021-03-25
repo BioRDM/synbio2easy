@@ -7,7 +7,11 @@ package ed.biordm.sbol.synbio.handler;
 
 import ed.biordm.sbol.synbio.dom.Command;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
@@ -19,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.client.HttpClientErrorException;
 
 /**
  *
@@ -292,5 +295,86 @@ public class SynBioHandlerIntTest {
         String verCollUrl = handler.verifyCollectionUrlVersion(parameters);
 
         assertEquals(collPidUrl.concat("/1"), verCollUrl);
+    }
+
+    @Test
+    public void testUploadDifferentVersions() throws URISyntaxException, UnsupportedEncodingException {
+        CommandOptions parameters = new CommandOptions(Command.ATTACH_SEQUENCE);
+
+        String collPidUrl = "http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection";
+        parameters.url = collPidUrl;
+        parameters.user = synBioUser;
+        parameters.password = synBioPassword;
+
+        String token = handler.login(parameters);
+        System.out.println(token);
+        assertNotNull(token);
+
+        parameters.sessionToken = token;
+
+        String verCollUrl = handler.verifyCollectionUrlVersion(parameters);
+
+        assertEquals(collPidUrl.concat("/1"), verCollUrl);
+        
+        File file = new File(getClass().getResource("cyano_sl1099.xml").getFile());
+        parameters.crateNew = false;
+        parameters.fileExtFilter = ".xml";
+        parameters.dir = file.getParent();
+        parameters.overwrite = true;
+        parameters.version = "1";
+        parameters.url = verCollUrl;
+
+        // upload version 2.0.0
+        replaceStringInFile(file, "1.0.0", "2.0.0");
+        handler.depositSingleCollection(parameters);
+        
+        // upload version 1.1.0
+        replaceStringInFile(file, "2.0.0", "1.1.0");
+        handler.depositSingleCollection(parameters);
+        
+        // upload version 1.0.0
+        replaceStringInFile(file, "1.1.0", "1.0.0");
+        handler.depositSingleCollection(parameters);
+    }
+
+    private void replaceStringInFile(File file, String strToReplace, String replaceStr) {
+        String originalFilePath = file.getAbsolutePath();
+        String originalFileContent = "";
+
+        BufferedReader reader = null;
+        BufferedWriter writer = null;
+
+        try {
+            reader = new BufferedReader(new FileReader(originalFilePath));
+
+            String currentReadingLine = reader.readLine();
+
+            while (currentReadingLine != null) {
+                originalFileContent += currentReadingLine + System.lineSeparator();
+                currentReadingLine = reader.readLine();
+            }
+
+            String modifiedFileContent = originalFileContent.replaceAll(strToReplace, replaceStr);
+
+            writer = new BufferedWriter(new FileWriter(originalFilePath));
+
+            writer.write(modifiedFileContent);
+
+        } catch (IOException e) {
+            //handle exception
+        } finally {
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+
+                if (writer != null) {
+                    writer.close();
+                }
+
+            } catch (IOException e) {
+                //handle exception
+            }
+        }
     }
 }
