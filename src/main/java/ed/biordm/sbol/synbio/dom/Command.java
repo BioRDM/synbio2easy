@@ -12,6 +12,5 @@ package ed.biordm.sbol.synbio.dom;
 public enum Command {
 
     DEPOSIT,
-    ATTACH_SEQUENCE,
     UPDATE
 }
