@@ -85,7 +85,17 @@ public class UserInputPrompter {
         // Arrays.asList(Command.values()).forEach(joiner::add);
 
         console.printf("Choose from: %s%n", joiner.toString());
-        String command = console.readLine("Operation: ");
+        String command = "";
+        boolean validCmd = false;
+
+        while(validCmd == false) {
+            command = console.readLine("Operation: ");
+            for (Command cmd : Command.values()) {
+                if (cmd.name().equalsIgnoreCase(command)) {
+                    validCmd = true;
+                }
+            }
+        }
 
         return command;
     }
