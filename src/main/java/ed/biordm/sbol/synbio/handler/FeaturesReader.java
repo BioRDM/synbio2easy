@@ -107,7 +107,8 @@ public class FeaturesReader {
      * @param skipRows: the number of rows to skip, e.g. '1' for skipping header
      * @return map with id and the list of read column values
      */
-    protected Map<String, List<String>> readWorksheetRows(Sheet worksheet, int skipRows, int numCols) {
+    protected Map<String, List<String>> readWorksheetRows(Sheet worksheet,
+            int skipRows, int numCols) {
         Map<String, List<String>> rows = new HashMap<>();
 
         // https://knpcode.com/java-programs/read-excel-file-java-using-apache-poi/
@@ -155,7 +156,9 @@ public class FeaturesReader {
 
                 String cellValue = getStringValueFromCell(cell);
 
-                colNames.add(cellValue);
+                if(!cellValue.isBlank()) {
+                    colNames.add(cellValue);
+                }
             }
         }
 
