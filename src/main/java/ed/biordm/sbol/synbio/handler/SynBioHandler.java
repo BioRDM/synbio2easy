@@ -172,11 +172,14 @@ public class SynBioHandler {
         int overwriteMerge = 0; // Assume we are always overwriting
 
         if(isOverwrite) {
-            if(parameters.crateNew) {
+            // never want to accidentally overwrite files if they already exist
+            // when the user chose to create a new collection
+            overwriteMerge = 3;
+            /*if(parameters.crateNew) {
                 overwriteMerge = 1;
             } else {
                 overwriteMerge = 3;
-            }
+            }*/
         } else {
             if(parameters.crateNew) {
                 overwriteMerge = 0;
