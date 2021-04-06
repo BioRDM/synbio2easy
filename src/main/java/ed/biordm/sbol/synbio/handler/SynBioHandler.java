@@ -299,9 +299,21 @@ public class SynBioHandler {
     protected void processRow(CommandOptions parameters, String cwd, 
             String collUrl, String url, String displayId, List<String> colHeaders,
             List<String> colVals, Map<String, String> updatedDesigns) {
-        String attachFilename = colVals.get(colHeaders.indexOf(ATTACH_FILE_HEADER));
-        final String description = colVals.get(colHeaders.indexOf(DESC_HEADER));
-        final String notes = colVals.get(colHeaders.indexOf(NOTES_HEADER));
+        String attachFilename = null;
+        String description = null;
+        String notes = null;
+
+        if(colHeaders.contains(ATTACH_FILE_HEADER)) {
+            attachFilename = colVals.get(colHeaders.indexOf(ATTACH_FILE_HEADER));
+        }
+
+        if(colHeaders.contains(DESC_HEADER)) {
+            description = colVals.get(colHeaders.indexOf(DESC_HEADER));
+        }
+
+        if(colHeaders.contains(NOTES_HEADER)) {
+            notes = colVals.get(colHeaders.indexOf(NOTES_HEADER));
+        }
 
         String requestParams = "/objectType="+SBOL_OBJ_TYPE+"&collection="+collUrl+
             "&"+SBOL_DISP_ID_TYPE+"='"+displayId+"'&/?offset=0&limit=10";
@@ -330,11 +342,17 @@ public class SynBioHandler {
             Map<String,Object> map = (Map<String,Object>) design;
             String designUri = (String)map.get("uri");
 
-            attachFileToDesign(parameters, cwd, designUri, attachFilename);
+            if(attachFilename != null) {
+                attachFileToDesign(parameters, cwd, designUri, attachFilename);
+            }
 
-            updateDesignDescription(parameters, cwd, designUri, description);
+            if(description != null) {
+                updateDesignDescription(parameters, cwd, designUri, description);
+            }
 
-            updateDesignNotes(parameters, cwd, designUri, notes);
+            if(notes != null) {
+                updateDesignNotes(parameters, cwd, designUri, notes);
+            }
 
             updatedDesigns.put(displayId, collUrl);
         }
