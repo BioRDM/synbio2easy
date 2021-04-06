@@ -240,7 +240,7 @@ public class SynBioHandlerIntTest {
     public void testReadExcel() throws URISyntaxException, IOException {
         // File file = new File(getClass().getResource("update_designs_test.xlsx").getFile());
         File file = new File(getClass().getResource("update_designs_tz.xlsx").getFile());
-        CommandOptions parameters = new CommandOptions(Command.ATTACH_SEQUENCE);
+        CommandOptions parameters = new CommandOptions(Command.UPDATE);
 
         parameters.url = "http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection/1";
         parameters.user = synBioUser;
@@ -260,7 +260,7 @@ public class SynBioHandlerIntTest {
     @Test
     public void testReadExcelUnsorted() throws URISyntaxException, IOException {
         File file = new File(getClass().getResource("update_designs_test_unsorted.xlsx").getFile());
-        CommandOptions parameters = new CommandOptions(Command.ATTACH_SEQUENCE);
+        CommandOptions parameters = new CommandOptions(Command.UPDATE);
 
         parameters.url = "http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection/1";
         parameters.user = synBioUser;
@@ -279,7 +279,7 @@ public class SynBioHandlerIntTest {
 
     @Test
     public void testVerifyCollectionUrlVersion() throws URISyntaxException, UnsupportedEncodingException {
-        CommandOptions parameters = new CommandOptions(Command.ATTACH_SEQUENCE);
+        CommandOptions parameters = new CommandOptions(Command.UPDATE);
 
         String collPidUrl = "http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection";
         parameters.url = collPidUrl;
@@ -299,7 +299,7 @@ public class SynBioHandlerIntTest {
 
     @Test
     public void testUploadDifferentVersions() throws URISyntaxException, UnsupportedEncodingException {
-        CommandOptions parameters = new CommandOptions(Command.ATTACH_SEQUENCE);
+        CommandOptions parameters = new CommandOptions(Command.UPDATE);
 
         String collPidUrl = "http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection";
         parameters.url = collPidUrl;
