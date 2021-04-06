@@ -189,6 +189,10 @@ public class UserInputPrompter {
             if (options.url == null) {
                 console.printf("Please enter the URL of the SynBioHub server%n");
                 options.url = console.readLine("URL [<ENTER> for https://synbiohub.org]: ");
+
+                if (options.url.isBlank()) {
+                    options.url = "https://synbiohub.org";
+                }
                 options.url = sanitizeUrl(options.url);
             } else {
                 console.printf("SynBioHub URL: %s", options.url);
