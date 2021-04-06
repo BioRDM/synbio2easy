@@ -7,15 +7,21 @@ package ed.biordm.sbol.synbio;
 
 import ed.biordm.sbol.synbio.dom.CommandOptions;
 import ed.biordm.sbol.synbio.handler.SynBioHandler;
+import ed.biordm.sbol.synbio.prompt.InputReader;
 import ed.biordm.sbol.synbio.prompt.MissingOptionException;
+import ed.biordm.sbol.synbio.prompt.ShellHelper;
 import ed.biordm.sbol.synbio.prompt.UserInputPrompter;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import org.jline.reader.LineReader;
+import org.jline.terminal.Terminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -51,4 +57,14 @@ public class SynBioRunner implements ApplicationRunner{
         } 
     }
 
+    @Bean
+    public ShellHelper shellHelper(@Lazy Terminal terminal) {
+            return new ShellHelper(terminal);
+    }
+    
+    @Bean
+    public InputReader inputReader(@Lazy LineReader lineReader,
+            ShellHelper shellHelper) {
+        return new InputReader(lineReader, shellHelper);
+    }
 }

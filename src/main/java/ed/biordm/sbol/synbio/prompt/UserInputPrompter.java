@@ -17,15 +17,19 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.StringJoiner;
 import java.util.regex.Pattern;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
-import org.springframework.stereotype.Component;
+import org.springframework.shell.standard.ShellComponent;
 
 /**
  *
  * @author tzielins
  */
-@Component
+@ShellComponent
 public class UserInputPrompter {
+
+    @Autowired
+    InputReader inputReader;
 
     final Console console;
 
@@ -89,7 +93,8 @@ public class UserInputPrompter {
         boolean validCmd = false;
 
         while(validCmd == false) {
-            command = console.readLine("Operation: ");
+            //command = console.readLine("Operation: ");
+            command = inputReader.prompt("Operation: ");
             for (Command cmd : Command.values()) {
                 if (cmd.name().equalsIgnoreCase(command)) {
                     validCmd = true;
