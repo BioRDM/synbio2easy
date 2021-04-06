@@ -220,15 +220,19 @@ public class UserInputPrompter {
         }
 
         if (options.overwrite == false) {
-            console.printf("Do you wish to overwrite designs if they exist?%n");
-            String overwriteAns = console.readLine("Y | N: ").strip();
+            if (options.crateNew == true) {
+                options.overwrite = false;
+            } else {
+                console.printf("Do you wish to overwrite designs if they exist?%n");
+                String overwriteAns = console.readLine("Y | N: ").strip();
 
-            while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
-                overwriteAns = console.readLine("Y | N: ").strip();
-            }
+                while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
+                    overwriteAns = console.readLine("Y | N: ").strip();
+                }
 
-            if (Y_PATTERN.matcher(overwriteAns).matches()) {
-                options.overwrite = true;
+                if (Y_PATTERN.matcher(overwriteAns).matches()) {
+                    options.overwrite = true;
+                }
             }
         } else {
             console.printf("Overwrite: %s", options.overwrite);
