@@ -8,9 +8,11 @@ package ed.biordm.sbol.synbio.prompt;
 import ed.biordm.sbol.synbio.dom.Command;
 import static ed.biordm.sbol.synbio.dom.Command.*;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
+import ed.biordm.sbol.synbio.handler.SynBioHandler;
 import java.io.Console;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,7 +21,9 @@ import java.util.StringJoiner;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.shell.standard.ShellComponent;
+import org.springframework.shell.standard.ShellMethod;
 
 /**
  *
@@ -31,6 +35,9 @@ public class UserInputPrompter {
     @Autowired
     InputReader inputReader;
 
+    @Autowired
+    SynBioHandler handler;
+
     final Console console;
 
     private static final Pattern Y_N_PATTERN = Pattern.compile("^(Y|y|Yes|yes|N|n|No|no){1}$");
@@ -39,12 +46,23 @@ public class UserInputPrompter {
 
     public UserInputPrompter() {
         this(System.console());
-
     }
 
     // for testing so that console can be mocked
     protected UserInputPrompter(Console console) {
         this.console = console;
+    }
+
+    @ShellMethod("Deposit or update data in a SynBioHub instance")
+    public void synbiohub() {
+        ApplicationArguments args = new DefaultApplicationArguments();
+        try {
+            CommandOptions command = getCommandOptions(args);             
+            handler.handle(command);
+        } catch (MissingOptionException | URISyntaxException | IOException e) {
+            System.out.println(e.getMessage());
+            System.out.println(this.getUsageTxt());
+        } 
     }
 
     public CommandOptions getCommandOptions(ApplicationArguments args) throws MissingOptionException {
@@ -111,7 +129,7 @@ public class UserInputPrompter {
 
         if (options.dir == null) {
             console.printf("Please enter the directory path to upload%n");
-            options.dir = console.readLine("Directory path [<ENTER> for current directory]: ");
+            options.dir = inputReader.prompt("Directory path [<ENTER> for current directory]: ");
 
             if (!validateDirPath(options.dir)) {
                 if(options.dir.isEmpty()) {
@@ -126,7 +144,7 @@ public class UserInputPrompter {
 
         if (options.fileExtFilter == null) {
             console.printf("Which type of file extensions do you wish to upload?%n");
-            options.fileExtFilter = console.readLine("File extension [<ENTER> for any (.*)]: ");
+            options.fileExtFilter = inputReader.prompt("File extension [<ENTER> for any (.*)]: ");
 
             if (!validateString(FILE_EXT_PATTERN, options.fileExtFilter)) {
                 if(options.fileExtFilter.isEmpty()) {
@@ -145,9 +163,9 @@ public class UserInputPrompter {
 
             if(isSubFolders) {
                 console.printf("Do you wish to create multiple collections%n");
-                String multipleAns = console.readLine("Y | N: ").strip();
+                String multipleAns = inputReader.prompt("Y | N: ").strip();
                 while(!Y_N_PATTERN.matcher(multipleAns).matches()) {
-                    multipleAns = console.readLine("Y | N: ").strip();
+                    multipleAns = inputReader.prompt("Y | N: ").strip();
                 }
 
                 if (Y_PATTERN.matcher(multipleAns).matches()) {
@@ -162,9 +180,9 @@ public class UserInputPrompter {
 
         if (options.crateNew == false) {
             console.printf("Do you wish to create a new collection?%n");
-            String createNewAns = console.readLine("Y | N: ").strip();
+            String createNewAns = inputReader.prompt("Y | N: ").strip();
             while(!Y_N_PATTERN.matcher(createNewAns).matches()) {
-                createNewAns = console.readLine("Y | N: ").strip();
+                createNewAns = inputReader.prompt("Y | N: ").strip();
             }
 
             if (Y_PATTERN.matcher(createNewAns).matches()) {
@@ -178,14 +196,14 @@ public class UserInputPrompter {
             if (options.multipleCollections == false) {
                 if (options.collectionName == null) {
                     console.printf("Please enter a name for the new collection%n");
-                    options.collectionName = console.readLine("Name: ");
+                    options.collectionName = inputReader.prompt("Name: ");
                 } else {
                     console.printf("New collection name: %s", options.collectionName);
                 }
             } else {
                 if (options.collectionName == null) {
                     console.printf("Please enter a prefix for the new collections%n");
-                    options.collectionName = console.readLine("Prefix [<ENTER> for no prefix]: ");
+                    options.collectionName = inputReader.prompt("Prefix [<ENTER> for no prefix]: ");
                 } else {
                     console.printf("New collection prefix: %s", options.collectionName);
                 }  
@@ -193,7 +211,7 @@ public class UserInputPrompter {
 
             if (options.url == null) {
                 console.printf("Please enter the URL of the SynBioHub server%n");
-                options.url = console.readLine("URL [<ENTER> for https://synbiohub.org]: ");
+                options.url = inputReader.prompt("URL [<ENTER> for https://synbiohub.org]: ");
 
                 if (options.url.isBlank()) {
                     options.url = "https://synbiohub.org";
@@ -205,7 +223,7 @@ public class UserInputPrompter {
         } else {
             if (options.url == null) {
                 console.printf("Please enter the URL for the existing collection%n");
-                options.url = console.readLine("URL: ");
+                options.url = inputReader.prompt("URL: ");
             } else {
                 console.printf("Collection URL: %s", options.url);
             }
@@ -214,7 +232,7 @@ public class UserInputPrompter {
         if (options.version == null) {
             if (options.crateNew == true) {
                 console.printf("Please enter the version number%n");
-                options.version = console.readLine("Version [<ENTER> for 1.0]: ");
+                options.version = inputReader.prompt("Version [<ENTER> for 1.0]: ");
 
                 if (options.version == null || options.version.trim().isEmpty()) {
                     options.version = "1.0";
@@ -226,10 +244,10 @@ public class UserInputPrompter {
 
         if (options.overwrite == false) {
             console.printf("Do you wish to overwrite designs if they exist?%n");
-            String overwriteAns = console.readLine("Y | N: ").strip();
+            String overwriteAns = inputReader.prompt("Y | N: ").strip();
 
             while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
-                overwriteAns = console.readLine("Y | N: ").strip();
+                overwriteAns = inputReader.prompt("Y | N: ").strip();
             }
 
             if (Y_PATTERN.matcher(overwriteAns).matches()) {
@@ -241,7 +259,7 @@ public class UserInputPrompter {
 
         if (options.user == null) {
             console.printf("Please enter your SynBioHub username%n");
-            options.user = console.readLine("Username (email): ");
+            options.user = inputReader.prompt("Username (email): ");
         } else {
             console.printf("Username: %s", options.user);
         }
@@ -261,7 +279,7 @@ public class UserInputPrompter {
 
         if (options.xslFile == null) {
             console.printf("Please enter the path to the Excel file with designs to update%n");
-            options.xslFile = console.readLine("Filename: ");
+            options.xslFile = inputReader.prompt("Filename: ");
 
             if (!validateDirPath(options.xslFile)) {
                 throw new IllegalArgumentException("Invalid Excel file path argument: "+options.xslFile);
@@ -272,21 +290,21 @@ public class UserInputPrompter {
 
         if (options.url == null) {
             console.printf("Please enter the URL for the collection to update%n");
-            options.url = console.readLine("URL: ");
+            options.url = inputReader.prompt("URL: ");
         } else {
             console.printf("Collection URL: %s", options.url);
         }
 
         if (options.user == null) {
             console.printf("Please enter your SynBioHub username%n");
-            options.user = console.readLine("Username (email): ");
+            options.user = inputReader.prompt("Username (email): ");
         } else {
             console.printf("Username: %s", options.user);
         }
 
         if (options.password == null) {
             console.printf("Please enter your SynBioHub password%n");
-            options.password = new String(console.readPassword("Password: "));
+            options.password = new String(inputReader.prompt("Password", "secret", false));
         } else {
             console.printf("Password: *****");
         }

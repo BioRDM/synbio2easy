@@ -47,14 +47,14 @@ public class SynBioRunner implements ApplicationRunner{
     @Override
     public void run(ApplicationArguments args) {
 
-        try {
+        /*try {
             CommandOptions command = prompter.getCommandOptions(args);             
             handler.handle(command);
 
         } catch (MissingOptionException | URISyntaxException | IOException e) {
             System.out.println(e.getMessage());
             System.out.println(prompter.getUsageTxt());
-        } 
+        } */
     }
 
     @Bean
