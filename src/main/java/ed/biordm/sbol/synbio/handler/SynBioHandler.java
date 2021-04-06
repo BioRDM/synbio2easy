@@ -271,8 +271,11 @@ public class SynBioHandler {
 
                 try {
                     final String displayId = colVals.get(colHeaders.indexOf(DISP_ID_HEADER));
-                    processRow(parameters, cwd, collUrl, url, displayId,
+
+                    if(!displayId.isBlank()) {
+                        processRow(parameters, cwd, collUrl, url, displayId,
                             colHeaders, colVals, updatedDesigns);
+                    }
                 } catch(Exception e) {
                     // abort the run and print out all the successful rows up to this point
                     outputDesigns(updatedDesigns);
