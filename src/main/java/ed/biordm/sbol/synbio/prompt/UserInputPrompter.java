@@ -249,6 +249,8 @@ public class UserInputPrompter {
 
                 if (Y_PATTERN.matcher(overwriteAns).matches()) {
                     options.overwrite = true;
+                } else {
+                    options.overwrite = false;
                 }
             }
         } else {
@@ -321,6 +323,9 @@ public class UserInputPrompter {
         } else {
             console.printf("Password: *****");
         }
+
+        options.crateNew = false;
+        options.overwrite = true;
 
         console.printf("%n");
 

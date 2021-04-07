@@ -109,9 +109,11 @@ public class SynBioClientTest {
     @Test
     public void depositBadUrl() {
         String token = "token";
+        int overwrite = 0;
 
         try {
-            client.deposit(token, synBioUrl.replace("/", "\\"), Paths.get("D://temp"));
+            client.deposit(token, synBioUrl.replace("/", "\\"),
+                    Paths.get("D://temp"), overwrite);
         } catch(IllegalStateException e) {
             assertTrue(e.getMessage().startsWith("Could not derive base SynBioHub server URL: Illegal character in opaque part"));
         }

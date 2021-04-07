@@ -54,8 +54,6 @@ public class SynBioClient {
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     final RestTemplateBuilder restBuilder;
-
-    final private static int OVERWRITE_MERGE = 3;
     
     public SynBioClient(RestTemplateBuilder restBuilder) {
         this.restBuilder = restBuilder;
@@ -103,7 +101,8 @@ public class SynBioClient {
     }
     
     // some other params as for API
-    public void deposit(String sessionToken, String collectionUrl, Path file) {
+    public void deposit(String sessionToken, String collectionUrl, Path file,
+            int overwriteMerge) {
         
         String url;
         try {
@@ -112,16 +111,18 @@ public class SynBioClient {
             throw reportError("Could not derive base SynBioHub server URL", e);
         }
 
-        doDeposit(url, sessionToken, collectionUrl, file);
+        doDeposit(url, sessionToken, collectionUrl, file, overwriteMerge);
     }
 
-    public void doDeposit(String url, String sessionToken, String collectionUrl, Path file) {
+    public void doDeposit(String url, String sessionToken, String collectionUrl,
+            Path file, int overwriteMerge) {
         HttpHeaders headers = authenticatedHeaders(sessionToken);
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN));
 
         //other params as needed by api
-        MultiValueMap<String, Object> body = makeDepositBody(collectionUrl, file);
+        MultiValueMap<String, Object> body = makeDepositBody(collectionUrl,
+                file, overwriteMerge);
         final HttpEntity<MultiValueMap<String, Object>> reqEntity = new HttpEntity<>(body, headers);
         
         RestTemplate template = restBuilder.build();
@@ -129,11 +130,11 @@ public class SynBioClient {
         try {
             String response = template.postForObject(url, reqEntity, String.class);
             logger.debug("Response from deposit request: "+response);
+            System.out.printf("Deposited file <%s> into collection <%s>%n%n", file.toString(), collectionUrl);
         } catch (RuntimeException e) {
-            throw reportError("Could not deposit", e);
+            System.out.printf("Failed to deposit file <%s> into collection <%s>%n%n", file.toString(), collectionUrl);
+            // throw reportError("Could not deposit", e);
         }
-
-        System.out.printf("Deposited file <%s> into collection <%s>%n%n", file.toString(), collectionUrl);
     }
 
     public String createCollection(String sessionToken, String url, 
@@ -309,7 +310,8 @@ public class SynBioClient {
         return headers;
     }
 
-    MultiValueMap<String, Object> makeDepositBody(String collectionUrl, Path file) {
+    MultiValueMap<String, Object> makeDepositBody(String collectionUrl,
+            Path file, int overwriteMerge) {
         File fromPath = file.toFile();
         Resource fileResource = new FileSystemResource(fromPath);
 
@@ -336,7 +338,7 @@ public class SynBioClient {
         final HttpEntity<Resource> partsEntity = new HttpEntity<>(fileResource, parts);
 
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
-        requestMap.add("overwrite_merge", OVERWRITE_MERGE);
+        requestMap.add("overwrite_merge", overwriteMerge);
         requestMap.add("rootCollections", collectionUrl);
         requestMap.add("file", partsEntity);
 
@@ -355,12 +357,13 @@ public class SynBioClient {
         return new IllegalStateException(msg);
     }
 
-    public void attachFile(String sessionToken, String designUri, String attachFilename) {
+    public void attachFile(String sessionToken, String designUri,
+            String attachFilename, int overwriteMerge) {
         String url = designUri + "attach";
 
         Path file = Paths.get(attachFilename);
 
-        doDeposit(url, sessionToken, designUri, file);
+        doDeposit(url, sessionToken, designUri, file, overwriteMerge);
     }
 
     public void appendToDescription(String sessionToken, String designUri, String description) {
