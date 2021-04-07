@@ -139,12 +139,13 @@ public class UserInputPrompter {
             console.printf("File extension filter: %s", options.fileExtFilter);
         }
 
+        console.printf("%n");
+
         if (options.multipleCollections == false) {
             // check for sub-folders
             boolean isSubFolders = isSubFolders(options.dir);
 
             if(isSubFolders) {
-                console.printf("%n");
                 console.printf("Do you wish to create multiple collections%n");
                 String multipleAns = console.readLine("Y | N: ").strip();
                 while(!Y_N_PATTERN.matcher(multipleAns).matches()) {
@@ -162,9 +163,8 @@ public class UserInputPrompter {
             }
         }
 
-        console.printf("%n");
-
         if (options.crateNew == false) {
+            console.printf("%n");
             console.printf("Do you wish to create a new collection?%n");
             String createNewAns = console.readLine("Y | N: ").strip();
             while(!Y_N_PATTERN.matcher(createNewAns).matches()) {
