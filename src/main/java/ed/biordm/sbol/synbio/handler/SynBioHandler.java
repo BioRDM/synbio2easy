@@ -117,8 +117,9 @@ public class SynBioHandler {
 
         List<Path> subCollections = subfolders(orgParameters.dir);
 
-        Path parentDirPath = Paths.get(orgParameters.dir);
-        processUploadDir(orgParameters, parentDirPath, prefix);
+        // no need to upload the parent directory, only the children
+        // Path parentDirPath = Paths.get(orgParameters.dir);
+        // processUploadDir(orgParameters, parentDirPath, prefix);
         for (Path col: subCollections) {
             processUploadDir(orgParameters, col, prefix);
 
