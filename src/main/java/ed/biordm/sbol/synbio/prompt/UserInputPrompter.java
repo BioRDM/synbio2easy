@@ -219,10 +219,9 @@ public class UserInputPrompter {
             }
         }
 
-        console.printf("%n");
-
         if (options.version == null) {
             if (options.crateNew == true) {
+                console.printf("%n");
                 console.printf("Please enter the version number%n");
                 options.version = console.readLine("Version [<ENTER> for 1.0]: ");
 
@@ -231,6 +230,7 @@ public class UserInputPrompter {
                 }
             }
         } else {
+            console.printf("%n");
             console.printf("Version: %s", options.version);
         }
 
@@ -280,7 +280,9 @@ public class UserInputPrompter {
     }
 
     CommandOptions promptUpdateOptions(CommandOptions options) {
+        console.printf("%n");
         console.printf("... updating existing designs in SynBioHub%n");
+        console.printf("%n");
 
         if (options.xslFile == null) {
             console.printf("Please enter the path to the Excel file with designs to update%n");
@@ -293,12 +295,16 @@ public class UserInputPrompter {
             console.printf("Excel File: %s", options.xslFile);
         }
 
+        console.printf("%n");
+
         if (options.url == null) {
             console.printf("Please enter the URL for the collection to update%n");
             options.url = console.readLine("URL: ");
         } else {
             console.printf("Collection URL: %s", options.url);
         }
+
+        console.printf("%n");
 
         if (options.user == null) {
             console.printf("Please enter your SynBioHub username%n");
@@ -307,12 +313,16 @@ public class UserInputPrompter {
             console.printf("Username: %s", options.user);
         }
 
+        console.printf("%n");
+
         if (options.password == null) {
             console.printf("Please enter your SynBioHub password%n");
             options.password = new String(console.readPassword("Password: "));
         } else {
             console.printf("Password: *****");
         }
+
+        console.printf("%n");
 
         return options;
     }
