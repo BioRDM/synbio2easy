@@ -154,7 +154,8 @@ public class SynBioHandler {
 
             // some other params as needed by the API
             // for example overwrite is needed here not only for the creation
-            client.deposit(parameters.sessionToken, collectionUrl, file);
+            client.deposit(parameters.sessionToken, collectionUrl, file,
+                    getOverwriteParam(parameters));
         }
     }
 
@@ -169,24 +170,7 @@ public class SynBioHandler {
         String citations = "";
 
         boolean isOverwrite = parameters.overwrite;
-        int overwriteMerge = 0; // Assume we are always overwriting
-
-        if(isOverwrite) {
-            // never want to accidentally overwrite files if they already exist
-            // when the user chose to create a new collection
-            overwriteMerge = 3;
-            /*if(parameters.crateNew) {
-                overwriteMerge = 1;
-            } else {
-                overwriteMerge = 3;
-            }*/
-        } else {
-            if(parameters.crateNew) {
-                overwriteMerge = 0;
-            } else {
-                overwriteMerge = 2;
-            }
-        }
+        int overwriteMerge = getOverwriteParam(parameters);
 
         logger.info("URL in parameters: {}", parameters.url);
 
@@ -370,7 +354,8 @@ public class SynBioHandler {
             }
 
             if (attachFile.exists()) {
-                client.attachFile(parameters.sessionToken, designUri+"/", attachFilename);
+                client.attachFile(parameters.sessionToken, designUri+"/",
+                        attachFilename, getOverwriteParam(parameters));
             }
         }
     }
@@ -453,5 +438,29 @@ public class SynBioHandler {
         }
 
         return verCollUrl;
+    }
+
+    protected int getOverwriteParam(CommandOptions parameters) {
+        boolean isOverwrite = parameters.overwrite;
+        int overwriteMerge = 0; // Assume we are always overwriting
+
+        if(isOverwrite) {
+            // never want to accidentally overwrite files if they already exist
+            // when the user chose to create a new collection
+            overwriteMerge = 3;
+            /*if(parameters.crateNew) {
+                overwriteMerge = 1;
+            } else {
+                overwriteMerge = 3;
+            }*/
+        } else {
+            if(parameters.crateNew) {
+                overwriteMerge = 0;
+            } else {
+                overwriteMerge = 2;
+            }
+        }
+
+        return overwriteMerge;
     }
 }

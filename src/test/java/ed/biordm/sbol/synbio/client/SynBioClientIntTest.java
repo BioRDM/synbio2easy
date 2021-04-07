@@ -91,7 +91,9 @@ public class SynBioClientIntTest {
         System.out.println(token);
         assertNotNull(token);
 
-        client.deposit(token, synBioCollUrl, sbolFilePath);
+        int overwrite = 3;
+
+        client.deposit(token, synBioCollUrl, sbolFilePath, overwrite);
     }
 
     @Test
@@ -109,9 +111,11 @@ public class SynBioClientIntTest {
         String subCollUrl = client.createCollection(token, submitUrl,
                 subCollId, "1", subCollName, subCollName, "", 3);
 
-        client.deposit(token, subCollUrl, sbolFilePath);
+        int overwrite = 3;
+
+        client.deposit(token, subCollUrl, sbolFilePath, overwrite);
         // thos one will fail without overwriting
-        client.deposit(token, subCollUrl, sbolFilePath);
+        client.deposit(token, subCollUrl, sbolFilePath, overwrite);
 
         subCollName+="2";
         subCollId+="2";
@@ -119,7 +123,7 @@ public class SynBioClientIntTest {
                 subCollId, "1", subCollName, subCollName, "", 3);        
 
         // second collection submit
-        client.deposit(token, subCollUrl, sbolFilePath);
+        client.deposit(token, subCollUrl, sbolFilePath, overwrite);
         
         // not needed
         // Create the parent collection and upload a file
@@ -153,7 +157,9 @@ public class SynBioClientIntTest {
         String subCollUrl = client.createCollection(token, submitUrl, 
                 subCollId, "1", subCollName, subCollName, "", 1);
 
-        client.deposit(token, subCollUrl, sbolFilePath);
+        int overwrite = 1;
+
+        client.deposit(token, subCollUrl, sbolFilePath, overwrite);
 
         // Create the parent collection and upload a file
         String parentCollName = "Johnny Parent Collection";
@@ -162,13 +168,13 @@ public class SynBioClientIntTest {
         String parentCollUrl = client.createCollection(token, submitUrl, 
                 parentCollId, "1", parentCollName, parentCollName, "", 1);
 
-        client.deposit(token, parentCollUrl, sbolFilePath);
+        client.deposit(token, parentCollUrl, sbolFilePath, overwrite);
 
         // now add the sub collection to the parent collection
         client.addChildCollection(token, parentCollUrl, subCollUrl);
 
         // now submit a new object to the sub-collection
-        client.deposit(token, subCollUrl, sbolFilePath);
+        client.deposit(token, subCollUrl, sbolFilePath, overwrite);
     }
 
     @Test
@@ -222,7 +228,9 @@ public class SynBioClientIntTest {
 
         String designUri = "http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km/1.0.0/";
 
-        client.attachFile(token, designUri, attachFilename);
+        int overwrite = 0;
+
+        client.attachFile(token, designUri, attachFilename, overwrite);
     }
 
     @Test
