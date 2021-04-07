@@ -155,7 +155,7 @@ public class SynBioHandler {
             // some other params as needed by the API
             // for example overwrite is needed here not only for the creation
             client.deposit(parameters.sessionToken, collectionUrl, file,
-                    getOverwriteParam(parameters));
+                    getOverwriteParam(parameters, true));
         }
     }
 
@@ -170,7 +170,7 @@ public class SynBioHandler {
         String citations = "";
 
         boolean isOverwrite = parameters.overwrite;
-        int overwriteMerge = getOverwriteParam(parameters);
+        int overwriteMerge = getOverwriteParam(parameters, false);
 
         logger.info("URL in parameters: {}", parameters.url);
 
@@ -355,7 +355,7 @@ public class SynBioHandler {
 
             if (attachFile.exists()) {
                 client.attachFile(parameters.sessionToken, designUri+"/",
-                        attachFilename, getOverwriteParam(parameters));
+                        attachFilename, getOverwriteParam(parameters, true));
             }
         }
     }
@@ -440,9 +440,9 @@ public class SynBioHandler {
         return verCollUrl;
     }
 
-    protected int getOverwriteParam(CommandOptions parameters) {
+    protected int getOverwriteParam(CommandOptions parameters, boolean isFile) {
         boolean isOverwrite = parameters.overwrite;
-        int overwriteMerge = 0; // Assume we are always overwriting
+        int overwriteMerge = 0; // Assume we prevent overwriting if exists
 
         if(isOverwrite) {
             // never want to accidentally overwrite files if they already exist
@@ -455,7 +455,11 @@ public class SynBioHandler {
             }*/
         } else {
             if(parameters.crateNew) {
-                overwriteMerge = 0;
+                if(isFile == true) {
+                    overwriteMerge = 2;
+                } else {
+                    overwriteMerge = 0;
+                }
             } else {
                 overwriteMerge = 2;
             }
