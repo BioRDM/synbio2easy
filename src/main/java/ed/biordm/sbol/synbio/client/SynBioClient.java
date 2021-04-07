@@ -193,6 +193,17 @@ public class SynBioClient {
                         newUrl = newUrl.concat(collPath);
                     }
                 }
+
+                if(newUrl.equals(this.hubFromUrl(url))) {
+                    // if the new collection URL is the same as the base server
+                    // URL, assume something went wrong and report the error
+                    String errorMsg = "No collection URL returned from the "
+                            + "SynBioHub server for the new collection.\n";
+                    errorMsg = errorMsg.concat("This is probably because you "
+                            + "chose to create a new collection with the same name "
+                            + "as one that already exists.\n");
+                    throw reportError(errorMsg, new IllegalArgumentException("Invalid collection specified"));
+                }
             }
         } catch (RuntimeException | URISyntaxException e) {
             throw reportError("Could not create new collection", e);
