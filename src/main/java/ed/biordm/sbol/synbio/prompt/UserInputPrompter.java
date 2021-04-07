@@ -76,6 +76,7 @@ public class UserInputPrompter {
 
     String promptForCommand() {
 
+        console.printf("%n");
         console.printf("What operation do you want to perform?%n");
         StringJoiner joiner = new StringJoiner(" | ", "", "");
 
@@ -102,7 +103,9 @@ public class UserInputPrompter {
 
     CommandOptions promptDepositOptions(CommandOptions options) {
 
+        console.printf("%n");
         console.printf("... depositing designs into SynBioHub%n");
+        console.printf("%n");
 
         if (options.dir == null) {
             console.printf("Please enter the directory path to upload%n");
@@ -119,6 +122,8 @@ public class UserInputPrompter {
             console.printf("Directory: %s", options.dir);
         }
 
+        console.printf("%n");
+
         if (options.fileExtFilter == null) {
             console.printf("Which type of file extensions do you wish to upload?%n");
             options.fileExtFilter = console.readLine("File extension [<ENTER> for any (.*)]: ");
@@ -133,6 +138,8 @@ public class UserInputPrompter {
         } else {
             console.printf("File extension filter: %s", options.fileExtFilter);
         }
+
+        console.printf("%n");
 
         if (options.multipleCollections == false) {
             // check for sub-folders
@@ -155,6 +162,8 @@ public class UserInputPrompter {
             }
         }
 
+        console.printf("%n");
+
         if (options.crateNew == false) {
             console.printf("Do you wish to create a new collection?%n");
             String createNewAns = console.readLine("Y | N: ").strip();
@@ -168,6 +177,8 @@ public class UserInputPrompter {
 
             }
         }
+
+        console.printf("%n");
 
         if (options.crateNew == true) {
             if (options.multipleCollections == false) {
@@ -185,6 +196,8 @@ public class UserInputPrompter {
                     console.printf("New collection prefix: %s", options.collectionName);
                 }  
             }
+
+            console.printf("%n");
 
             if (options.url == null) {
                 console.printf("Please enter the URL of the SynBioHub server%n");
@@ -206,6 +219,8 @@ public class UserInputPrompter {
             }
         }
 
+        console.printf("%n");
+
         if (options.version == null) {
             if (options.crateNew == true) {
                 console.printf("Please enter the version number%n");
@@ -223,6 +238,8 @@ public class UserInputPrompter {
             if (options.crateNew == true) {
                 options.overwrite = false;
             } else {
+                console.printf("%n");
+
                 console.printf("Do you wish to overwrite designs if they exist?%n");
                 String overwriteAns = console.readLine("Y | N: ").strip();
 
@@ -235,8 +252,11 @@ public class UserInputPrompter {
                 }
             }
         } else {
+            console.printf("%n");
             console.printf("Overwrite: %s", options.overwrite);
         }
+
+        console.printf("%n");
 
         if (options.user == null) {
             console.printf("Please enter your SynBioHub username%n");
@@ -245,12 +265,16 @@ public class UserInputPrompter {
             console.printf("Username: %s", options.user);
         }
 
+        console.printf("%n");
+
         if (options.password == null) {
             console.printf("Please enter your SynBioHub password%n");
             options.password = new String(console.readPassword("Password: "));
         } else {
             console.printf("Password: *****");
         }
+
+        console.printf("%n");
 
         return options;
     }
