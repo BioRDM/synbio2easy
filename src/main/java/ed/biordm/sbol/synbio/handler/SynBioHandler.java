@@ -329,7 +329,7 @@ public class SynBioHandler {
                 logger.info(userMessage, displayId, decCollUrl);
 
                 // replace with UI logger
-                System.out.printf("No design found with displayId %s in collection %s%n", displayId, decCollUrl);
+                System.out.printf("No design found with displayId %s in collection %s%n%n", displayId, decCollUrl);
                 return;
             } catch (UnsupportedEncodingException e) {
                 logger.error(e.getMessage(), e);
@@ -392,13 +392,13 @@ public class SynBioHandler {
     protected void outputDesigns(Map<String, String> updatedDesigns) {
         // replace this with UI logger
         System.out.println("");
-        System.out.println("Successfully updated the following designs...");
+        System.out.println("Successfully updated the following designs...\n");
         System.out.println("");
 
         updatedDesigns.forEach((key, value) -> {
             try {
                 String decVal = URLDecoder.decode(value, StandardCharsets.UTF_8.name());
-                System.out.printf("DisplayId: %s in collection %s%n", key, decVal);
+                System.out.printf("DisplayId: %s in collection %s%n%n", key, decVal);
             } catch (UnsupportedEncodingException e) {
                 logger.error(e.getMessage(), e);
             }
@@ -427,7 +427,7 @@ public class SynBioHandler {
                 logger.info(userMessage, verCollUrl);
 
                 // replace with UI logger
-                System.out.printf("No collection found with persistent ID {}%n", verCollUrl);
+                System.out.printf("No collection found with persistent ID %s%n%n", verCollUrl);
                 return null;
             }
 

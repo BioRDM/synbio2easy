@@ -9,6 +9,9 @@
                 %msg%n%throwable
             </Pattern>
         </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
     </appender>
 
 

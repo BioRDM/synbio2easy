@@ -132,6 +132,8 @@ public class SynBioClient {
         } catch (RuntimeException e) {
             throw reportError("Could not deposit", e);
         }
+
+        System.out.printf("Deposited file <%s> into collection <%s>%n%n", file.toString(), collectionUrl);
     }
 
     public String createCollection(String sessionToken, String url, 
@@ -195,7 +197,7 @@ public class SynBioClient {
             throw reportError("Could not create new collection", e);
         }
 
-        logger.info("Newly created collection URL is: {}", newUrl);
+        System.out.printf("Newly created collection URL is: %s%n%n", newUrl);
         return newUrl;
     }
 
