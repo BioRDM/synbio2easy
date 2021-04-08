@@ -77,25 +77,57 @@ public class UserInputPrompter {
     String promptForCommand() {
 
         console.printf("%n");
-        console.printf("What operation do you want to perform?%n");
-        StringJoiner joiner = new StringJoiner(" | ", "", "");
+        console.printf("Welcome to the SynBioHub Client!%n");
+        console.printf("To exit the application at any time, press <CTRL> + C%n");
 
-        for (Command cmd : Command.values()) {
-            joiner.add(String.valueOf(cmd).toLowerCase());
-        }
-        // Arrays.asList(Command.values()).forEach(joiner::add);
-
-        console.printf("Choose from: %s%n", joiner.toString());
         String command = "";
+
+        while(command.isBlank()) {
+            console.printf("%n");
+            console.printf("What operation do you want to perform?%n");
+            StringJoiner joiner = new StringJoiner(" | ", "", "");
+
+            for (Command cmd : Command.values()) {
+                joiner.add(String.valueOf(cmd).toLowerCase());
+            }
+            // Arrays.asList(Command.values()).forEach(joiner::add);
+
+            console.printf("Choose from: %s%n", joiner.toString());
+            command = chooseOperation();
+        }
+
+        return command;
+    }
+
+    String chooseOperation() {
         boolean validCmd = false;
+        Command selectedCmd = null;
+        String command = "";
 
         while(validCmd == false) {
             command = console.readLine("Operation: ");
             for (Command cmd : Command.values()) {
                 if (cmd.name().equalsIgnoreCase(command)) {
                     validCmd = true;
+                    selectedCmd = cmd;
                 }
             }
+        }
+
+        console.printf("%n");
+        console.printf(selectedCmd.getGuidanceText());
+        console.printf("%n");
+
+        console.printf("Do you wish to continue?%n");
+        String cmdAns = console.readLine("Y | N: ").strip();
+
+        while(!Y_N_PATTERN.matcher(cmdAns).matches()) {
+            cmdAns = console.readLine("Y | N: ").strip();
+        }
+
+        if (!Y_PATTERN.matcher(cmdAns).matches()) {
+            command = "";
+            console.printf("%n");
         }
 
         return command;
@@ -146,7 +178,7 @@ public class UserInputPrompter {
             boolean isSubFolders = isSubFolders(options.dir);
 
             if(isSubFolders) {
-                console.printf("Do you wish to create multiple collections%n");
+                console.printf("Do you wish to create multiple collections?%n");
                 String multipleAns = console.readLine("Y | N: ").strip();
                 while(!Y_N_PATTERN.matcher(multipleAns).matches()) {
                     multipleAns = console.readLine("Y | N: ").strip();
