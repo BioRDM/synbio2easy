@@ -4,6 +4,9 @@
 
 [Deposit 2](#deposit)
 
+[General Notes on Deposit Operation
+2](#general-notes-on-deposit-operation)
+
 [Update 2](#update)
 
 [Use Case 1 -- Deposit SBOL Files to a Single New Collection
@@ -49,6 +52,8 @@
 
 [Outputs 13](#outputs-4)
 
+[Advanced Use 14](#advanced-use)
+
 # Initial screen -- Choose Operation
 
 ![](media/image1.png){width="6.268055555555556in"
@@ -59,6 +64,13 @@ height="3.8555555555555556in"}
 This operation is for uploading SBOL files into new or existing
 collections, and updating or overwriting the objects in existing
 collections. This is the operation used in Use Cases 1-4.
+
+### General Notes on Deposit Operation
+
+-   If no files are detected in the specified directory either because
+    there are none present, or they are filtered out because of the file
+    extension filter, then a new collection will still be created for
+    Use Cases 1 and 2
 
 ## Update
 
@@ -112,7 +124,7 @@ particular types of files in the directory that they wish to deposit.
     they contain invalid SBOL
 
 ![](media/image2.png){width="6.268055555555556in"
-height="3.908333333333333in"}
+height="4.655555555555556in"}
 
 ## Typical Errors
 
@@ -128,7 +140,7 @@ different than one named "JHay Cyano [s]{.ul}ource" and version
 "[v]{.ul}1.0" is different than "[V]{.ul}1.0", for example.
 
 ![](media/image3.png){width="6.268055555555556in"
-height="3.908333333333333in"}
+height="4.655555555555556in"}
 
 # 
 
@@ -184,7 +196,7 @@ traversed for their file contents to be uploaded.
     they contain invalid SBOL
 
 ![](media/image4.png){width="6.268055555555556in"
-height="3.908333333333333in"}
+height="4.655555555555556in"}
 
 ## Typical Errors
 
@@ -241,7 +253,7 @@ will be uploaded if they do not conflict with any existing objects.
     objects that already exist on the server, or contain invalid SBOL
 
 ![](media/image5.png){width="6.268055555555556in"
-height="3.908333333333333in"}
+height="4.655555555555556in"}
 
 # Use Case 4 -- Deposit SBOL Files to Update an Existing Collection
 
@@ -285,7 +297,7 @@ used with caution!
     they contain invalid SBOL
 
 ![](media/image6.png){width="6.268055555555556in"
-height="3.908333333333333in"}
+height="4.655555555555556in"}
 
 # Use Case 5 -- Updating Existing Designs in an Existing Collection
 
@@ -340,6 +352,128 @@ height="2.4506944444444443in"}
     the specified collection
 
 ![](media/image8.png){width="6.268055555555556in"
-height="3.908333333333333in"}
+height="4.655555555555556in"}
 
--   Screenshots are 165 wide by 50 high
+# Advanced Use
+
+Users who know precisely which parameters they require can invoke the
+SynBioHub Client with those arguments in a prepared statement. For
+instance, to skip the initial operation selection step, the user can
+simply start the client with the 'deposit' or 'update' argument. If any
+required parameters are missing from those supplied by the user for the
+specified task, the user will be prompted for them. The CLI commands
+that are equivalent to the user input prompt for each use case
+demonstrated above are shown in the table below.
+
++----------+----------------------------------------------------------+
+| Use Case | CLI Command                                              |
++==========+==========================================================+
+| 1        | java -jar SynBioHub-CLI.jar deposit                      |
+|          |                                                          |
+|          | \--dir=D:\\temp\\sbol\\cyano_subset                      |
+|          | \--file-extension=.xml                                   |
+|          |                                                          |
+|          | \--multi=false \--create-new=true \--name=\"JHay Cyano   |
+|          | Source\"                                                 |
+|          |                                                          |
+|          | \--url=https://synbiohub.org \--version=1.0              |
+|          |                                                          |
+|          | \--username=j.hay\@epcc.ed.ac.uk                         |
++----------+----------------------------------------------------------+
+| 2        | java -jar SynBioHub-CLI.jar deposit                      |
+|          | \--dir=D:\\temp\\sbol \--file-extension=.xml             |
+|          | \--multi=true \--create-new=true \--name=\"JHay Multi    |
+|          | Cyano Source\" \--url=https://synbiohub.org              |
+|          | \--version=1.0 \--username=j.hay\@epcc.ed.ac.uk          |
++----------+----------------------------------------------------------+
+| 3        | java -jar SynBioHub-CLI.jar deposit                      |
+|          | \--dir=D:\\temp\\sbol \--file-extension=.xml             |
+|          | \--multi=false \--create-new=false                       |
+|          |                                                          |
+|          | \--url=[https://synbiohub.org/user/jhay/\                |
+|          | JHay_Cyano_Source/JHay_                                  |
+|          | Cyano_Source_collection/1.0](https://synbiohub.org/user/ |
+|          | jhay/JHay_Cyano_Source/JHay_Cyano_Source_collection/1.0) |
+|          |                                                          |
+|          | \--username=j.hay\@epcc.ed.ac.uk \--overwrite=false      |
++----------+----------------------------------------------------------+
+| 4        | java -jar SynBioHub-CLI.jar deposit                      |
+|          | \--dir=D:\\temp\\sbol \--file-extension=.xml             |
+|          | \--multi=false \--create-new=false \--url=               |
+|          |                                                          |
+|          | [https://synbiohub.org/user/jhay/JHay_Cyano_Source/\     |
+|          | JHay_                                                    |
+|          | Cyano_Source_collection/1.0](https://synbiohub.org/user/ |
+|          | jhay/JHay_Cyano_Source/JHay_Cyano_Source_collection/1.0) |
+|          |                                                          |
+|          | \--username=j.hay\@epcc.ed.ac.uk \--overwrite=true       |
++----------+----------------------------------------------------------+
+| 5        | java -jar SynBioHub-CLI.jar update                       |
+|          | \--excel-file=update_designs.xlsx                        |
+|          | \--url=[https://synbiohub.org/user/\                     |
+|          | jhay/JHay_Cyano_Source/JHay_                             |
+|          | Cyano_Source_collection/1.0](https://synbiohub.org/user/ |
+|          | jhay/JHay_Cyano_Source/JHay_Cyano_Source_collection/1.0) |
+|          |                                                          |
+|          | \--username=j.hay\@epcc.ed.ac.uk                         |
++----------+----------------------------------------------------------+
+
+Table : All-in-one CLI commands for running the example use cases
+
++----------------------+----------------------+----------------------+
+| Command Option       | Description          | Examples             |
++======================+======================+======================+
+| \--dir, \--d         | Directory to upload  | \--dir=C:\\m         |
+|                      |                      | y_data\\cyano_source |
++----------------------+----------------------+----------------------+
+| \--file-extension,   | File extension with  | \--f=.xml            |
+| \--f                 | which to filter      |                      |
+|                      | files in upload      | \                    |
+|                      | directory            | --file-extension=.\* |
++----------------------+----------------------+----------------------+
+| \--multi, \--m       | Flag to indicate     | \--multi=true        |
+|                      | whether to upload    |                      |
+|                      | child directories as | \--m=false           |
+|                      | multiple collections |                      |
++----------------------+----------------------+----------------------+
+| \--create-new, \--c  | Whether to create a  | \--create-new=true   |
+|                      | new collection       |                      |
+|                      |                      | \--c=false           |
++----------------------+----------------------+----------------------+
+| \--url, \--l         | URL of the target    | \--url=h             |
+|                      | SynBioHub server or  | ttps://synbiohub.org |
+|                      | the existing         |                      |
+|                      | collection           | \--l=[https://       |
+|                      |                      | synbiohub.org/user/\ |
+|                      |                      | jhay                 |
+|                      |                      | /JHay_Cyano_Source/\ |
+|                      |                      | JHay_Cyano_Source    |
+|                      |                      | _collection/1.0](htt |
+|                      |                      | ps://synbiohub.org/u |
+|                      |                      | ser/jhay/JHay_Cyano_ |
+|                      |                      | Source/JHay_Cyano_So |
+|                      |                      | urce_collection/1.0) |
++----------------------+----------------------+----------------------+
+| \--username, \--u    | User name of the     | <--username=         |
+|                      | SynBioHub user       | j.hay@epcc.ed.ac.uk> |
+|                      | (typically email     |                      |
+|                      | address)             | -u=jo.bloggs\@ac.uk  |
++----------------------+----------------------+----------------------+
+| \--version, \--v     | Version of the new   | \--version=1.0       |
+|                      | collection to create |                      |
+|                      |                      | \--v=v1.0.0-alpha    |
++----------------------+----------------------+----------------------+
+| \--overwrite, \--o   | Whether to overwrite | \--overwrite=true    |
+|                      | existing objects in  |                      |
+|                      | the existing         | \--o=false           |
+|                      | collection           |                      |
++----------------------+----------------------+----------------------+
+| \--excel-file, \--e  | The file path to the | \--excel-file        |
+|                      | Excel file           | =update_designs.xlsx |
+|                      | containing the       |                      |
+|                      | metadata for         | \-                   |
+|                      | existing objects to  | -e=new_metadata.xlsx |
+|                      | update               |                      |
++----------------------+----------------------+----------------------+
+
+Table : Form and function of different command options
