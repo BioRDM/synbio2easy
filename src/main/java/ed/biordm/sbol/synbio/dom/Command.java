@@ -11,6 +11,45 @@ package ed.biordm.sbol.synbio.dom;
  */
 public enum Command {
 
-    DEPOSIT,
-    UPDATE
+    DEPOSIT {
+        @Override
+        public String getGuidanceText() {
+            StringBuffer textBuf = new StringBuffer();
+            textBuf.append("You selected the DEPOSIT operation%n%n");
+            textBuf.append("The deposit operation provides the ability to batch "
+                    + "upload SBOL document files into a %ntarget SynBioHub server instance.%n");
+            textBuf.append("The operation requires the following parameters:%n");
+            textBuf.append("\t1. A directory containing valid SBOL document files you wish to upload%n");
+            textBuf.append("\t2. A target SynBioHub server (https://synbiohub.org by default)%n");
+            textBuf.append("\t3. An active user account on the target SynBioHub server%n");
+
+            return textBuf.toString();
+        }
+    },
+    UPDATE {
+        @Override
+        public String getGuidanceText() {
+            StringBuffer textBuf = new StringBuffer();
+            textBuf.append("You selected the UPDATE operation%n%n");
+            textBuf.append("The update operation provides the ability to bulk update "
+                    + "SBOL designs in an existing %ncollection on a target SynBioHub server instance.%n");
+            textBuf.append("The operation requires the following parameters:%n");
+            textBuf.append("\t1. An MS Excel file containing the metadata you wish to submit%n");
+            textBuf.append("\t1.1. The MS Excel file must contain a 'display_id' column, "
+                    + "along with one or %n\t     more optional columns comprising 'attachment_filename', "
+                    + "'description' and 'notes'%n");
+            textBuf.append("\t1.2. The filename specified in the 'attachment_filename' "
+                    + "column will be uploaded %n\t     and attached to the corresponding "
+                    + "design in the target SynBioHub server%n");
+            textBuf.append("\t1.3. The text in the 'description' and 'notes' columns "
+                    + "will be appended to the %n\t     appropriate fields of the corresponding "
+                    + "design in the target SynBioHub server%n");
+            textBuf.append("\t2. A target SynBioHub server (https://synbiohub.org by default)%n");
+            textBuf.append("\t3. An active user account on the target SynBioHub server%n");
+
+            return textBuf.toString();
+        }
+    };
+
+    public abstract String getGuidanceText();
 }
