@@ -62,3 +62,8 @@ The CLI Client is a Spring Boot application. Entry to the program is through the
 ### Building the CLI Application
 In NetBeans, right-click on the project in the Projects explorer window, and select \'Run Maven\' -> \'Bundle\'
 
+### Updating the Documentation
+Do your edits in the Word file, then convert to the Markdown version with Pandoc (https://medium.com/@ravinduk369/convert-a-ms-word-document-to-markdown-e0e99c41cfab) with:
+```shell
+pandoc -f docx -t markdown sbh_cli_user_guide.docx -o USER_GUIDE.md
+```
