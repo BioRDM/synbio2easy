@@ -152,6 +152,7 @@ public class UserInputPrompter {
             }
         } else {
             console.printf("Directory: %s", options.dir);
+            console.printf("%n");
         }
 
         console.printf("%n");
@@ -169,11 +170,12 @@ public class UserInputPrompter {
             }
         } else {
             console.printf("File extension filter: %s", options.fileExtFilter);
+            console.printf("%n");
         }
 
         console.printf("%n");
 
-        if (options.multipleCollections == false) {
+        if (options.isMultipleCollectionsDef == false && options.multipleCollections == false) {
             // check for sub-folders
             boolean isSubFolders = isSubFolders(options.dir);
 
@@ -193,9 +195,11 @@ public class UserInputPrompter {
                     console.printf("Only the files in the top level directory (no sub-directories) will be submitted to SynBioHub%n");
                 }
             }
+        } else {
+            console.printf("Each sub-folder in the selected directory will be uploaded to SynBioHub as a separate collection%n");
         }
 
-        if (options.crateNew == false) {
+        if (options.isCreateNewDef == false && options.crateNew == false) {
             console.printf("%n");
             console.printf("Do you wish to create a new collection?%n");
             String createNewAns = console.readLine("Y | N: ").strip();
@@ -206,8 +210,11 @@ public class UserInputPrompter {
             if (Y_PATTERN.matcher(createNewAns).matches()) {
                 options.crateNew = true;
             } else {
-
+                options.crateNew = false;
             }
+        } else {
+            console.printf("Creating new collection(s)");
+            console.printf("%n");
         }
 
         console.printf("%n");
@@ -219,6 +226,7 @@ public class UserInputPrompter {
                     options.collectionName = console.readLine("Name: ");
                 } else {
                     console.printf("New collection name: %s", options.collectionName);
+                    console.printf("%n");
                 }
             } else {
                 if (options.collectionName == null) {
@@ -226,6 +234,7 @@ public class UserInputPrompter {
                     options.collectionName = console.readLine("Prefix [<ENTER> for no prefix]: ");
                 } else {
                     console.printf("New collection prefix: %s", options.collectionName);
+                    console.printf("%n");
                 }  
             }
 
@@ -241,6 +250,7 @@ public class UserInputPrompter {
                 options.url = sanitizeUrl(options.url);
             } else {
                 console.printf("SynBioHub URL: %s", options.url);
+                console.printf("%n");
             }
         } else {
             if (options.url == null) {
@@ -248,6 +258,7 @@ public class UserInputPrompter {
                 options.url = console.readLine("URL: ");
             } else {
                 console.printf("Collection URL: %s", options.url);
+                console.printf("%n");
             }
         }
 
@@ -264,9 +275,10 @@ public class UserInputPrompter {
         } else {
             console.printf("%n");
             console.printf("Version: %s", options.version);
+            console.printf("%n");
         }
 
-        if (options.overwrite == false) {
+        if (options.isOverwriteDef == false && options.overwrite == false) {
             if (options.crateNew == true) {
                 options.overwrite = false;
             } else {
@@ -288,6 +300,7 @@ public class UserInputPrompter {
         } else {
             console.printf("%n");
             console.printf("Overwrite: %s", options.overwrite);
+            console.printf("%n");
         }
 
         console.printf("%n");
@@ -297,6 +310,7 @@ public class UserInputPrompter {
             options.user = console.readLine("Username (email): ");
         } else {
             console.printf("Username: %s", options.user);
+            console.printf("%n");
         }
 
         console.printf("%n");
@@ -306,6 +320,7 @@ public class UserInputPrompter {
             options.password = new String(console.readPassword("Password: "));
         } else {
             console.printf("Password: *****");
+            console.printf("%n");
         }
 
         console.printf("%n");
@@ -327,6 +342,7 @@ public class UserInputPrompter {
             }
         } else {
             console.printf("Excel File: %s", options.xslFile);
+            console.printf("%n");
         }
 
         console.printf("%n");
@@ -336,6 +352,7 @@ public class UserInputPrompter {
             options.url = console.readLine("URL: ");
         } else {
             console.printf("Collection URL: %s", options.url);
+            console.printf("%n");
         }
 
         console.printf("%n");
@@ -345,6 +362,7 @@ public class UserInputPrompter {
             options.user = console.readLine("Username (email): ");
         } else {
             console.printf("Username: %s", options.user);
+            console.printf("%n");
         }
 
         console.printf("%n");
@@ -379,6 +397,83 @@ public class UserInputPrompter {
             options.user = args.getOptionValues("u").get(0);
         }
 
+        if (args.getOptionNames().contains("url") && !args.getOptionValues("url").isEmpty()) {
+            options.url = args.getOptionValues("url").get(0);
+        }
+        if (args.getOptionNames().contains("l") && !args.getOptionValues("l").isEmpty()) {
+            options.url = args.getOptionValues("url").get(0);
+        }
+
+        if(options.command == Command.DEPOSIT) {
+            if (args.getOptionNames().contains("file-extension") && !args.getOptionValues("file-extension").isEmpty()) {
+                options.fileExtFilter = args.getOptionValues("file-extension").get(0);
+            }
+            if (args.getOptionNames().contains("f") && !args.getOptionValues("f").isEmpty()) {
+                options.fileExtFilter = args.getOptionValues("f").get(0);
+            }
+
+            if (args.getOptionNames().contains("create-new") && !args.getOptionValues("create-new").isEmpty()) {
+                options.crateNew = Boolean.parseBoolean(args.getOptionValues("create-new").get(0));
+                options.isCreateNewDef = true;
+            }
+            if (args.getOptionNames().contains("c") && !args.getOptionValues("c").isEmpty()) {
+                options.crateNew = Boolean.parseBoolean(args.getOptionValues("c").get(0));
+                options.isCreateNewDef = true;
+            }
+
+            if (options.crateNew == true) {
+                options.url = sanitizeUrl(options.url);
+            }
+            setPassedDepositOptions(options, args);
+        } else if(options.command == Command.UPDATE) {
+            if (args.getOptionNames().contains("excel-file") && !args.getOptionValues("excel-file").isEmpty()) {
+                options.xslFile = args.getOptionValues("excel-file").get(0);
+            }
+            if (args.getOptionNames().contains("e") && !args.getOptionValues("e").isEmpty()) {
+                options.xslFile = args.getOptionValues("e").get(0);
+            }
+        }
+    }
+
+    void setPassedDepositOptions(CommandOptions options, ApplicationArguments args) {
+        if (args.getOptionNames().contains("name") && !args.getOptionValues("name").isEmpty()) {
+            options.collectionName = args.getOptionValues("name").get(0);
+        }
+        if (args.getOptionNames().contains("n") && !args.getOptionValues("n").isEmpty()) {
+            options.collectionName = args.getOptionValues("n").get(0);
+        }
+
+        if (args.getOptionNames().contains("version") && !args.getOptionValues("version").isEmpty()) {
+            options.version = args.getOptionValues("version").get(0);
+        }
+        if (args.getOptionNames().contains("v") && !args.getOptionValues("v").isEmpty()) {
+            options.version = args.getOptionValues("v").get(0);
+        }
+
+        if (args.getOptionNames().contains("multi") && !args.getOptionValues("multi").isEmpty()) {
+            options.multipleCollections = Boolean.parseBoolean(args.getOptionValues("multi").get(0));
+            options.isMultipleCollectionsDef = true;
+        }
+        if (args.getOptionNames().contains("m") && !args.getOptionValues("m").isEmpty()) {
+            options.multipleCollections = Boolean.parseBoolean(args.getOptionValues("m").get(0));
+            options.isMultipleCollectionsDef = true;
+        }
+
+        if (args.getOptionNames().contains("dir") && !args.getOptionValues("dir").isEmpty()) {
+            options.dir = args.getOptionValues("dir").get(0);
+        }
+        if (args.getOptionNames().contains("d") && !args.getOptionValues("d").isEmpty()) {
+            options.dir = args.getOptionValues("d").get(0);
+        }
+
+        if (args.getOptionNames().contains("overwrite") && !args.getOptionValues("overwrite").isEmpty()) {
+            options.overwrite = Boolean.parseBoolean(args.getOptionValues("overwrite").get(0));
+            options.isOverwriteDef = true;
+        }
+        if (args.getOptionNames().contains("o") && !args.getOptionValues("o").isEmpty()) {
+            options.overwrite = Boolean.parseBoolean(args.getOptionValues("o").get(0));
+            options.isOverwriteDef = true;
+        }
     }
 
     boolean validateDirPath(String dirPath) {
