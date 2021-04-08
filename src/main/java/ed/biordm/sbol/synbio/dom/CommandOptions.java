@@ -22,12 +22,15 @@ public class CommandOptions implements Cloneable {
 
     // Deposit command options
     public boolean multipleCollections;
+    public boolean isMultipleCollectionsDef;
     public String collectionName;
     public boolean crateNew;
+    public boolean isCreateNewDef;
     public String dir;
     public String fileExtFilter;
     public String version;
     public boolean overwrite;
+    public boolean isOverwriteDef;
 
     // Attachment command options
     public String xslFile;
