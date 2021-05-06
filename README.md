@@ -67,3 +67,13 @@ Do your edits in the Word file, then convert to the Markdown version with Pandoc
 ```shell
 pandoc -f docx -t markdown sbh_cli_user_guide.docx -o USER_GUIDE.md
 ```
+### Creating the Certificate for jsign Executable Signing
+```shell
+keytool.exe -genkeypair -alias BioRDM -keyalg RSA -keystore keystore.jks
+```
+>> BioRDM
+>> SynthSys
+>> The University of Edinburgh
+>> Edinburgh
+>> Scotland
+>> UK

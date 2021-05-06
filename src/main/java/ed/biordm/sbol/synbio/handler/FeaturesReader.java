@@ -52,7 +52,8 @@ public class FeaturesReader {
 
             Sheet sheet = workbook.getSheetAt(sheetNr);
 
-            Map<String, List<String>> rows = readWorksheetRows(sheet, skipRows, numCols);
+            Map<String, List<String>> rows = readWorksheetRows(sheet, skipRows,
+                    numCols, formEval);
 
             rows.forEach((key, value) -> {
                 List<String> colVals = (List<String>) value;
@@ -92,7 +93,7 @@ public class FeaturesReader {
 
             Sheet sheet = workbook.getSheetAt(sheetNr);
 
-            features = readWorksheetRows(sheet, skipRows, numCols);
+            features = readWorksheetRows(sheet, skipRows, numCols, formEval);
             return features;
         } catch (IllegalArgumentException | NotOLE2FileException e) {
             throw new IOException("Not valid excel: " + e.getMessage(), e);
@@ -108,7 +109,7 @@ public class FeaturesReader {
      * @return map with id and the list of read column values
      */
     protected Map<String, List<String>> readWorksheetRows(Sheet worksheet,
-            int skipRows, int numCols) {
+            int skipRows, int numCols, FormulaEvaluator formEval) {
         Map<String, List<String>> rows = new HashMap<>();
 
         // https://knpcode.com/java-programs/read-excel-file-java-using-apache-poi/
@@ -125,7 +126,7 @@ public class FeaturesReader {
                 Cell cell = row.getCell(cn, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
                 int index = cell.getColumnIndex();
 
-                String cellValue = getStringValueFromCell(cell);
+                String cellValue = getStringValueFromCell(cell, formEval);
 
                 if (index == 0) {
                     rows.put(cellValue, colVals);
@@ -139,7 +140,7 @@ public class FeaturesReader {
         return rows;
     }
 
-    public List<String> readWorksheetHeader(Sheet worksheet, int numCols) {
+    public List<String> readWorksheetHeader(Sheet worksheet, int numCols, FormulaEvaluator formEval) {
         Iterator<Row> rowItr = worksheet.iterator();
         List<String> colNames = new ArrayList();
 
@@ -154,7 +155,7 @@ public class FeaturesReader {
                 Cell cell = row.getCell(cn, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
                 int index = cell.getColumnIndex();
 
-                String cellValue = getStringValueFromCell(cell);
+                String cellValue = getStringValueFromCell(cell, formEval);
 
                 if(!cellValue.isBlank()) {
                     colNames.add(cellValue);
@@ -166,9 +167,9 @@ public class FeaturesReader {
     }
 
     // Utility method to get String value of cell based on cell type
-    private String getStringValueFromCell(Cell cell) {
+    private String getStringValueFromCell(Cell cell, FormulaEvaluator formEval) {
         String stringCellVal = new String();
-        Object cellValue = getValueFromCell(cell);
+        Object cellValue = getValueFromCell(cell, formEval);
 
         if (cellValue instanceof Number) {
             stringCellVal = String.valueOf(cellValue);
@@ -185,7 +186,8 @@ public class FeaturesReader {
     }
 
     // Utility method to get cell value based on cell type
-    private Object getValueFromCell(Cell cell) {
+    private Object getValueFromCell(Cell cell, FormulaEvaluator formEval) {
+
         switch (cell.getCellType()) {
             case STRING:
                 return cell.getStringCellValue();
@@ -197,7 +199,7 @@ public class FeaturesReader {
                 }
                 return cell.getNumericCellValue();
             case FORMULA:
-                return cell.getCellFormula();
+                return formEval.evaluateFormulaCell(cell);
             case BLANK:
                 return "";
             default:
