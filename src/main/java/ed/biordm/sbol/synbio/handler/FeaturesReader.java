@@ -199,7 +199,7 @@ public class FeaturesReader {
                 }
                 return cell.getNumericCellValue();
             case FORMULA:
-                return formEval.evaluateFormulaCell(cell);
+                return formEval.evaluate(cell).getStringValue();
             case BLANK:
                 return "";
             default:
