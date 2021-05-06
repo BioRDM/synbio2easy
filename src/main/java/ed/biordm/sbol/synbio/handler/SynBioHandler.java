@@ -22,12 +22,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.maven.artifact.versioning.ComparableVersion;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -247,9 +246,12 @@ public class SynBioHandler {
         try (Workbook workbook = WorkbookFactory.create(file, null, true)) {
             Sheet sheet = workbook.getSheetAt(0);
 
+            FormulaEvaluator formEval = workbook.getCreationHelper().createFormulaEvaluator();
+            formEval.setIgnoreMissingWorkbooks(true);
+
             // assume always 4 column names in header
-            List<String> colHeaders = featuresReader.readWorksheetHeader(sheet, 4);
-            Map<String, List<String>> rows = featuresReader.readWorksheetRows(sheet, 1, 4);
+            List<String> colHeaders = featuresReader.readWorksheetHeader(sheet, 4, formEval);
+            Map<String, List<String>> rows = featuresReader.readWorksheetRows(sheet, 1, 4, formEval);
 
             rows.forEach((key, value) -> {
                 List<String> colVals = (List<String>) value;
