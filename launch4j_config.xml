@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>console</headerType>
+  <jar>D:\Users\Chickens\Documents\EPCC\SynthSys\code_projects\synbio-toolkit\target\SynBioHub-CLI.jar</jar>
+  <outfile>D:\Users\Chickens\Documents\EPCC\SynthSys\code_projects\synbio-toolkit\target\SynBioHub-CLI2.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
+  <manifest></manifest>
+  <icon></icon>
+  <var>CONSOLE_WIDTH=300</var>
+  <var>CONSOLE_HEIGHT=200</var>
+  <jre>
+    <path></path>
+    <bundledJre64Bit>false</bundledJre64Bit>
+    <bundledJreAsFallback>false</bundledJreAsFallback>
+    <minVersion>11</minVersion>
+    <maxVersion>16</maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <runtimeBits>64/32</runtimeBits>
+  </jre>
+  <versionInfo>
+    <fileVersion>1.0.0.0</fileVersion>
+    <txtFileVersion>1.0.0.0</txtFileVersion>
+    <fileDescription>SynBioHub and SBOL Toolkit</fileDescription>
+    <copyright>BioRDM 2021</copyright>
+    <productVersion>1.0.0.0</productVersion>
+    <txtProductVersion>1.0.0.0</txtProductVersion>
+    <productName>SynBio-Toolkit</productName>
+    <companyName></companyName>
+    <internalName>SynBio-Toolkit</internalName>
+    <originalFilename>SynBioHub-CLI.exe</originalFilename>
+    <trademarks></trademarks>
+    <language>ENGLISH_US</language>
+  </versionInfo>
+</launch4jConfig>

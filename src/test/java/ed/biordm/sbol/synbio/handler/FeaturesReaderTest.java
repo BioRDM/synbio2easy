@@ -8,8 +8,10 @@ package ed.biordm.sbol.synbio.handler;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import org.apache.poi.ss.formula.WorkbookEvaluator;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
@@ -122,6 +124,14 @@ public class FeaturesReaderTest {
 
             rows = featuresReader.readWorksheetRows(sheet, 3, 4, formEval);
             assertEquals(expValue, rows.get(expKey));
+        }
+    }
+    
+    @Test
+    public void dummytest() {
+        Collection<String> supportedFuncs = WorkbookEvaluator.getNotSupportedFunctionNames();
+        for (String func: supportedFuncs) {
+            System.out.println(func);
         }
     }
 
