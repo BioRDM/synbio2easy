@@ -36,3 +36,4 @@ build/
 /mavenproject3/
 /logs/
 /_logs/
+/.mvn/
