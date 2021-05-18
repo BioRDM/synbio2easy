@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 unameOut="$(uname -s)"
 case "${unameOut}" in
@@ -15,4 +15,6 @@ if  [ "$machine" = "Linux" ]; then
 	xterm -hold -e "java -jar SynBioHub-CLI.jar"
 elif [ "$machine" = "Mac" ]; then
 	osascript -e 'do shell script "java -jar SynBioHub-CLI.jar"'
+elif [ "$machine" = "MinGw" ]; then
+	mintty -h always "java -jar SynBioHub-CLI.jar"
 fi
