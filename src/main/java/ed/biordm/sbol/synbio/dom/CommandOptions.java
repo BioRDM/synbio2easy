@@ -35,6 +35,12 @@ public class CommandOptions implements Cloneable {
     // Attachment command options
     public String xslFile;
 
+    // Generate command options
+    public String templateFile;
+    public String flankFile;
+    public String outputDir;
+    public String filenamePrefix;
+
     public CommandOptions(Command command) {
         Objects.requireNonNull(command);
         this.command = command;
