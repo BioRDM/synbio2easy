@@ -377,4 +377,19 @@ public class SynBioHandlerIntTest {
             }
         }
     }
+
+    @Test
+    public void testGenerateLibrary() throws URISyntaxException, IOException {
+        CommandOptions parameters = new CommandOptions(Command.GENERATE);
+
+        parameters.templateFile = new File(getClass().getResource("cyano_template.xml").getFile()).getAbsolutePath();
+        parameters.flankFile = new File(getClass().getResource("flank-list_20200821_fix2.xlsx").getFile()).getAbsolutePath();
+        parameters.filenamePrefix = "plasmid";
+        parameters.outputDir = "designs";
+        parameters.overwrite = true;
+        parameters.isOverwriteDef = true;
+        parameters.version = "1.0";
+
+        handler.handleGenerate(parameters);
+    }
 }

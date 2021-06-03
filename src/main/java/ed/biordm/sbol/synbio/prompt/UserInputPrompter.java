@@ -451,13 +451,12 @@ public class UserInputPrompter {
             console.printf("Please enter the directory path in which to put the generated SBOL files%n");
             options.outputDir = console.readLine("Directory path [<ENTER> for 'designs']: ");
 
-            if (!validateDirPath(options.outputDir)) {
-                if(options.outputDir.isEmpty()) {
-                    options.outputDir = System.getProperty("user.dir").concat(File.separator).concat("designs");
-                    console.printf("Directory: %s", options.outputDir);
-                } else {
-                    throw new IllegalArgumentException("Invalid directory path argument: "+options.dir);
-                }
+            if(options.outputDir.isEmpty()) {
+                options.outputDir = Paths.get(System.getProperty("user.dir")).resolve("designs").toFile().getAbsolutePath();
+                console.printf("Directory: %s", options.outputDir);
+            } else {
+                Path outputDirPath = validateOutputDirPath(options.outputDir);
+                options.outputDir = outputDirPath.toFile().getAbsolutePath();
             }
         } else {
             console.printf("Directory: %s", options.outputDir);
@@ -546,26 +545,53 @@ public class UserInputPrompter {
                 options.xslFile = args.getOptionValues("e").get(0);
             }
         } else if(options.command == Command.GENERATE) {
-            if (args.getOptionNames().contains("template-file") && !args.getOptionValues("template-file").isEmpty()) {
-                options.templateFile = args.getOptionValues("template-file").get(0);
-            }
-            if (args.getOptionNames().contains("t") && !args.getOptionValues("t").isEmpty()) {
-                options.templateFile = args.getOptionValues("t").get(0);
-            }
+            setPassedGenerateOptions(options, args);
+        }
+    }
 
-            if (args.getOptionNames().contains("flank-file") && !args.getOptionValues("flank-file").isEmpty()) {
-                options.flankFile = args.getOptionValues("flank-file").get(0);
-            }
-            if (args.getOptionNames().contains("f") && !args.getOptionValues("f").isEmpty()) {
-                options.flankFile = args.getOptionValues("f").get(0);
-            }
+    void setPassedGenerateOptions(CommandOptions options, ApplicationArguments args) {
+        if (args.getOptionNames().contains("template-file") && !args.getOptionValues("template-file").isEmpty()) {
+            options.templateFile = args.getOptionValues("template-file").get(0);
+        }
+        if (args.getOptionNames().contains("t") && !args.getOptionValues("t").isEmpty()) {
+            options.templateFile = args.getOptionValues("t").get(0);
+        }
 
-            if (args.getOptionNames().contains("output-dir") && !args.getOptionValues("output-dir").isEmpty()) {
-                options.outputDir = args.getOptionValues("output-dir").get(0);
-            }
-            if (args.getOptionNames().contains("o") && !args.getOptionValues("o").isEmpty()) {
-                options.outputDir = args.getOptionValues("o").get(0);
-            }
+        if (args.getOptionNames().contains("flank-file") && !args.getOptionValues("flank-file").isEmpty()) {
+            options.flankFile = args.getOptionValues("flank-file").get(0);
+        }
+        if (args.getOptionNames().contains("f") && !args.getOptionValues("f").isEmpty()) {
+            options.flankFile = args.getOptionValues("f").get(0);
+        }
+
+        if (args.getOptionNames().contains("filename-prefix") && !args.getOptionValues("filename-prefix").isEmpty()) {
+            options.filenamePrefix = args.getOptionValues("filename-prefix").get(0);
+        }
+        if (args.getOptionNames().contains("p") && !args.getOptionValues("p").isEmpty()) {
+            options.filenamePrefix = args.getOptionValues("p").get(0);
+        }
+
+        if (args.getOptionNames().contains("version") && !args.getOptionValues("version").isEmpty()) {
+            options.version = args.getOptionValues("version").get(0);
+        }
+        if (args.getOptionNames().contains("v") && !args.getOptionValues("v").isEmpty()) {
+            options.version = args.getOptionValues("v").get(0);
+        }
+
+        if (args.getOptionNames().contains("output-dir") && !args.getOptionValues("output-dir").isEmpty()) {
+            options.outputDir = args.getOptionValues("output-dir").get(0);
+        }
+        if (args.getOptionNames().contains("o") && !args.getOptionValues("o").isEmpty()) {
+            options.outputDir = args.getOptionValues("o").get(0);
+        }
+
+        if (args.getOptionNames().contains("overwrite") && !args.getOptionValues("overwrite").isEmpty()) {
+            options.overwrite = Boolean.parseBoolean(args.getOptionValues("overwrite").get(0));
+            options.isOverwriteDef = true;
+        }
+        if (args.getOptionNames().contains("o") && !args.getOptionValues("o").isEmpty()) {
+            options.overwrite = Boolean.parseBoolean(args.getOptionValues("o").get(0));
+            options.isOverwriteDef = true;
         }
     }
 
@@ -616,6 +642,24 @@ public class UserInputPrompter {
         File dirFile = path.toFile();
 
         return dirFile.exists();
+    }
+
+    Path validateOutputDirPath(String dirPath) {
+        Path path = Paths.get(dirPath);
+        Path outputDirPath;
+
+        File dirFile = path.toFile();
+        boolean exists = dirFile.exists();
+
+        if(exists == false) {
+            // check if they provided a relative path
+            outputDirPath = Paths.get(System.getProperty("user.dir")).resolve(path);
+            dirFile = outputDirPath.toFile();
+            exists = dirFile.exists();
+        } else {
+            outputDirPath = path;
+        }
+        return outputDirPath;
     }
 
     boolean validateString(Pattern pattern, String str) {
