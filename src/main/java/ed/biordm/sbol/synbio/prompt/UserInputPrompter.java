@@ -453,7 +453,8 @@ public class UserInputPrompter {
 
             if (!validateDirPath(options.outputDir)) {
                 if(options.outputDir.isEmpty()) {
-                    options.outputDir = System.getProperty("user.dir").concat(File.pathSeparator).concat("designs");
+                    options.outputDir = System.getProperty("user.dir").concat(File.separator).concat("designs");
+                    console.printf("Directory: %s", options.outputDir);
                 } else {
                     throw new IllegalArgumentException("Invalid directory path argument: "+options.dir);
                 }

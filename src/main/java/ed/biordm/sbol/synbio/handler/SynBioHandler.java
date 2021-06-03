@@ -106,16 +106,17 @@ public class SynBioHandler {
     }
 
     void handleGenerate(CommandOptions parameters) throws URISyntaxException, IOException {
-        if (parameters.sessionToken == null) {
-            parameters.sessionToken = login(parameters);
-        }
-
         PlasmidsGenerator generator = new PlasmidsGenerator();
         String name = parameters.filenamePrefix;
         String version = parameters.version;
         Path templateFile = Paths.get(parameters.templateFile);
         Path flankFile = Paths.get(parameters.flankFile);
         Path outDir = Paths.get(parameters.outputDir);
+        System.out.println(name);
+        System.out.println(version);
+        System.out.println(templateFile.toFile().getAbsolutePath());
+        System.out.println(flankFile.toFile().getAbsolutePath());
+        System.out.println(outDir.toFile().getAbsolutePath());
 
         try {
             generator.generateFromFiles(name, version, templateFile, flankFile, outDir);
