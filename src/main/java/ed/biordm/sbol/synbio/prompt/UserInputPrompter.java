@@ -149,7 +149,18 @@ public class UserInputPrompter {
                 if(options.dir.isEmpty()) {
                     options.dir = System.getProperty("user.dir");
                 } else {
-                    throw new IllegalArgumentException("Invalid directory path argument: "+options.dir);
+                    boolean isInput = true;    // must exist because it's input directory
+                    Path inputPath = null;
+                    try {
+                        inputPath = validateInputPath(options.dir, isInput);
+                        options.dir = inputPath.toFile().getAbsolutePath();
+                    } catch (Exception e) {
+                        throw new IllegalArgumentException("Invalid directory path argument: "+options.dir);
+                    }
+
+                    if (inputPath == null || !inputPath.toFile().exists()) {
+                        throw new IllegalArgumentException("Invalid directory path argument: "+options.dir);
+                    }
                 }
             }
         } else {
@@ -340,7 +351,18 @@ public class UserInputPrompter {
             options.xslFile = console.readLine("Filename: ");
 
             if (!validateDirPath(options.xslFile)) {
-                throw new IllegalArgumentException("Invalid Excel file path argument: "+options.xslFile);
+                boolean isInput = true;    // must exist because it's input file
+                Path inputPath = null;
+                try {
+                    inputPath = validateInputPath(options.dir, isInput);
+                    options.xslFile = inputPath.toFile().getAbsolutePath();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.xslFile);
+                }
+
+                if (inputPath == null || !inputPath.toFile().exists()) {
+                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.xslFile);
+                }
             }
         } else {
             console.printf("Excel File: %s", options.xslFile);
@@ -394,7 +416,18 @@ public class UserInputPrompter {
             options.templateFile = console.readLine("Filename: ");
 
             if (!validateDirPath(options.templateFile)) {
-                throw new IllegalArgumentException("Invalid template SBOL file path argument: "+options.templateFile);
+                boolean isInput = true;    // must exist because it's input file
+                Path inputPath = null;
+                try {
+                    inputPath = validateInputPath(options.templateFile, isInput);
+                    options.templateFile = inputPath.toFile().getAbsolutePath();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid template SBOL file path argument: "+options.templateFile);
+                }
+
+                if (inputPath == null || !inputPath.toFile().exists()) {
+                    throw new IllegalArgumentException("Invalid template SBOL file path argument: "+options.templateFile);
+                }
             }
         } else {
             console.printf("Template SBOL File: %s", options.templateFile);
@@ -408,7 +441,18 @@ public class UserInputPrompter {
             options.flankFile = console.readLine("Filename: ");
 
             if (!validateDirPath(options.flankFile)) {
-                throw new IllegalArgumentException("Invalid Excel file path argument: "+options.flankFile);
+                boolean isInput = true;    // must exist because it's input file
+                Path inputPath = null;
+                try {
+                    inputPath = validateInputPath(options.flankFile, isInput);
+                    options.flankFile = inputPath.toFile().getAbsolutePath();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.flankFile);
+                }
+
+                if (inputPath == null || !inputPath.toFile().exists()) {
+                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.flankFile);
+                }
             }
         } else {
             console.printf("Excel Flank File: %s", options.flankFile);
@@ -455,7 +499,8 @@ public class UserInputPrompter {
                 options.outputDir = Paths.get(System.getProperty("user.dir")).resolve("designs").toFile().getAbsolutePath();
                 console.printf("Directory: %s", options.outputDir);
             } else {
-                Path outputDirPath = validateOutputDirPath(options.outputDir);
+                boolean isInput = false;    // doesn't matter that it doesn't exist because it's for output
+                Path outputDirPath = validateInputPath(options.outputDir, isInput);
                 options.outputDir = outputDirPath.toFile().getAbsolutePath();
             }
         } else {
@@ -467,6 +512,7 @@ public class UserInputPrompter {
             console.printf("%n");
 
             if (options.isOverwriteDef == false && options.overwrite == false) {
+                console.printf("%n");
                 console.printf("You have selected a directory that already exists. If you continue, existing designs may be overwritten by newly generated designs.%n");
                 console.printf("Do you wish to continue and overwrite designs if they already exist?%n");
                 String overwriteAns = console.readLine("Y | N: ").strip();
@@ -644,22 +690,26 @@ public class UserInputPrompter {
         return dirFile.exists();
     }
 
-    Path validateOutputDirPath(String dirPath) {
-        Path path = Paths.get(dirPath);
-        Path outputDirPath;
+    Path validateInputPath(String inputPath, boolean isInput) {
+        Path path = Paths.get(inputPath);
+        Path vInputPath;
 
-        File dirFile = path.toFile();
-        boolean exists = dirFile.exists();
+        File file = path.toFile();
+        boolean exists = file.exists();
 
         if(exists == false) {
             // check if they provided a relative path
-            outputDirPath = Paths.get(System.getProperty("user.dir")).resolve(path);
-            dirFile = outputDirPath.toFile();
-            exists = dirFile.exists();
+            vInputPath = Paths.get(System.getProperty("user.dir")).resolve(path);
+            file = vInputPath.toFile();
+            exists = file.exists();
+
+            if(exists == false && isInput == true) {
+                throw new IllegalArgumentException("Invalid input file path: "+inputPath);
+            }
         } else {
-            outputDirPath = path;
+            vInputPath = path;
         }
-        return outputDirPath;
+        return vInputPath;
     }
 
     boolean validateString(Pattern pattern, String str) {
