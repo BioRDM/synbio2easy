@@ -10,7 +10,7 @@
     </parent>
     <groupId>ed.biordm</groupId>
     <artifactId>sbol-synbio-toolkit</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.3.0-SNAPSHOT</version>
     <name>sbol-synbio-toolkit</name>
     <description>SynBioHub client</description>
     <properties>
@@ -67,7 +67,7 @@
         <dependency>
             <groupId>ed.biordm.sbol</groupId>
             <artifactId>sbol-toolkit</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.3-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -82,6 +82,7 @@
                 </configuration>
             </plugin>
             <!-- launch4j plugin to wrap built jar in .exe for Windows -->
+            <!-- 
             <plugin>
               <groupId>com.akathist.maven.plugins.launch4j</groupId>
               <artifactId>launch4j-maven-plugin</artifactId>
@@ -135,7 +136,9 @@
                 </execution>
               </executions>
             </plugin>
+            -->
             <!-- jSign plugin to create signed executable wrapper; 2.0 is compatible with launch4j -->
+            <!--
             <plugin>
               <groupId>net.jsign</groupId>
               <artifactId>jsign-maven-plugin</artifactId>
@@ -155,7 +158,7 @@
                   </configuration>
                 </execution>
               </executions>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
 
