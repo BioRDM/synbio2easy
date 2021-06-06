@@ -493,10 +493,10 @@ public class UserInputPrompter {
 
         if (options.outputDir == null) {
             console.printf("Please enter the directory path in which to put the generated SBOL files%n");
-            options.outputDir = console.readLine("Directory path [<ENTER> for 'designs']: ");
+            options.outputDir = console.readLine("Directory path [<ENTER> for 'library']: ");
 
             if(options.outputDir.isEmpty()) {
-                options.outputDir = Paths.get(System.getProperty("user.dir")).resolve("designs").toFile().getAbsolutePath();
+                options.outputDir = Paths.get(System.getProperty("user.dir")).resolve("library").toFile().getAbsolutePath();
                 console.printf("Directory: %s", options.outputDir);
             } else {
                 boolean isInput = false;    // doesn't matter that it doesn't exist because it's for output
