@@ -381,11 +381,12 @@ public class SynBioHandlerIntTest {
     @Test
     public void testGenerateLibrary() throws URISyntaxException, IOException {
         CommandOptions parameters = new CommandOptions(Command.GENERATE);
+        String outputDir = tmpDir.resolve("designs").toFile().getAbsolutePath();
 
         parameters.templateFile = new File(getClass().getResource("cyano_template.xml").getFile()).getAbsolutePath();
-        parameters.flankFile = new File(getClass().getResource("flank-list_20200821_fix2.xlsx").getFile()).getAbsolutePath();
+        parameters.flankFile = new File(getClass().getResource("flank-list_20200821_fix2_short.xlsx").getFile()).getAbsolutePath();
         parameters.filenamePrefix = "plasmid";
-        parameters.outputDir = "designs";
+        parameters.outputDir = outputDir;
         parameters.overwrite = true;
         parameters.isOverwriteDef = true;
         parameters.version = "1.0";
