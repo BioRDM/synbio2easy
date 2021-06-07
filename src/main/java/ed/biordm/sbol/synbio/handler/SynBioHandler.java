@@ -5,6 +5,7 @@
  */
 package ed.biordm.sbol.synbio.handler;
 
+import ed.biordm.cyanosource.plasmid.PlasmidsGenerator;
 import ed.biordm.sbol.synbio.client.SynBioClient;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
 import java.io.File;
@@ -22,6 +23,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -30,6 +33,8 @@ import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.sbolstandard.core2.SBOLConversionException;
+import org.sbolstandard.core2.SBOLValidationException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParser;
@@ -75,6 +80,7 @@ public class SynBioHandler {
         switch (command.command) {
             case DEPOSIT: handleDeposit(command); break;
             case UPDATE: handleUpdate(command); break;
+            case GENERATE: handleGenerate(command); break;
             default: throw new IllegalArgumentException("Unsuported command: "+command.command);
         }
     }
@@ -97,6 +103,27 @@ public class SynBioHandler {
         }
 
         readExcel(parameters);
+    }
+
+    void handleGenerate(CommandOptions parameters) throws URISyntaxException, IOException {
+        PlasmidsGenerator generator = new PlasmidsGenerator();
+        String name = parameters.filenamePrefix;
+        String version = parameters.version;
+        Path templateFile = Paths.get(parameters.templateFile);
+        Path flankFile = Paths.get(parameters.flankFile);
+        Path outDir = Paths.get(parameters.outputDir);
+        System.out.println(name);
+        System.out.println(version);
+        System.out.println(templateFile.toFile().getAbsolutePath());
+        System.out.println(flankFile.toFile().getAbsolutePath());
+        System.out.println(outDir.toFile().getAbsolutePath());
+
+        try {
+            generator.generateFromFiles(name, version, templateFile, flankFile, outDir);
+        } catch (SBOLValidationException | SBOLConversionException | ed.biordm.sbol.toolkit.transform.SBOLConversionException e) {
+            logger.error(e.getMessage(), e);
+            throw new IOException(e);
+        }
     }
 
     String login(CommandOptions parameters) throws URISyntaxException {

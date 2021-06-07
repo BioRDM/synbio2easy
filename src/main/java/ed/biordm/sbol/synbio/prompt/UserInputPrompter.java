@@ -53,6 +53,7 @@ public class UserInputPrompter {
         switch (command) {
             case DEPOSIT: return promptDepositOptions(options);
             case UPDATE: return promptUpdateOptions(options);
+            case GENERATE: return promptGenerateOptions(options);
             default: throw new IllegalArgumentException("Unsupported command: "+command);
         }
     }
@@ -70,6 +71,7 @@ public class UserInputPrompter {
         switch(Command.valueOf(command.toUpperCase())) {
             case DEPOSIT: return DEPOSIT;
             case UPDATE: return UPDATE;
+            case GENERATE: return GENERATE;
             default: throw new MissingOptionException("Unknown command "+command);
         }
     }
@@ -147,7 +149,18 @@ public class UserInputPrompter {
                 if(options.dir.isEmpty()) {
                     options.dir = System.getProperty("user.dir");
                 } else {
-                    throw new IllegalArgumentException("Invalid directory path argument: "+options.dir);
+                    boolean isInput = true;    // must exist because it's input directory
+                    Path inputPath = null;
+                    try {
+                        inputPath = validateInputPath(options.dir, isInput);
+                        options.dir = inputPath.toFile().getAbsolutePath();
+                    } catch (Exception e) {
+                        throw new IllegalArgumentException("Invalid directory path argument: "+options.dir);
+                    }
+
+                    if (inputPath == null || !inputPath.toFile().exists()) {
+                        throw new IllegalArgumentException("Invalid directory path argument: "+options.dir);
+                    }
                 }
             }
         } else {
@@ -338,7 +351,18 @@ public class UserInputPrompter {
             options.xslFile = console.readLine("Filename: ");
 
             if (!validateDirPath(options.xslFile)) {
-                throw new IllegalArgumentException("Invalid Excel file path argument: "+options.xslFile);
+                boolean isInput = true;    // must exist because it's input file
+                Path inputPath = null;
+                try {
+                    inputPath = validateInputPath(options.dir, isInput);
+                    options.xslFile = inputPath.toFile().getAbsolutePath();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.xslFile);
+                }
+
+                if (inputPath == null || !inputPath.toFile().exists()) {
+                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.xslFile);
+                }
             }
         } else {
             console.printf("Excel File: %s", options.xslFile);
@@ -382,10 +406,144 @@ public class UserInputPrompter {
         return options;
     }
 
+    CommandOptions promptGenerateOptions(CommandOptions options) {
+        console.printf("%n");
+        console.printf("... generating plasmid designs in SBOL documents%n");
+        console.printf("%n");
+
+        if (options.templateFile == null) {
+            console.printf("Please enter the path to the template SBOL file for generating plasmid designs%n");
+            options.templateFile = console.readLine("Filename: ");
+
+            if (!validateDirPath(options.templateFile)) {
+                boolean isInput = true;    // must exist because it's input file
+                Path inputPath = null;
+                try {
+                    inputPath = validateInputPath(options.templateFile, isInput);
+                    options.templateFile = inputPath.toFile().getAbsolutePath();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid template SBOL file path argument: "+options.templateFile);
+                }
+
+                if (inputPath == null || !inputPath.toFile().exists()) {
+                    throw new IllegalArgumentException("Invalid template SBOL file path argument: "+options.templateFile);
+                }
+            }
+        } else {
+            console.printf("Template SBOL File: %s", options.templateFile);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+
+        if (options.flankFile == null) {
+            console.printf("Please enter the path to the Excel file with flank sequences to generate%n");
+            options.flankFile = console.readLine("Filename: ");
+
+            if (!validateDirPath(options.flankFile)) {
+                boolean isInput = true;    // must exist because it's input file
+                Path inputPath = null;
+                try {
+                    inputPath = validateInputPath(options.flankFile, isInput);
+                    options.flankFile = inputPath.toFile().getAbsolutePath();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.flankFile);
+                }
+
+                if (inputPath == null || !inputPath.toFile().exists()) {
+                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.flankFile);
+                }
+            }
+        } else {
+            console.printf("Excel Flank File: %s", options.flankFile);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+
+        if (options.filenamePrefix == null) {
+            console.printf("Please enter the filename prefix for the generated SBOL document files%n");
+            options.filenamePrefix = console.readLine("Filename Prefix [<ENTER> for 'plasmid']: ");
+
+            if (options.filenamePrefix == null || options.filenamePrefix.trim().isEmpty()) {
+                options.filenamePrefix = "plasmid";
+            }
+        } else {
+            console.printf("%n");
+            console.printf("Filename Prefix: %s", options.filenamePrefix);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+
+        if (options.version == null) {
+            console.printf("Please enter the version number%n");
+            options.version = console.readLine("Version [<ENTER> for 1.0]: ");
+
+            if (options.version == null || options.version.trim().isEmpty()) {
+                options.version = "1.0";
+            }
+        } else {
+            console.printf("%n");
+            console.printf("Version: %s", options.version);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+
+        if (options.outputDir == null) {
+            console.printf("Please enter the directory path in which to put the generated SBOL files%n");
+            options.outputDir = console.readLine("Directory path [<ENTER> for 'library']: ");
+
+            if(options.outputDir.isEmpty()) {
+                options.outputDir = Paths.get(System.getProperty("user.dir")).resolve("library").toFile().getAbsolutePath();
+                console.printf("Directory: %s", options.outputDir);
+            } else {
+                boolean isInput = false;    // doesn't matter that it doesn't exist because it's for output
+                Path outputDirPath = validateInputPath(options.outputDir, isInput);
+                options.outputDir = outputDirPath.toFile().getAbsolutePath();
+            }
+        } else {
+            console.printf("Directory: %s", options.outputDir);
+            console.printf("%n");
+        }
+
+        if (new File(options.outputDir).exists()) {
+            console.printf("%n");
+
+            if (options.isOverwriteDef == false && options.overwrite == false) {
+                console.printf("%n");
+                console.printf("You have selected a directory that already exists. If you continue, existing designs may be overwritten by newly generated designs.%n");
+                console.printf("Do you wish to continue and overwrite designs if they already exist?%n");
+                String overwriteAns = console.readLine("Y | N: ").strip();
+
+                while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
+                    overwriteAns = console.readLine("Y | N: ").strip();
+                }
+
+                if (Y_PATTERN.matcher(overwriteAns).matches()) {
+                    options.overwrite = true;
+                } else {
+                    throw new IllegalArgumentException("Cannot continue with generation as existing designs will be overwritten in "+options.outputDir);
+                }
+            } else {
+                console.printf("%n");
+                console.printf("Overwrite: %s", options.overwrite);
+                console.printf("%n");
+            }
+        } else {
+            options.overwrite = false;
+        }
+
+        console.printf("%n");
+
+        return options;
+    }
+
     public String getUsageTxt() {
         return "Usage:"
                 + "\n"
-                + "deposit | sequence";
+                + "deposit | update | generate";
     }
 
     void setPassedOptions(CommandOptions options, ApplicationArguments args) {
@@ -432,6 +590,54 @@ public class UserInputPrompter {
             if (args.getOptionNames().contains("e") && !args.getOptionValues("e").isEmpty()) {
                 options.xslFile = args.getOptionValues("e").get(0);
             }
+        } else if(options.command == Command.GENERATE) {
+            setPassedGenerateOptions(options, args);
+        }
+    }
+
+    void setPassedGenerateOptions(CommandOptions options, ApplicationArguments args) {
+        if (args.getOptionNames().contains("template-file") && !args.getOptionValues("template-file").isEmpty()) {
+            options.templateFile = args.getOptionValues("template-file").get(0);
+        }
+        if (args.getOptionNames().contains("t") && !args.getOptionValues("t").isEmpty()) {
+            options.templateFile = args.getOptionValues("t").get(0);
+        }
+
+        if (args.getOptionNames().contains("flank-file") && !args.getOptionValues("flank-file").isEmpty()) {
+            options.flankFile = args.getOptionValues("flank-file").get(0);
+        }
+        if (args.getOptionNames().contains("f") && !args.getOptionValues("f").isEmpty()) {
+            options.flankFile = args.getOptionValues("f").get(0);
+        }
+
+        if (args.getOptionNames().contains("filename-prefix") && !args.getOptionValues("filename-prefix").isEmpty()) {
+            options.filenamePrefix = args.getOptionValues("filename-prefix").get(0);
+        }
+        if (args.getOptionNames().contains("p") && !args.getOptionValues("p").isEmpty()) {
+            options.filenamePrefix = args.getOptionValues("p").get(0);
+        }
+
+        if (args.getOptionNames().contains("version") && !args.getOptionValues("version").isEmpty()) {
+            options.version = args.getOptionValues("version").get(0);
+        }
+        if (args.getOptionNames().contains("v") && !args.getOptionValues("v").isEmpty()) {
+            options.version = args.getOptionValues("v").get(0);
+        }
+
+        if (args.getOptionNames().contains("output-dir") && !args.getOptionValues("output-dir").isEmpty()) {
+            options.outputDir = args.getOptionValues("output-dir").get(0);
+        }
+        if (args.getOptionNames().contains("o") && !args.getOptionValues("o").isEmpty()) {
+            options.outputDir = args.getOptionValues("o").get(0);
+        }
+
+        if (args.getOptionNames().contains("overwrite") && !args.getOptionValues("overwrite").isEmpty()) {
+            options.overwrite = Boolean.parseBoolean(args.getOptionValues("overwrite").get(0));
+            options.isOverwriteDef = true;
+        }
+        if (args.getOptionNames().contains("o") && !args.getOptionValues("o").isEmpty()) {
+            options.overwrite = Boolean.parseBoolean(args.getOptionValues("o").get(0));
+            options.isOverwriteDef = true;
         }
     }
 
@@ -482,6 +688,28 @@ public class UserInputPrompter {
         File dirFile = path.toFile();
 
         return dirFile.exists();
+    }
+
+    Path validateInputPath(String inputPath, boolean isInput) {
+        Path path = Paths.get(inputPath);
+        Path vInputPath;
+
+        File file = path.toFile();
+        boolean exists = file.exists();
+
+        if(exists == false) {
+            // check if they provided a relative path
+            vInputPath = Paths.get(System.getProperty("user.dir")).resolve(path);
+            file = vInputPath.toFile();
+            exists = file.exists();
+
+            if(exists == false && isInput == true) {
+                throw new IllegalArgumentException("Invalid input file path: "+inputPath);
+            }
+        } else {
+            vInputPath = path;
+        }
+        return vInputPath;
     }
 
     boolean validateString(Pattern pattern, String str) {

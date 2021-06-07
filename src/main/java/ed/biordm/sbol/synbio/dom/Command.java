@@ -49,6 +49,21 @@ public enum Command {
 
             return textBuf.toString();
         }
+    },
+    GENERATE {
+        @Override
+        public String getGuidanceText() {
+            StringBuffer textBuf = new StringBuffer();
+            textBuf.append("You selected the GENERATE operation%n%n");
+            textBuf.append("The generate operation provides the ability to create "
+                    + "the library of Cyanosource plasmid design SBOL document files. %n");
+            textBuf.append("The operation requires the following parameters:%n");
+            textBuf.append("\t1. A template SBOL document file from which to generate the plasmid designs with alternative flank sequences%n");
+            textBuf.append("\t2. An MS Excel file containing the flank sequences for the designs you wish to generate%n");
+            textBuf.append("\t3. An output directory where the newly created plasmid design SBOL document files will be placed%n");
+
+            return textBuf.toString();
+        }
     };
 
     public abstract String getGuidanceText();
