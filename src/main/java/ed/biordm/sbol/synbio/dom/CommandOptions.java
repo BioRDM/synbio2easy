@@ -41,6 +41,13 @@ public class CommandOptions implements Cloneable {
     public String outputDir;
     public String filenamePrefix;
 
+    // Clean command options
+    public String inputFile;
+    public String outputFile;
+    public String namespace;
+    public boolean removeColls;
+    public boolean isRemoveCollsDef;
+
     public CommandOptions(Command command) {
         Objects.requireNonNull(command);
         this.command = command;
