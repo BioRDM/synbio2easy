@@ -8,8 +8,11 @@ package ed.biordm.sbol.synbio.handler;
 import ed.biordm.cyanosource.plasmid.PlasmidsGenerator;
 import ed.biordm.sbol.synbio.client.SynBioClient;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
+import ed.biordm.sbol.toolkit.transform.SynBioTamer;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
@@ -23,8 +26,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,6 +35,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.sbolstandard.core2.SBOLConversionException;
+import org.sbolstandard.core2.SBOLDocument;
+import org.sbolstandard.core2.SBOLReader;
 import org.sbolstandard.core2.SBOLValidationException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +84,7 @@ public class SynBioHandler {
             case DEPOSIT: handleDeposit(command); break;
             case UPDATE: handleUpdate(command); break;
             case GENERATE: handleGenerate(command); break;
+            case CLEAN: handleClean(command); break;
             default: throw new IllegalArgumentException("Unsuported command: "+command.command);
         }
     }
@@ -121,6 +125,31 @@ public class SynBioHandler {
         try {
             generator.generateFromFiles(name, version, templateFile, flankFile, outDir);
         } catch (SBOLValidationException | SBOLConversionException | ed.biordm.sbol.toolkit.transform.SBOLConversionException e) {
+            logger.error(e.getMessage(), e);
+            throw new IOException(e);
+        }
+    }
+
+    void handleClean(CommandOptions parameters) throws URISyntaxException, IOException {
+        SynBioTamer  tamer = new SynBioTamer();
+        Path inputFile = Paths.get(parameters.inputFile);
+        Path outputFile = Paths.get(parameters.outputFile);
+        String namespace = parameters.namespace;
+        boolean removeColls = parameters.removeColls;
+
+        System.out.println(inputFile.toFile().getAbsolutePath());
+        System.out.println(outputFile.toFile().getAbsolutePath());
+        System.out.println(removeColls);
+        System.out.println(namespace);
+
+        SBOLDocument orig;
+
+        try (InputStream is = new FileInputStream(inputFile.toFile()))
+        {
+            orig = SBOLReader.read(is);
+            SBOLDocument output = tamer.tameForSynBio(orig, namespace, removeColls);
+            output.write(outputFile.toFile());
+        } catch (SBOLValidationException | SBOLConversionException | IOException e) {
             logger.error(e.getMessage(), e);
             throw new IOException(e);
         }
