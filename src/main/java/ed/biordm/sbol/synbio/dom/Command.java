@@ -64,6 +64,22 @@ public enum Command {
 
             return textBuf.toString();
         }
+    },
+    CLEAN {
+        @Override
+        public String getGuidanceText() {
+            StringBuffer textBuf = new StringBuffer();
+            textBuf.append("You selected the CLEAN operation%n%n");
+            textBuf.append("The clean operation provides the ability to sanitise "
+                    + "an SBOL file originating in SynBioHub that you wish to upload again. %n");
+            textBuf.append("The operation requires the following parameters:%n");
+            textBuf.append("\t1. An original SBOL document file from SynBioHub to be cleaned%n");
+            textBuf.append("\t2. An output file where the cleaned SBOL document will be saved%n");
+            textBuf.append("\t3. A namespace for the cleaned SBOL document%n");
+            textBuf.append("\t4. Whether to remove existing SynBioHub collection details from the cleaned SBOL document%n");
+
+            return textBuf.toString();
+        }
     };
 
     public abstract String getGuidanceText();
