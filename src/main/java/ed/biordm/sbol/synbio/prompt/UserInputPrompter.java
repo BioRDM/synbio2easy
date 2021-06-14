@@ -54,6 +54,7 @@ public class UserInputPrompter {
             case DEPOSIT: return promptDepositOptions(options);
             case UPDATE: return promptUpdateOptions(options);
             case GENERATE: return promptGenerateOptions(options);
+            case CLEAN: return promptCleanOptions(options);
             default: throw new IllegalArgumentException("Unsupported command: "+command);
         }
     }
@@ -72,6 +73,7 @@ public class UserInputPrompter {
             case DEPOSIT: return DEPOSIT;
             case UPDATE: return UPDATE;
             case GENERATE: return GENERATE;
+            case CLEAN: return CLEAN;
             default: throw new MissingOptionException("Unknown command "+command);
         }
     }
@@ -540,6 +542,113 @@ public class UserInputPrompter {
         return options;
     }
 
+    CommandOptions promptCleanOptions(CommandOptions options) {
+        console.printf("%n");
+        console.printf("... cleaning SBOL document in input file%n");
+        console.printf("%n");
+
+        if (options.inputFile == null) {
+            console.printf("Please enter the path to the input file containing the SBOL document to be cleaned%n");
+            options.inputFile = console.readLine("Filename: ");
+
+            if (!validateDirPath(options.inputFile)) {
+                boolean isInput = true;    // must exist because it's input file
+                Path inputPath = null;
+                try {
+                    inputPath = validateInputPath(options.inputFile, isInput);
+                    options.inputFile = inputPath.toFile().getAbsolutePath();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid SBOL document input file path argument: "+options.inputFile);
+                }
+
+                if (inputPath == null || !inputPath.toFile().exists()) {
+                    throw new IllegalArgumentException("Invalid SBOL document input file path argumen: "+options.inputFile);
+                }
+            }
+        } else {
+            console.printf("Input SBOL File: %s", options.inputFile);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+
+        if (options.outputFile == null) {
+            console.printf("Please enter the path to the cleaned output file to generate%n");
+            options.outputFile = console.readLine("Filename: ");
+
+            if (!validateDirPath(options.outputFile)) {
+                boolean isInput = false;    // not an input file
+                Path outputPath = null;
+                try {
+                    outputPath = validateInputPath(options.outputFile, isInput);
+                    options.outputFile = outputPath.toFile().getAbsolutePath();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid output file path argument: "+options.outputFile);
+                }
+
+                if (outputPath == null) {
+                    throw new IllegalArgumentException("Invalid output file path argument: "+options.outputFile);
+                } else if(outputPath.toFile().exists()) {
+                    console.printf("%n");
+                    console.printf("You have selected an output file that already exists. If you continue, the existing SBOL document file will be overwritten.%n");
+                    console.printf("Do you wish to continue and overwrite designs if they already exist?%n");
+                    String overwriteAns = console.readLine("Y | N: ").strip();
+
+                    while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
+                        overwriteAns = console.readLine("Y | N: ").strip();
+                    }
+
+                    if (!Y_PATTERN.matcher(overwriteAns).matches()) {
+                        throw new IllegalArgumentException("Cannot continue with cleaning as existing SBOL document will be overwritten in "+options.outputFile);
+                    }
+                }
+            }
+        } else {
+            console.printf("Cleaned SBOL Output File: %s", options.outputFile);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+
+        if (options.namespace == null) {
+            console.printf("Please enter the namespace for components in the cleaned SBOL document file%n");
+            options.namespace = console.readLine("Namespace [press <ENTER> for the 'DEFAULT_NAMESPACE' if you are not sure]: ");
+
+            if (options.namespace == null || options.namespace.trim().isEmpty()) {
+                options.namespace = "DEFAULT_NAMESPACE";
+            }
+        } else {
+            console.printf("%n");
+            console.printf("SBOL Component Namespace: %s", options.namespace);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+
+        if (options.isRemoveCollsDef == false && options.removeColls == false) {
+            console.printf("Do you wish to remove references to any SynBioHub collections in the cleaned SBOL output document?%n");
+            String removeCollsAns = console.readLine("Y | N: ").strip();
+
+            while(!Y_N_PATTERN.matcher(removeCollsAns).matches()) {
+                removeCollsAns = console.readLine("Y | N: ").strip();
+            }
+
+            if (Y_PATTERN.matcher(removeCollsAns).matches()) {
+                options.removeColls = true;
+            } else {
+                options.removeColls = false;
+            }
+        } else {
+            console.printf("%n");
+            console.printf("Remove Collections: %s", options.removeColls);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+
+        return options;
+    }
+
     public String getUsageTxt() {
         return "Usage:"
                 + "\n"
@@ -679,6 +788,38 @@ public class UserInputPrompter {
         if (args.getOptionNames().contains("o") && !args.getOptionValues("o").isEmpty()) {
             options.overwrite = Boolean.parseBoolean(args.getOptionValues("o").get(0));
             options.isOverwriteDef = true;
+        }
+    }
+
+    void setPassedCleanOptions(CommandOptions options, ApplicationArguments args) {
+        if (args.getOptionNames().contains("input-file") && !args.getOptionValues("input-file").isEmpty()) {
+            options.inputFile = args.getOptionValues("input-file").get(0);
+        }
+        if (args.getOptionNames().contains("i") && !args.getOptionValues("i").isEmpty()) {
+            options.inputFile = args.getOptionValues("i").get(0);
+        }
+
+        if (args.getOptionNames().contains("output-file") && !args.getOptionValues("output-file").isEmpty()) {
+            options.outputFile = args.getOptionValues("output-file").get(0);
+        }
+        if (args.getOptionNames().contains("o") && !args.getOptionValues("o").isEmpty()) {
+            options.outputFile = args.getOptionValues("o").get(0);
+        }
+
+        if (args.getOptionNames().contains("namespace") && !args.getOptionValues("namespace").isEmpty()) {
+            options.namespace = args.getOptionValues("namespace").get(0);
+        }
+        if (args.getOptionNames().contains("n") && !args.getOptionValues("n").isEmpty()) {
+            options.namespace = args.getOptionValues("n").get(0);
+        }
+
+        if (args.getOptionNames().contains("remove-collections") && !args.getOptionValues("remove-collections").isEmpty()) {
+            options.removeColls = Boolean.parseBoolean(args.getOptionValues("remove-collections").get(0));
+            options.isRemoveCollsDef = true;
+        }
+        if (args.getOptionNames().contains("r") && !args.getOptionValues("r").isEmpty()) {
+            options.removeColls = Boolean.parseBoolean(args.getOptionValues("r").get(0));
+            options.isRemoveCollsDef = true;
         }
     }
 
