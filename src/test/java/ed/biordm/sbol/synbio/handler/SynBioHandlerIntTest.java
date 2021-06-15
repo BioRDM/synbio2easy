@@ -401,8 +401,8 @@ public class SynBioHandlerIntTest {
         String outputDir = tmpDir.resolve("clean").toFile().getAbsolutePath();
         new File(outputDir).mkdirs();
 
-        parameters.inputFile = new File(getClass().getResource("sl0199_flatten.xml").getFile()).getAbsolutePath();
-        parameters.outputFile = new File(outputDir).toPath().resolve("sl0199_flatten.xml").toFile().getAbsolutePath();
+        parameters.inputFile = new File(getClass().getResource("synbiohub_sbol.xml").getFile()).getAbsolutePath();
+        parameters.outputFile = new File(outputDir).toPath().resolve("synbiohub_sbol.xml").toFile().getAbsolutePath();
         parameters.namespace = "DEFAULT_NAMESPACE";
         parameters.removeColls = true;
         parameters.isRemoveCollsDef = true;
