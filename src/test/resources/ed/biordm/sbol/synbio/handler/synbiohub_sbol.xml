@@ -2,7 +2,7 @@
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:prov="http://www.w3.org/ns/prov#" xmlns:sbol="http://sbols.org/v2#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#dateTime/" xmlns:om="http://www.ontology-of-units-of-measure.org/resource/om-2/" xmlns:synbiohub="http://synbiohub.org#" xmlns:sbh="http://wiki.synbiohub.org/wiki/Terms/synbiohub#" xmlns:sybio="http://www.sybio.ncl.ac.uk#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:ncbi="http://www.ncbi.nlm.nih.gov#" xmlns:igem="http://wiki.synbiohub.org/wiki/Terms/igem#" xmlns:genbank="http://www.ncbi.nlm.nih.gov/genbank#" xmlns:gbconv="http://sbols.org/genBankConversion#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:obo="http://purl.obolibrary.org/obo/">
   <sbol:ComponentDefinition rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0">
     <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten"/>
-    <sbol:displayId>sl0199_flatten</sbol:displayId>
+    <sbol:displayId>sl0199_flatten_cleaned</sbol:displayId>
     <sbol:version>1.0.0</sbol:version>
     <dcterms:title>sl0199_flatten</dcterms:title>
     <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
