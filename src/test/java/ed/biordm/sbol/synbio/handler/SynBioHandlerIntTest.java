@@ -382,6 +382,7 @@ public class SynBioHandlerIntTest {
     public void testGenerateLibrary() throws URISyntaxException, IOException {
         CommandOptions parameters = new CommandOptions(Command.GENERATE);
         String outputDir = tmpDir.resolve("designs").toFile().getAbsolutePath();
+        new File(outputDir).mkdirs();
 
         parameters.templateFile = new File(getClass().getResource("cyano_template.xml").getFile()).getAbsolutePath();
         parameters.flankFile = new File(getClass().getResource("flank-list_20200821_fix2_short.xlsx").getFile()).getAbsolutePath();
@@ -392,5 +393,20 @@ public class SynBioHandlerIntTest {
         parameters.version = "1.0";
 
         handler.handleGenerate(parameters);
+    }
+
+    @Test
+    public void testCleanSbolFile() throws URISyntaxException, IOException {
+        CommandOptions parameters = new CommandOptions(Command.GENERATE);
+        String outputDir = tmpDir.resolve("clean").toFile().getAbsolutePath();
+        new File(outputDir).mkdirs();
+
+        parameters.inputFile = new File(getClass().getResource("sl0199_flatten.xml").getFile()).getAbsolutePath();
+        parameters.outputFile = new File(outputDir).toPath().resolve("sl0199_flatten.xml").toFile().getAbsolutePath();
+        parameters.namespace = "DEFAULT_NAMESPACE";
+        parameters.removeColls = true;
+        parameters.isRemoveCollsDef = true;
+
+        handler.handleClean(parameters);
     }
 }
