@@ -1,0 +1,773 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:prov="http://www.w3.org/ns/prov#" xmlns:sbol="http://sbols.org/v2#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#dateTime/" xmlns:om="http://www.ontology-of-units-of-measure.org/resource/om-2/" xmlns:synbiohub="http://synbiohub.org#" xmlns:sbh="http://wiki.synbiohub.org/wiki/Terms/synbiohub#" xmlns:sybio="http://www.sybio.ncl.ac.uk#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:ncbi="http://www.ncbi.nlm.nih.gov#" xmlns:igem="http://wiki.synbiohub.org/wiki/Terms/igem#" xmlns:genbank="http://www.ncbi.nlm.nih.gov/genbank#" xmlns:gbconv="http://sbols.org/genBankConversion#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:obo="http://purl.obolibrary.org/obo/">
+  <sbol:ComponentDefinition rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0">
+    <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten"/>
+    <sbol:displayId>sl0199_flatten</sbol:displayId>
+    <sbol:version>1.0.0</sbol:version>
+    <dcterms:title>sl0199_flatten</dcterms:title>
+    <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+    <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+    <dc:creator>Alistair McCormick</dc:creator>
+    <dc:creator>Anja Nenninger</dc:creator>
+    <sbol:type rdf:resource="http://www.biopax.org/release/biopax-level3.owl#DnaRegion"/>
+    <sbol:type rdf:resource="http://identifiers.org/so/SO:0000988"/>
+    <sbol:role rdf:resource="http://identifiers.org/so/SO:0000637"/>
+    <sbol:component>
+      <sbol:Component rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/barcode_inst/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/barcode_inst"/>
+        <sbol:displayId>barcode_inst</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:definition rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/barcode/1.0.0"/>
+        <sbol:access rdf:resource="http://sbols.org/v2#public"/>
+      </sbol:Component>
+    </sbol:component>
+    <sbol:component>
+      <sbol:Component rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/ori_instance/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/ori_instance"/>
+        <sbol:displayId>ori_instance</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:definition rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/ori/1.0.0"/>
+        <sbol:access rdf:resource="http://sbols.org/v2#public"/>
+      </sbol:Component>
+    </sbol:component>
+    <sbol:component>
+      <sbol:Component rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/codA_inst/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/codA_inst"/>
+        <sbol:displayId>codA_inst</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:definition rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/codA/1.0.0"/>
+        <sbol:access rdf:resource="http://sbols.org/v2#public"/>
+      </sbol:Component>
+    </sbol:component>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/backbone/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/backbone"/>
+        <sbol:displayId>backbone</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>backbone</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/backbone/backbone/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/backbone/backbone"/>
+            <sbol:displayId>backbone</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>1</sbol:start>
+            <sbol:end>2157</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000804"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BsmBI/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BsmBI"/>
+        <sbol:displayId>BsmBI</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BsmBI/BsmBI/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BsmBI/BsmBI"/>
+            <sbol:displayId>BsmBI</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>31</sbol:start>
+            <sbol:end>31</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0001687"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BsmBI_2/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BsmBI_2"/>
+        <sbol:displayId>BsmBI_2</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>BsmBI</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BsmBI_2/BsmBI_2/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BsmBI_2/BsmBI_2"/>
+            <sbol:displayId>BsmBI_2</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>73</sbol:start>
+            <sbol:end>73</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0001687"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AmpR_prom/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AmpR_prom"/>
+        <sbol:displayId>AmpR_prom</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <gbconv:gene>bla</gbconv:gene>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AmpR_prom/AmpR_prom/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AmpR_prom/AmpR_prom"/>
+            <sbol:displayId>AmpR_prom</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>176</sbol:start>
+            <sbol:end>280</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000167"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AmpR/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AmpR"/>
+        <sbol:displayId>AmpR</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbh:mutableDescription>confers resistance to ampicillin, carbenicillin, and related antibiotics</sbh:mutableDescription>
+        <gbconv:gene>bla</gbconv:gene>
+        <gbconv:product>beta-lactamase</gbconv:product>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AmpR/AmpR/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AmpR/AmpR"/>
+            <sbol:displayId>AmpR</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>281</sbol:start>
+            <sbol:end>1141</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000316"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/ori/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/ori"/>
+        <sbol:displayId>ori</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/ori/ori/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/ori/ori"/>
+            <sbol:displayId>ori</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>1312</sbol:start>
+            <sbol:end>1900</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:component rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/ori_instance/1.0.0"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/sll0199_left/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/sll0199_left"/>
+        <sbol:displayId>sll0199_left</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>sll0199_left</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/sll0199_left/sll0199_left/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/sll0199_left/sll0199_left"/>
+            <sbol:displayId>sll0199_left</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>2158</sbol:start>
+            <sbol:end>2684</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000342"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/insert/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/insert"/>
+        <sbol:displayId>insert</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>insert</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbh:mutableDescription>transgene insert with codA and Km</sbh:mutableDescription>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/insert/insert/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/insert/insert"/>
+            <sbol:displayId>insert</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>2685</sbol:start>
+            <sbol:end>5601</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000915"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/SapI_ATG_over/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/SapI_ATG_over"/>
+        <sbol:displayId>SapI_ATG_over</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>SapI-ATG overhang</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/SapI_ATG_over/SapI_ATG_over/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/SapI_ATG_over/SapI_ATG_over"/>
+            <sbol:displayId>SapI_ATG_over</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>2685</sbol:start>
+            <sbol:end>2687</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0001933"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/SapI_BspQI/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/SapI_BspQI"/>
+        <sbol:displayId>SapI_BspQI</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>SapI/BspQI</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/SapI_BspQI/SapI_BspQI/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/SapI_BspQI/SapI_BspQI"/>
+            <sbol:displayId>SapI_BspQI</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>2689</sbol:start>
+            <sbol:end>2695</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0001687"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/barcode/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/barcode"/>
+        <sbol:displayId>barcode</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/barcode/barcode/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/barcode/barcode"/>
+            <sbol:displayId>barcode</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>2707</sbol:start>
+            <sbol:end>2724</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:component rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/barcode_inst/1.0.0"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BpiI_TGCC_over/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BpiI_TGCC_over"/>
+        <sbol:displayId>BpiI_TGCC_over</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>BpiI-TGCC overhang</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BpiI_TGCC_over/BpiI_TGCC_over/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BpiI_TGCC_over/BpiI_TGCC_over"/>
+            <sbol:displayId>BpiI_TGCC_over</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>2725</sbol:start>
+            <sbol:end>2728</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0001933"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BpiI/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BpiI"/>
+        <sbol:displayId>BpiI</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BpiI/BpiI/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BpiI/BpiI"/>
+            <sbol:displayId>BpiI</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>2731</sbol:start>
+            <sbol:end>2736</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0001687"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AarI_TGCC_over/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AarI_TGCC_over"/>
+        <sbol:displayId>AarI_TGCC_over</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>AarI-TGCC overhang</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AarI_TGCC_over/AarI_TGCC_over/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AarI_TGCC_over/AarI_TGCC_over"/>
+            <sbol:displayId>AarI_TGCC_over</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>2737</sbol:start>
+            <sbol:end>2740</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0001933"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AarI/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AarI"/>
+        <sbol:displayId>AarI</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AarI/AarI/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AarI/AarI"/>
+            <sbol:displayId>AarI</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>2745</sbol:start>
+            <sbol:end>2751</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0001687"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/attB_CC/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/attB_CC"/>
+        <sbol:displayId>attB_CC</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>attB CC</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/attB_CC/attB_CC/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/attB_CC/attB_CC"/>
+            <sbol:displayId>attB_CC</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>2752</sbol:start>
+            <sbol:end>2804</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0001532"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/J23101MH_prom/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/J23101MH_prom"/>
+        <sbol:displayId>J23101MH_prom</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>J23101MH prom</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbh:mutableDescription>pC0.031 https://doi.org/10.1104/pp.18.01401</sbh:mutableDescription>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/J23101MH_prom/J23101MH_prom/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/J23101MH_prom/J23101MH_prom"/>
+            <sbol:displayId>J23101MH_prom</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>2805</sbol:start>
+            <sbol:end>2893</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000167"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/codA/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/codA"/>
+        <sbol:displayId>codA</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/codA/codA/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/codA/codA"/>
+            <sbol:displayId>codA</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>2894</sbol:start>
+            <sbol:end>4177</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:component rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/codA_inst/1.0.0"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/rrnBT1_T7_term/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/rrnBT1_T7_term"/>
+        <sbol:displayId>rrnBT1_T7_term</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>rrnBT1/T7 term</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbh:mutableDescription>BBa_B0015 double terminator (B0010-B0012) pC0.082 https://doi.org/10.1104/pp.18.01401</sbh:mutableDescription>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/rrnBT1_T7_term/rrnBT1_T7_term/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/rrnBT1_T7_term/rrnBT1_T7_term"/>
+            <sbol:displayId>rrnBT1_T7_term</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>4182</sbol:start>
+            <sbol:end>4296</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000141"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/KanR_term/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/KanR_term"/>
+        <sbol:displayId>KanR_term</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>KanR term</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/KanR_term/KanR_term/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/KanR_term/KanR_term"/>
+            <sbol:displayId>KanR_term</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>4301</sbol:start>
+            <sbol:end>4584</sbol:end>
+            <sbol:orientation rdf:resource="http://sbols.org/v2#reverseComplement"/>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000141"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/KanR/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/KanR"/>
+        <sbol:displayId>KanR</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbh:mutableDescription>Gene: aph(3&apos;)-Ia aminoglycoside phosphotransferase confers resistance to kanamycin in bacteria or G418 (Geneticin(R)) in eukaryotes</sbh:mutableDescription>
+        <gbconv:gene>aph(3&apos;)-Ia</gbconv:gene>
+        <gbconv:product>aminoglycoside phosphotransferase</gbconv:product>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/KanR/KanR/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/KanR/KanR"/>
+            <sbol:displayId>KanR</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>4585</sbol:start>
+            <sbol:end>5400</sbol:end>
+            <sbol:orientation rdf:resource="http://sbols.org/v2#reverseComplement"/>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000316"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/KanR_prom/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/KanR_prom"/>
+        <sbol:displayId>KanR_prom</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>KanR prom</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/KanR_prom/KanR_prom/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/KanR_prom/KanR_prom"/>
+            <sbol:displayId>KanR_prom</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>5401</sbol:start>
+            <sbol:end>5510</sbol:end>
+            <sbol:orientation rdf:resource="http://sbols.org/v2#reverseComplement"/>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000167"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/attB_TT/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/attB_TT"/>
+        <sbol:displayId>attB_TT</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>attB TT</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbh:mutableDescription>https://doi.org/10.1002/bit.26854</sbh:mutableDescription>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/attB_TT/attB_TT/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/attB_TT/attB_TT"/>
+            <sbol:displayId>attB_TT</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>5511</sbol:start>
+            <sbol:end>5563</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0001532"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AarI_2/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AarI_2"/>
+        <sbol:displayId>AarI_2</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>AarI</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AarI_2/AarI_2/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AarI_2/AarI_2"/>
+            <sbol:displayId>AarI_2</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>5564</sbol:start>
+            <sbol:end>5570</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0001687"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AarI_GGGA_over/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AarI_GGGA_over"/>
+        <sbol:displayId>AarI_GGGA_over</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>AarI-GGGA overhang</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AarI_GGGA_over/AarI_GGGA_over/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/AarI_GGGA_over/AarI_GGGA_over"/>
+            <sbol:displayId>AarI_GGGA_over</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>5575</sbol:start>
+            <sbol:end>5578</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0001933"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BpiI_2/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BpiI_2"/>
+        <sbol:displayId>BpiI_2</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>BpiI</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BpiI_2/BpiI_2/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BpiI_2/BpiI_2"/>
+            <sbol:displayId>BpiI_2</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>5579</sbol:start>
+            <sbol:end>5584</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0001687"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BpiI_GGGA_over/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BpiI_GGGA_over"/>
+        <sbol:displayId>BpiI_GGGA_over</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>BpiI-GGGA overhang</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BpiI_GGGA_over/BpiI_GGGA_over/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/BpiI_GGGA_over/BpiI_GGGA_over"/>
+            <sbol:displayId>BpiI_GGGA_over</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>5587</sbol:start>
+            <sbol:end>5590</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0001933"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/SapI_2/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/SapI_2"/>
+        <sbol:displayId>SapI_2</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>SapI</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/SapI_2/SapI_2/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/SapI_2/SapI_2"/>
+            <sbol:displayId>SapI_2</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>5591</sbol:start>
+            <sbol:end>5597</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0001687"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/SapI_TAA_over/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/SapI_TAA_over"/>
+        <sbol:displayId>SapI_TAA_over</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>SapI-TAA overhang</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/SapI_TAA_over/SapI_TAA_over/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/SapI_TAA_over/SapI_TAA_over"/>
+            <sbol:displayId>SapI_TAA_over</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>5599</sbol:start>
+            <sbol:end>5601</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0001933"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/sll0199_right/1.0.0">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/sll0199_right"/>
+        <sbol:displayId>sll0199_right</sbol:displayId>
+        <sbol:version>1.0.0</sbol:version>
+        <dcterms:title>sll0199_right</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+        <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/sll0199_right/sll0199_right/1.0.0">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/sll0199_right/sll0199_right"/>
+            <sbol:displayId>sll0199_right</sbol:displayId>
+            <sbol:version>1.0.0</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten/1.0.0"/>
+            <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+            <sbol:start>5602</sbol:start>
+            <sbol:end>6122</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000342"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequence rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten_seq/1.0.0"/>
+  </sbol:ComponentDefinition>
+  <sbol:ComponentDefinition rdf:about="https://synbiohub.org/user/jhay/Johnny190421/barcode/1.0.0">
+    <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/barcode"/>
+    <sbol:displayId>barcode</sbol:displayId>
+    <sbol:version>1.0.0</sbol:version>
+    <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/barcode/1.0.0"/>
+    <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+    <sbol:type rdf:resource="http://www.biopax.org/release/biopax-level3.owl#DnaRegion"/>
+    <sbol:role rdf:resource="http://identifiers.org/so/SO:0000730"/>
+  </sbol:ComponentDefinition>
+  <sbol:ComponentDefinition rdf:about="https://synbiohub.org/user/jhay/Johnny190421/codA/1.0.0">
+    <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/codA"/>
+    <sbol:displayId>codA</sbol:displayId>
+    <sbol:version>1.0.0</sbol:version>
+    <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/codA/1.0.0"/>
+    <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+    <sbh:mutableDescription>Codon optimised (V153A, F317C)  ndoi:10.1111/tpj.12675</sbh:mutableDescription>
+    <sbol:type rdf:resource="http://www.biopax.org/release/biopax-level3.owl#DnaRegion"/>
+    <sbol:role rdf:resource="http://identifiers.org/so/SO:0000316"/>
+    <sbol:sequence rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/codA_seq/1.0.0"/>
+  </sbol:ComponentDefinition>
+  <sbol:ComponentDefinition rdf:about="https://synbiohub.org/user/jhay/Johnny190421/ori/1.0.0">
+    <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/ori"/>
+    <sbol:displayId>ori</sbol:displayId>
+    <sbol:version>1.0.0</sbol:version>
+    <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/ori/1.0.0"/>
+    <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+    <sbh:mutableDescription>high-copy-number ColE1/pMB1/pBR322/pUC origin of replication</sbh:mutableDescription>
+    <sbol:type rdf:resource="http://www.biopax.org/release/biopax-level3.owl#DnaRegion"/>
+    <sbol:role rdf:resource="http://identifiers.org/so/SO:0000296"/>
+    <sbol:sequence rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/ori_seq/1.0.0"/>
+  </sbol:ComponentDefinition>
+  <sbol:Sequence rdf:about="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten_seq/1.0.0">
+    <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten_seq"/>
+    <sbol:displayId>sl0199_flatten_seq</sbol:displayId>
+    <sbol:version>1.0.0</sbol:version>
+    <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/sl0199_flatten_seq/1.0.0"/>
+    <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+    <sbol:elements>CGCTGCTTACAGACAAGCTGTGACCGTCTCCGGGAGCTGCATGTGTCAGAGGTTTTCACCGTCATCACCGAAACGCGCGAGACGAAAGGGCCTCGTGATACGCCTATTTTTATAGGTTAATGTCATGATAATAATGGTTTCTTAGACGTCAGGTGGCACTTTTCGGGGAAATGTGCGCGGAACCCCTATTTGTTTATTTTTCTAAATACATTCAAATATGTATCCGCTCATGAGACAATAACCCTGATAAATGCTTCAATAATATTGAAAAAGGAAGAGTATGAGTATTCAACATTTCCGTGTCGCCCTTATTCCCTTTTTTGCGGCATTTTGCCTTCCTGTTTTTGCTCACCCAGAAACGCTGGTGAAAGTAAAAGATGCTGAAGATCAGTTGGGTGCACGAGTGGGTTACATCGAACTGGATCTCAACAGCGGTAAGATCCTTGAGAGTTTTCGCCCCGAAGAACGTTTTCCAATGATGAGCACTTTTAAAGTTCTGCTATGTGGCGCGGTATTATCCCGTATTGACGCCGGGCAAGAGCAACTCGGTCGCCGCATACACTATTCTCAGAATGACTTGGTTGAGTACTCACCAGTCACAGAAAAGCATCTTACGGATGGCATGACAGTAAGAGAATTATGCAGTGCTGCCATAACCATGAGTGATAACACTGCGGCCAACTTACTTCTGACAACGATCGGAGGACCGAAGGAGCTAACCGCTTTTTTGCACAACATGGGGGATCATGTAACTCGCCTTGATCGTTGGGAACCGGAGCTGAATGAAGCCATACCAAACGACGAGCGTGACACCACGATGCCTGTAGCAATGGCAACAACGTTGCGCAAACTATTAACTGGCGAACTACTTACTCTAGCTTCCCGGCAACAATTAATAGACTGGATGGAGGCGGATAAAGTTGCAGGACCACTTCTGCGCTCGGCCCTTCCGGCTGGCTGGTTTATTGCTGATAAATCTGGAGCCGGTGAGCGTGGTTCTCGCGGTATCATTGCAGCACTGGGGCCAGATGGTAAGCCCTCCCGTATCGTAGTTATCTACACGACGGGGAGTCAGGCAACTATGGATGAACGAAATAGACAGATCGCTGAGATAGGTGCCTCACTGATTAAGCATTGGTAACTGTCAGACCAAGTTTACTCATATATACTTTAGATTGATTTAAAACTTCATTTTTAATTTAAAAGGATCTAGGTGAAGATCCTTTTTGATAATCTCATGACCAAAATCCCTTAACGTGAGTTTTCGTTCCACTGAGCGTCAGACCCCGTAGAAAAGATCAAAGGATCTTCTTGAGATCCTTTTTTTCTGCGCGTAATCTGCTGCTTGCAAACAAAAAAACCACCGCTACCAGCGGTGGTTTGTTTGCCGGATCAAGAGCTACCAACTCTTTTTCCGAAGGTAACTGGCTTCAGCAGAGCGCAGATACCAAATACTGTTCTTCTAGTGTAGCCGTAGTTAGGCCACCACTTCAAGAACTCTGTAGCACCGCCTACATACCTCGCTCTGCTAATCCTGTTACCAGTGGCTGCTGCCAGTGGCGATAAGTCGTGTCTTACCGGGTTGGACTCAAGACGATAGTTACCGGATAAGGCGCAGCGGTCGGGCTGAACGGGGGGTTCGTGCACACAGCCCAGCTTGGAGCGAACGACCTACACCGAACTGAGATACCTACAGCGTGAGCTATGAGAAAGCGCCACGCTTCCCGAAGGGAGAAAGGCGGACAGGTATCCGGTAAGCGGCAGGGTCGGAACAGGAGAGCGCACGAGGGAGCTTCCAGGGGGAAACGCCTGGTATCTTTATAGTCCTGTCGGGTTTCGCCACCTCTGACTTGAGCGTCGATTTTTGTGATGCTCGTCAGGGGGGCGGAGCCTATGGAAAAACGCCAGCAACGCGGCCTTTTTACGGTTCCTGGCCTTTTGCTGGCCTTTTGCTCACATGTTCTTTCCTGCGTTATCCCCTGATTCTGTGGATAACCGTATTACCGCCTTTGAGTGAGCTGATACCGCTCGCCGCAGCCGAACGACCGAGCGCAGCGAGTCAGTGAGCGAGGAAGCGGATGAGCGCCCAATACGCAAACCGCCTCTCCCCGCGCGTTGGCCGATTCATTAATGCAGCTGGCACGACAGGTTTCggagCACTAGGCCAACCATAATGGCCATCGGCAAGGCAAAACCACCGTTATCAGCAGAACGACGGCGGGAAAAAATGATTAAACGAAAAAATTTGCAAGGATTCATAGCGGTTGCCCAATCTAACTCAGGGAGCGACTTCAGCCCACAAAAAACACCACTGGGCCTACTGGGCTATTCCCATTATCATCTACATTGAAGGGATAGCAAGCTAATTTTTATGACGGCGATCGCCAAAAACAAAGAAAATTCAGCAATTACCGTGGGTAGCAAAAAATCCCCATCTAAAGTTCAGTAAATATAGCTAGAACAACCAAGCATTTTCGGCAAAGTACTATTCAGATAGAACGAGAAATGAGCTTGTTCTATCCGCCCGGGGCTGAGGCTGTATAATCTACGACGGGCTGTCAAACATTGTGATACCATGGGCAGAAGAAAGGAAAAACGTCCCTGATCGCCTTTTTGGGCACGGAGTAGGGCGTTACCCCGGCCCGTTCAACCACAAGTCCCTATAGATACAATCGCCAAGAAGTATGaGAAGAGCACGGTAGCCTTNNNNNNNNNNNNNNNNNNTGCCCAGTCTTCTGCCTAAGGCAGGTGCCGCGGTGCGGGTGCCAGGGCGTGCCCCCGGGCTCCCCGGGCGCGTACTCCACtttacagctagctcagtcctaggtattatgctagctattgtgagcggataacaatttcacacatactagagaaagaggagaaatactaaATGTCTAACAACGCGCTGCAAACCATCATCAATGCACGCCTGCCTGGAGAGGAAGGGTTGTGGCAGATTCACTTACAGGACGGCAAAATCTCCGCGATCGACGCACAATCTGGGGTTATGCCGATCACCGAAAACTCTTTGGATGCCGAACAAGGGTTAGTCATTCCCCCATTCGTTGAACCACATATTCACCTGGATACTACTCAGACAGCCGGTCAGCCCAATTGGAACCAGTCCGGTACGCTGTTCGAAGGTATCGAACGATGGGCGGAGCGAAAAGCTCTACTCACGCATGACGATGTCAAGCAACGGGCCTGGCAGACCCTGAAGTGGCAGATCGCCAACGGAATACAGCACGTACGCACTCACGTGGATGTTTCCGATGCCACTTTGACGGCATTGAAGGCAATGCTCGAAGTTAAGCAGGAAGTAGCCCCGTGGATTGACTTGCAAATCGCTGCCTTCCCTCAGGAAGGCATCCTAAGTTATCCGAATGGAGAAGCGCTCCTGGAGGAGGCATTGCGGTTAGGAGCAGACGTGGTGGGAGCGATTCCCCATTTCGAGTTTACCCGCGAGTACGGTGTTGAATCTCTGCATAAAACATTTGCTTTAGCTCAGAAGTATGACCGTCTGATCGACGTACACTGCGACGAGATCGATGACGAACAGAGTCGCTTCGTGGAGACGGTGGCTGCGCTGGCGCATCACGAAGGCATGGGTGCACGTGTAACTGCAAGCCATACGACGGCTATGCACAGCTATAATGGGGCATATACATCTCGTTTGTTCCGATTACTAAAAATGAGCGGAATCAACTTTGTTGCCAATCCATTGGTCAACATTCATCTACAAGGACGCTTCGACACCTACCCGAAACGGCGAGGAATCACACGAGTTAAGGAAATGCTAGAGTCTGGTATCAATGTGTGTTTCGGGCATGATGACGTGTGTGGTCCCTGGTACCCTCTAGGAACAGCCAACATGCTGCAAGTTCTCCACATGGGTCTACACGTGTGTCAACTCATGGGGTATGGACAAATTAACGATGGACTCAATCTAATTACACACCATTCCGCCCGAACACTGAACCTCCAGGATTACGGGATCGCGGCGGGAAATTCTGCCAACCTCATCATTCTGCCCGCGGAAAACGGGTTCGACGCTCTACGCCGTCAAGTGCCAGTTCGGTATTCTGTTCGTGGGGGTAAGGTAATTGCAAGTACCCAACCGGCTCAGACCACGGTCTATTTAGAGCAACCGGAAGCTATCGACTACAAACGATGAgcttcaaataaaacgaaaggctcagtcgaaagactgggcctttcgttttatctgttgtttgtcggtgaacgctctctactagagtcacactggctcaccttcgggtgggcctttctgcgcgctCTGAGGTCTGCCTCGTGAAGAAGGTGTTGCTGACTCATACCAGGCCTGAATCGCCCCATCATCCAGCCAGAAAGTGAGGGAGCCACGGTTGATGAGAGCTTTGTTGTAGGTGGACCAGTTGGTGATTTTGAACTTTTGCTTTGCCACGGAACGGTCTGCGTTGTCGGGAAGATGCGTGATCTGATCCTTCAACTCAGCAAAAGTTCGATTTATTCAACAAAGCCGCCGTCCCGTCAAGTCAGCGTAATGCTCTGCCAGTGTTACAACCAATTAACCAATTCTGATTAGAAAAACTCATCGAGCATCAAATGAAACTGCAATTTATTCATATCAGGATTATCAATACCATATTTTTGAAAAAGCCGTTTCTGTAATGAAGGAGAAAACTCACCGAGGCAGTTCCATAGGATGGCAAGATCCTGGTATCGGTCTGCGATTCCGACTCGTCCAACATCAATACAACCTATTAATTTCCCCTCGTCAAAAATAAGGTTATCAAGTGAGAAATCACCATGAGTGACGACTGAATCCGGTGAGAATGGCAAAAGCTTATGCATTTCTTTCCAGACTTGTTCAACAGGCCAGCCATTACGCTCGTCATCAAAATCACTCGCATCAACCAAACCGTTATTCATTCGTGATTGCGCCTGAGCGAGACGAAATACGCGATCGCTGTTAAAAGGACAATTACAAACAGGAATCGAATGCAACCGGCGCAGGAACACTGCCAGCGCATCAACAATATTTTCACCTGAATCAGGATATTCTTCTAATACCTGGAATGCTGTTTTCCCGGGGATCGCAGTGGTGAGTAACCATGCATCATCAGGAGTACGGATAAAATGCTTGATGGTCGGAAGAGGCATAAATTCCGTCAGCCAGTTTAGTCTGACCATCTCATCTGTAACATCATTGGCAACGCTACCTTTGCCATGTTTCAGAAACAACTCTGGCGCATCGGGCTTCCCATACAATCGATAGATTGTCGCACCTGATTGCCCGACATTATCGCGAGCCCATTTATACCCATATAAATCAGCATCCATGTTGGAATTTAATCGCGGCCTCGAGCAAGACGTTTCCCGTTGAATATGGCTCATAACACCCCTTGTATTACTGTTTATGTAAGCAGACAGTTTTATTGTTCATGATGATATATTTTTATCTTGTGCAATGTAACATCAGAGATTTTGAGACACAACGTGGCTTTCCGCGGTGCGGGTGCCAGGGCGTGCCCTTGGGCTCCCCGGGCGCGTACTCCACCACCTGCCATTGGGAGAAGACTTGGGAGCTCTTCataaTCAGCCAGCTCAATCTGTGTGTCGTTGATTTAAGCTTAATGCTACGGGGTCTGTCTCCAACTCCCTCAGCTTCTCGCAATGGCAAGGCAAATAATGTTTCTCTTGCTGAGTAGATGTTCAGGAGGACGGATCGAAAGTCTACAAAACAGATTCTTGACCAAGCCATCTACTTAGAAAAACTTCTGCGTTTTGGCGATCGCATCTTTTAAGCGAGATGCGATTTTTTTGTCCATTAGTTTGTATTTTAATACTCTTTTGTTGTTTGATTTCGTCCAAGCTTTTCTTGGTATGTGGGATCTTCCGTGCCCAAAATTTTATCCCAGAAAGTGAAATATAGTCATTTCAATTAACGATGAGAGAATTTAATGTAAAATTATGGAGTGTACAAAATGAACAGGTTTAAACAATGGCTTACAGTTTAGATTTAAGGCAAAGGGTAGTAGCTTATATAGAAGCTGGAGGAAAAATAACTGAGGCTTCCAAGATATATAAAATAGGAAAAGCCTCGATATACAGATGGT</sbol:elements>
+    <sbol:encoding rdf:resource="http://www.chem.qmul.ac.uk/iubmb/misc/naseq.html"/>
+  </sbol:Sequence>
+  <sbol:Sequence rdf:about="https://synbiohub.org/user/jhay/Johnny190421/codA_seq/1.0.0">
+    <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/codA_seq"/>
+    <sbol:displayId>codA_seq</sbol:displayId>
+    <sbol:version>1.0.0</sbol:version>
+    <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/codA_seq/1.0.0"/>
+    <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+    <sbol:elements>ATGTCTAACAACGCGCTGCAAACCATCATCAATGCACGCCTGCCTGGAGAGGAAGGGTTGTGGCAGATTCACTTACAGGACGGCAAAATCTCCGCGATCGACGCACAATCTGGGGTTATGCCGATCACCGAAAACTCTTTGGATGCCGAACAAGGGTTAGTCATTCCCCCATTCGTTGAACCACATATTCACCTGGATACTACTCAGACAGCCGGTCAGCCCAATTGGAACCAGTCCGGTACGCTGTTCGAAGGTATCGAACGATGGGCGGAGCGAAAAGCTCTACTCACGCATGACGATGTCAAGCAACGGGCCTGGCAGACCCTGAAGTGGCAGATCGCCAACGGAATACAGCACGTACGCACTCACGTGGATGTTTCCGATGCCACTTTGACGGCATTGAAGGCAATGCTCGAAGTTAAGCAGGAAGTAGCCCCGTGGATTGACTTGCAAATCGCTGCCTTCCCTCAGGAAGGCATCCTAAGTTATCCGAATGGAGAAGCGCTCCTGGAGGAGGCATTGCGGTTAGGAGCAGACGTGGTGGGAGCGATTCCCCATTTCGAGTTTACCCGCGAGTACGGTGTTGAATCTCTGCATAAAACATTTGCTTTAGCTCAGAAGTATGACCGTCTGATCGACGTACACTGCGACGAGATCGATGACGAACAGAGTCGCTTCGTGGAGACGGTGGCTGCGCTGGCGCATCACGAAGGCATGGGTGCACGTGTAACTGCAAGCCATACGACGGCTATGCACAGCTATAATGGGGCATATACATCTCGTTTGTTCCGATTACTAAAAATGAGCGGAATCAACTTTGTTGCCAATCCATTGGTCAACATTCATCTACAAGGACGCTTCGACACCTACCCGAAACGGCGAGGAATCACACGAGTTAAGGAAATGCTAGAGTCTGGTATCAATGTGTGTTTCGGGCATGATGACGTGTGTGGTCCCTGGTACCCTCTAGGAACAGCCAACATGCTGCAAGTTCTCCACATGGGTCTACACGTGTGTCAACTCATGGGGTATGGACAAATTAACGATGGACTCAATCTAATTACACACCATTCCGCCCGAACACTGAACCTCCAGGATTACGGGATCGCGGCGGGAAATTCTGCCAACCTCATCATTCTGCCCGCGGAAAACGGGTTCGACGCTCTACGCCGTCAAGTGCCAGTTCGGTATTCTGTTCGTGGGGGTAAGGTAATTGCAAGTACCCAACCGGCTCAGACCACGGTCTATTTAGAGCAACCGGAAGCTATCGACTACAAACGATGA</sbol:elements>
+    <sbol:encoding rdf:resource="http://www.chem.qmul.ac.uk/iubmb/misc/naseq.html"/>
+  </sbol:Sequence>
+  <sbol:Sequence rdf:about="https://synbiohub.org/user/jhay/Johnny190421/ori_seq/1.0.0">
+    <sbol:persistentIdentity rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/ori_seq"/>
+    <sbol:displayId>ori_seq</sbol:displayId>
+    <sbol:version>1.0.0</sbol:version>
+    <sbh:topLevel rdf:resource="https://synbiohub.org/user/jhay/Johnny190421/ori_seq/1.0.0"/>
+    <sbh:ownedBy rdf:resource="https://synbiohub.org/user/jhay"/>
+    <sbol:elements>TTGAGATCCTTTTTTTCTGCGCGTAATCTGCTGCTTGCAAACAAAAAAACCACCGCTACCAGCGGTGGTTTGTTTGCCGGATCAAGAGCTACCAACTCTTTTTCCGAAGGTAACTGGCTTCAGCAGAGCGCAGATACCAAATACTGTTCTTCTAGTGTAGCCGTAGTTAGGCCACCACTTCAAGAACTCTGTAGCACCGCCTACATACCTCGCTCTGCTAATCCTGTTACCAGTGGCTGCTGCCAGTGGCGATAAGTCGTGTCTTACCGGGTTGGACTCAAGACGATAGTTACCGGATAAGGCGCAGCGGTCGGGCTGAACGGGGGGTTCGTGCACACAGCCCAGCTTGGAGCGAACGACCTACACCGAACTGAGATACCTACAGCGTGAGCTATGAGAAAGCGCCACGCTTCCCGAAGGGAGAAAGGCGGACAGGTATCCGGTAAGCGGCAGGGTCGGAACAGGAGAGCGCACGAGGGAGCTTCCAGGGGGAAACGCCTGGTATCTTTATAGTCCTGTCGGGTTTCGCCACCTCTGACTTGAGCGTCGATTTTTGTGATGCTCGTCAGGGGGGCGGAGCCTATGGAAA</sbol:elements>
+    <sbol:encoding rdf:resource="http://www.chem.qmul.ac.uk/iubmb/misc/naseq.html"/>
+  </sbol:Sequence>
+</rdf:RDF>
