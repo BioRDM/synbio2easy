@@ -627,10 +627,10 @@ public class UserInputPrompter {
 
         if (options.isRemoveCollsDef == false && options.removeColls == false) {
             console.printf("Do you wish to remove references to any SynBioHub collections in the cleaned SBOL output document?%n");
-            String removeCollsAns = console.readLine("Y | N: ").strip();
+            String removeCollsAns = console.readLine("Y | N [enter 'Y' if you are not sure]: ").strip();
 
             while(!Y_N_PATTERN.matcher(removeCollsAns).matches()) {
-                removeCollsAns = console.readLine("Y | N: ").strip();
+                removeCollsAns = console.readLine("Y | N [enter 'Y' if you are not sure]: ").strip();
             }
 
             if (Y_PATTERN.matcher(removeCollsAns).matches()) {
