@@ -612,10 +612,10 @@ public class UserInputPrompter {
 
         if (options.namespace == null) {
             console.printf("Please enter the namespace for components in the cleaned SBOL document file%n");
-            options.namespace = console.readLine("Namespace [press <ENTER> for the 'DEFAULT_NAMESPACE' if you are not sure]: ");
+            options.namespace = console.readLine("Namespace [press <ENTER> for the default 'http://biordm.sbs.ed.ac.uk' namespace if you are not sure]: ");
 
             if (options.namespace == null || options.namespace.trim().isEmpty()) {
-                options.namespace = "DEFAULT_NAMESPACE";
+                options.namespace = "http://biordm.sbs.ed.ac.uk";
             }
         } else {
             console.printf("%n");
