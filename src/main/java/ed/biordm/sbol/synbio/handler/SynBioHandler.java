@@ -11,8 +11,10 @@ import ed.biordm.sbol.synbio.dom.CommandOptions;
 import ed.biordm.sbol.toolkit.transform.SynBioTamer;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
@@ -21,11 +23,16 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,6 +41,7 @@ import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.sbolstandard.core2.ComponentDefinition;
 import org.sbolstandard.core2.SBOLConversionException;
 import org.sbolstandard.core2.SBOLDocument;
 import org.sbolstandard.core2.SBOLReader;
@@ -116,11 +124,6 @@ public class SynBioHandler {
         Path templateFile = Paths.get(parameters.templateFile);
         Path flankFile = Paths.get(parameters.flankFile);
         Path outDir = Paths.get(parameters.outputDir);
-        System.out.println(name);
-        System.out.println(version);
-        System.out.println(templateFile.toFile().getAbsolutePath());
-        System.out.println(flankFile.toFile().getAbsolutePath());
-        System.out.println(outDir.toFile().getAbsolutePath());
 
         try {
             generator.generateFromFiles(name, version, templateFile, flankFile, outDir);
@@ -136,11 +139,6 @@ public class SynBioHandler {
         Path outputFile = Paths.get(parameters.outputFile);
         String namespace = parameters.namespace;
         boolean removeColls = parameters.removeColls;
-
-        System.out.println(inputFile.toFile().getAbsolutePath());
-        System.out.println(outputFile.toFile().getAbsolutePath());
-        System.out.println(removeColls);
-        System.out.println(namespace);
 
         SBOLDocument orig;
 
@@ -205,6 +203,13 @@ public class SynBioHandler {
         }
 
         List<Path> files = getFiles(parameters);
+        String csvLogFilename = new SimpleDateFormat("'deposit_log_'yyyy-MM-dd-HH-mm-ss'.csv'").format(new Date());
+
+        Path csvOutputFile = Paths.get(System.getProperty("user.dir")).resolve(csvLogFilename);
+        CommandOptions outputParams = parameters.clone();
+        outputParams.url = collectionUrl;
+
+        List<String[]> dataLines = new ArrayList();
 
         for (Path file: files) {
 
@@ -212,6 +217,19 @@ public class SynBioHandler {
             // for example overwrite is needed here not only for the creation
             client.deposit(parameters.sessionToken, collectionUrl, file,
                     getOverwriteParam(parameters, true));
+
+            try {
+                // do output to CSV file of uploaded designs
+                dataLines.addAll(getUploadedDesignProperties(outputParams, file));
+            } catch (FileNotFoundException | UnsupportedEncodingException | URISyntaxException e) {
+                logger.error(e.getMessage(), e);
+            }
+        }
+
+        try {
+            this.writeLogToCsv(csvOutputFile, dataLines);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -449,6 +467,108 @@ public class SynBioHandler {
         });
 
         System.out.println("");
+    }
+
+    protected List<String[]> getUploadedDesignProperties(CommandOptions parameters, Path sbolFile)
+            throws FileNotFoundException, UnsupportedEncodingException, URISyntaxException {
+        Set<ComponentDefinition> cmpDefs = client.getComponentDefinitions(sbolFile);
+        List<Map<String,Object>> designMaps = listCollectionDesigns(parameters);
+        List<String[]> dataLines = new ArrayList<>();
+
+        for(ComponentDefinition cmpDef: cmpDefs) {
+            String name = cmpDef.getName();
+            String displayId = cmpDef.getDisplayId();
+            String version = cmpDef.getVersion();
+
+            // match the ComponentDefinition properties from the SBOL file with those
+            // in the uploaded collection
+            for(Map<String,Object> designMap: designMaps) {
+                String upldName = (String)designMap.get("name");
+                String upldDisplayId = (String)designMap.get("displayId");
+                String upldVersion = (String)designMap.get("version");
+
+                if(upldDisplayId.equals(displayId) && upldVersion.equals(version)) {
+                    String cleanUpName = escapeSpecialCharacters(upldName);
+                    String cleanOrigName = escapeSpecialCharacters(name);
+                    String cleanDisplayId = escapeSpecialCharacters(upldDisplayId);
+                    String cleanVersion = escapeSpecialCharacters(upldVersion);
+                    String cleanUri = escapeSpecialCharacters((String)designMap.get("uri"));
+
+                    dataLines.add(new String[]
+                        { cleanDisplayId, cleanUpName, cleanOrigName, cleanVersion, cleanUri });
+                }
+            }
+        }
+
+        return dataLines;
+    }
+
+    protected String convertToCSV(String[] data) {
+        return Stream.of(data)
+          .map(this::escapeSpecialCharacters)
+          .collect(Collectors.joining(","));
+    }
+
+    protected String escapeSpecialCharacters(String data) {
+        if(data == null) {
+            return "";
+        }
+
+        String escapedData = data.replaceAll("\\R", " ");
+        if (data.contains(",") || data.contains("\"") || data.contains("'")) {
+            data = data.replace("\"", "\"\"");
+            escapedData = "\"" + data + "\"";
+        }
+        return escapedData;
+    }
+
+    public void writeLogToCsv(Path csvOutputFile, List<String[]> dataLines) throws IOException {
+        // add header row
+        String[] header = new String[]{"display_id", "uploaded_name", "original_name", "version", "uri"};
+        dataLines.add(0, header);
+
+        try (PrintWriter pw = new PrintWriter(csvOutputFile.toFile())) {
+            dataLines.stream().map(this::convertToCSV).forEach(pw::println);
+        }
+    }
+
+    protected List<Map<String,Object>> listCollectionDesigns(CommandOptions parameters) throws UnsupportedEncodingException, URISyntaxException {
+        String url = client.hubFromUrl(parameters.url);
+
+        // ensure collection URL specifies version
+        String verCollUrl = verifyCollectionUrlVersion(parameters);
+
+        final String collUrl = URLEncoder.encode("<"+verCollUrl+">", StandardCharsets.UTF_8.name());
+
+        String objType = "http://sbols.org/v2#ComponentDefinition";
+        objType = "ComponentDefinition";
+
+        // retrieve existing design and description
+        String requestParams = "/objectType="+objType+"&collection="+collUrl+"&/?offset=0&limit=10";
+
+        String metadata = client.searchMetadata(url, requestParams, parameters.sessionToken);
+
+        //Object design = client.getSubmissionByDisplayId();
+        List<Object> designList = JSON_PARSER.parseList(metadata);
+        List<Map<String,Object>> designMaps = new ArrayList();
+
+        if(designList == null || designList.isEmpty()) {
+            System.out.printf("Collection %s is empty!%n", verCollUrl);
+        }
+
+        for(Object cmpDef: designList) {
+            if (cmpDef instanceof Map) {
+                Map<String,Object> cmpDefMap = (Map<String,Object>) cmpDef;
+                String uri = (String)cmpDefMap.get("uri");
+                String displayId = (String)cmpDefMap.get("displayId");
+                String version = (String)cmpDefMap.get("version");
+                String name = (String)cmpDefMap.get("name");
+
+                designMaps.add(cmpDefMap);
+            }
+        }
+
+        return designMaps;
     }
 
     protected String verifyCollectionUrlVersion(CommandOptions parameters)

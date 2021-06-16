@@ -409,4 +409,19 @@ public class SynBioHandlerIntTest {
 
         handler.handleClean(parameters);
     }
+
+    @Test
+    public void testGetUploadedDesignProperties() {
+        
+    }
+
+    @Test
+    public void testWriteLogToCsv() {
+        
+    }
+
+    @Test
+    public void testListCollectionDesigns() {
+        
+    }
 }
