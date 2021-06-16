@@ -5,12 +5,20 @@
  */
 package ed.biordm.sbol.synbio.client;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import org.sbolstandard.core2.ComponentDefinition;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -116,6 +124,26 @@ public class SynBioClientTest {
                     Paths.get("D://temp"), overwrite);
         } catch(IllegalStateException e) {
             assertTrue(e.getMessage().startsWith("Could not derive base SynBioHub server URL: Illegal character in opaque part"));
+        }
+    }
+
+    @Test
+    public void testGetComponentDefinitions() throws FileNotFoundException {
+        Path sbolFile = Paths.get(new File(getClass().getResource("../handler/cyano_sl1099.xml").getFile()).getAbsolutePath());
+
+        List<String> names = new ArrayList(Arrays.asList(new String[]{null, "null",
+            "sll0199_left", "sll0199_right", "sl0199_flatten", "insert", "sll0199" }));
+
+        List<String> displayIds = new ArrayList(Arrays.asList(new String[]{null, "backbone",
+            "insert", "barcode", "sll0199", "left_flank", "sll0199_left",
+            "sll0199_right", "codA", "ori", "right_flank", "cyano_codA_Km", "sl0199_flatten"}));        
+
+        Set<ComponentDefinition> cmpDefs = client.getComponentDefinitions(sbolFile);
+        
+        for(ComponentDefinition cmpDef: cmpDefs) {
+            assertTrue(names.contains(cmpDef.getName()));
+            assertTrue(displayIds.contains(cmpDef.getDisplayId()));
+            assertTrue(cmpDef.getVersion().equals("1.0.0"));
         }
     }
 }

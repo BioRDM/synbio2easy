@@ -7,6 +7,8 @@ package ed.biordm.sbol.synbio.client;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -18,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Level;
+import java.util.Set;
 import javax.xml.namespace.QName;
 import org.apache.tika.Tika;
 import org.sbolstandard.core2.Annotation;
@@ -479,10 +481,8 @@ public class SynBioClient {
     protected String getDesignAnnotation(String designXml, String designUri, QName qname) {
         String dataValue = null;
 
-        InputStream is = new ByteArrayInputStream(designXml.getBytes(StandardCharsets.UTF_8));
-
         SBOLDocument doc;
-        try {
+        try (InputStream is = new ByteArrayInputStream(designXml.getBytes(StandardCharsets.UTF_8))){
             doc = SBOLReader.read(is);
             doc.setDefaultURIprefix("http://bio.ed.ac.uk/a_mccormick/cyano_source/");
             ComponentDefinition cmpDef = doc.getComponentDefinition(new URI(removeLastMatchingChar(designUri, "/")));
@@ -498,5 +498,21 @@ public class SynBioClient {
         }
 
         return dataValue;
+    }
+
+    public Set<ComponentDefinition> getComponentDefinitions(Path sbolFile) throws FileNotFoundException {
+        String dataValue = null;
+        Set<ComponentDefinition> cmpDefs = null;
+
+        SBOLDocument doc;
+        try (InputStream is = new FileInputStream(sbolFile.toFile())) {
+            doc = SBOLReader.read(is);
+            doc.setDefaultURIprefix("http://bio.ed.ac.uk/a_mccormick/cyano_source/");
+            cmpDefs = doc.getComponentDefinitions();
+        } catch (SBOLValidationException | IOException | SBOLConversionException e) {
+            logger.error("Unable to read SBOL document", e);
+        }
+
+        return cmpDefs;
     }
 }
