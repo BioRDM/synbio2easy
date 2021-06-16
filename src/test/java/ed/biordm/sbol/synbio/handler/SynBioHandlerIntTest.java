@@ -17,6 +17,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -421,7 +425,45 @@ public class SynBioHandlerIntTest {
     }
 
     @Test
-    public void testListCollectionDesigns() {
-        
+    public void testListCollectionDesigns() throws URISyntaxException, UnsupportedEncodingException {
+        CommandOptions parameters = new CommandOptions(Command.DEPOSIT);
+        String collPidUrl = "http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection";
+
+        parameters.collectionName = "johnny";
+        parameters.crateNew = false;
+        parameters.dir = "D:\\temp\\sbol\\";
+        parameters.url = collPidUrl;
+        parameters.overwrite = true;
+        parameters.version = "1";
+        parameters.fileExtFilter = ".xml";
+        parameters.multipleCollections = false;
+        parameters.user = synBioUser;
+        parameters.password = synBioPassword;
+
+        String token = handler.login(parameters);
+        System.out.println(token);
+        assertNotNull(token);
+
+        parameters.sessionToken = token;
+
+        List<Map<String,Object>> designMaps = handler.listCollectionDesigns(parameters);
+
+        List<String> designNames = new ArrayList(Arrays.asList(new String[]{"sl0199_flatten", "sll0199_left", "insert", "sll0199_right"}));
+        List<String> designDisplayIds = new ArrayList(Arrays.asList(new String[]{"sl0199_flatten", "sll0199_left", "insert", "sll0199_right"}));
+        List<String> designVersions = new ArrayList(Arrays.asList(new String[]{"2.0.0", "2.0.8", "1.1.0", "2.0.6", "2.0.1"}));
+
+        for(Map<String,Object> designMap: designMaps) {
+            String upldName = (String)designMap.get("name");
+            String upldDisplayId = (String)designMap.get("displayId");
+            String upldVersion = (String)designMap.get("version");
+
+            System.out.println(upldName);
+            System.out.println(upldDisplayId);
+            System.out.println(upldVersion);
+
+            assertTrue(designNames.contains(upldName));
+            assertTrue(designDisplayIds.contains(upldDisplayId));
+            assertTrue(designVersions.contains(upldVersion));
+        }
     }
 }
