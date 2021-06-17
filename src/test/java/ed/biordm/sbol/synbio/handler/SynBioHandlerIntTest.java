@@ -10,6 +10,7 @@ import ed.biordm.sbol.synbio.dom.CommandOptions;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -416,8 +417,33 @@ public class SynBioHandlerIntTest {
     }
 
     @Test
-    public void testGetUploadedDesignProperties() {
-        
+    public void testGetUploadedDesignProperties() throws URISyntaxException, FileNotFoundException, UnsupportedEncodingException {
+        CommandOptions parameters = new CommandOptions(Command.DEPOSIT);
+        String collPidUrl = "http://localhost:7777/user/Johnny/johnny_parent_collection/johnny_parent_collection_collection/1";
+
+        parameters.collectionName = "johnny";
+        parameters.crateNew = false;
+        parameters.dir = "D:\\temp\\sbol\\";
+        parameters.url = collPidUrl;
+        parameters.overwrite = true;
+        parameters.version = "1";
+        parameters.fileExtFilter = ".xml";
+        parameters.multipleCollections = false;
+        parameters.user = synBioUser;
+        parameters.password = synBioPassword;
+
+        String token = handler.login(parameters);
+        System.out.println(token);
+        assertNotNull(token);
+
+        parameters.sessionToken = token;
+
+        Path inputFilePath = Paths.get(new File(getClass().getResource("cyano_template.xml").getFile()).getAbsolutePath());
+        List<String[]> dataLines = handler.getUploadedDesignProperties(parameters, inputFilePath);
+
+        for(String[] dataLine: dataLines) {
+            System.out.println(String.join(",", dataLine));
+        }
     }
 
     @Test
