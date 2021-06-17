@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
@@ -420,8 +421,45 @@ public class SynBioHandlerIntTest {
     }
 
     @Test
-    public void testWriteLogToCsv() {
-        
+    public void testWriteLogToCsv() throws IOException {
+        List<String[]> dataLines = new ArrayList();
+
+        // add header row
+        String[] row1 = new String[]{"insert", null, "insert", "1.0", "http://localhost:7777/user/Johnny/insert/1.0"};
+        String[] row2 = new String[]{"sl1099_left", "sl1099_left", "sl1099_left", "1.0", "http://localhost:7777/user/Johnny/sl1099_left/1.0"};
+        String[] row3 = new String[]{"sl1099_right", null, "sl1099/right", "1.0", "http://localhost:7777/user/Johnny/sl1099_right/1.0"};
+
+        dataLines.add(0, row1);
+        dataLines.add(1, row2);
+        dataLines.add(2, row3);
+
+        Path outputFile = tmpDir.resolve("log.csv");
+        handler.writeLogToCsv(outputFile, dataLines);
+
+        try(BufferedReader bfr = new BufferedReader(new FileReader(outputFile.toFile()))) {
+            String line = bfr.readLine();
+            assertTrue(line.equals("display_id,uploaded_name,original_name,version,uri"));
+            int count = 0;
+
+            while(line != null) {
+                count++;
+                line = bfr.readLine();
+
+                switch (count) {
+                    case 1:
+                        assertEquals(String.join(",", row1).replaceAll("null", ""), line);
+                        break;
+                    case 2:
+                        assertEquals(String.join(",", row2).replaceAll("null", ""), line);
+                        break;
+                    case 3:
+                        assertEquals(String.join(",", row3).replaceAll("null", ""), line);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
     @Test
