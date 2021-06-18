@@ -14,12 +14,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.assertj.core.util.Arrays;
@@ -260,7 +261,7 @@ public class SynBioHandlerIntTest {
         String filename = file.getAbsolutePath();
         parameters.xslFile = filename;
 
-        handler.readExcel(parameters);
+        handler.processUpdateExcel(parameters);
     }
 
     @Test
@@ -280,7 +281,7 @@ public class SynBioHandlerIntTest {
         String filename = file.getAbsolutePath();
         parameters.xslFile = filename;
 
-        handler.readExcel(parameters);
+        handler.processUpdateExcel(parameters);
     }
 
     @Test
@@ -529,5 +530,36 @@ public class SynBioHandlerIntTest {
             assertTrue(designDisplayIds.contains(upldDisplayId));
             assertTrue(designVersions.contains(upldVersion));
         }
+    }
+
+    @Test
+    public void testHandleFlatten() throws IOException {
+        CommandOptions parameters = new CommandOptions(Command.GENERATE);
+        // Path outputDir = Paths.get("D:\\temp\\sbol\\");
+        Path outputDir = tmpDir;
+        String outputFile = outputDir.resolve("cyano_template_flatten.xml").toFile().getAbsolutePath();
+
+        parameters.inputFile = new File(getClass().getResource("cyano_template.xml").getFile()).getAbsolutePath();
+        parameters.outputFile = outputFile;
+
+        handler.handleFlatten(parameters);
+    }
+
+    @Test
+    public void testHandleAnnotate() throws IOException, URISyntaxException {
+        CommandOptions parameters = new CommandOptions(Command.GENERATE);
+        Path outputDir = Paths.get("D:\\temp\\sbol\\");
+        //Path outputDir = tmpDir;
+        String outputFile = outputDir.resolve("cyano_template_annotated.xml").toFile().getAbsolutePath();
+
+        parameters.inputFile = new File(getClass().getResource("cyano_sl1099.xml").getFile()).getAbsolutePath();
+        parameters.outputFile = outputFile;
+        parameters.xslFile = new File(getClass().getResource("update_designs_tz.xlsx").getFile()).getAbsolutePath();
+
+        /*String nowTime = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss").format(new Date());
+        parameters.description = "This is Johnny's latest update to the description at "+ nowTime;
+        parameters.notes = "This is Johnny's latest update to the notes at "+ nowTime;*/
+
+        handler.handleAnnotate(parameters);
     }
 }

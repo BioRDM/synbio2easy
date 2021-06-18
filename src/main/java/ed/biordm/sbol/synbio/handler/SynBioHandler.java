@@ -114,7 +114,7 @@ public class SynBioHandler {
             parameters.sessionToken = login(parameters);
         }
 
-        readExcel(parameters);
+        processUpdateExcel(parameters);
     }
 
     void handleGenerate(CommandOptions parameters) throws URISyntaxException, IOException {
@@ -151,6 +151,24 @@ public class SynBioHandler {
             logger.error(e.getMessage(), e);
             throw new IOException(e);
         }
+    }
+
+    void handleFlatten(CommandOptions parameters) throws IOException {
+        Path inputFile = Paths.get(parameters.inputFile);
+        Path outFile = Paths.get(parameters.outputFile);
+
+        PlasmidsGenerator generator = new PlasmidsGenerator();
+
+        try {
+            generator.flattenPlasmidDesigns(inputFile, outFile);
+        } catch (SBOLValidationException | SBOLConversionException | IOException | URISyntaxException e) {
+            logger.error(e.getMessage(), e);
+            throw new IOException(e);
+        }
+    }
+
+    void handleAnnotate(CommandOptions parameters) throws IOException, URISyntaxException {
+        processAnnotateExcel(parameters);
     }
 
     String login(CommandOptions parameters) throws URISyntaxException {
@@ -301,7 +319,7 @@ public class SynBioHandler {
         return cleanName;
     }
 
-    void readExcel(CommandOptions parameters) throws URISyntaxException, IOException {
+    void processUpdateExcel(CommandOptions parameters) throws URISyntaxException, IOException {
         FeaturesReader featuresReader = new FeaturesReader();
         String url = client.hubFromUrl(parameters.url);
 
@@ -334,8 +352,69 @@ public class SynBioHandler {
                     final String displayId = colVals.get(colHeaders.indexOf(DISP_ID_HEADER));
 
                     if(!displayId.isBlank()) {
-                        processRow(parameters, cwd, collUrl, url, displayId,
+                        processUpdateRow(parameters, cwd, collUrl, url, displayId,
                             colHeaders, colVals, updatedDesigns);
+                    }
+                } catch(Exception e) {
+                    // abort the run and print out all the successful rows up to this point
+                    outputDesigns(updatedDesigns);
+                    throw(e);
+                }
+            });
+        }
+
+        outputDesigns(updatedDesigns);
+    }
+
+    void processAnnotateExcel(CommandOptions parameters) throws URISyntaxException, IOException {
+        FeaturesReader featuresReader = new FeaturesReader();
+
+        String filename = parameters.xslFile;
+        File file = new File(filename);
+        String cwd = file.getParent();
+        Map<String, String> updatedDesigns = new LinkedHashMap();
+
+        Path inputFile = Paths.get(parameters.inputFile);
+        Path outFile = Paths.get(parameters.outputFile);
+
+        PlasmidsGenerator generator = new PlasmidsGenerator();
+
+        System.out.println("");
+
+        try (Workbook workbook = WorkbookFactory.create(file, null, true)) {
+            Sheet sheet = workbook.getSheetAt(0);
+
+            FormulaEvaluator formEval = workbook.getCreationHelper().createFormulaEvaluator();
+            formEval.setIgnoreMissingWorkbooks(true);
+
+            // assume always 4 column names in header
+            List<String> colHeaders = featuresReader.readWorksheetHeader(sheet, 4, formEval);
+            Map<String, List<String>> rows = featuresReader.readWorksheetRows(sheet, 1, 4, formEval);
+
+            rows.forEach((key, value) -> {
+                List<String> colVals = (List<String>) value;
+
+                try {
+                    final String displayId = colVals.get(colHeaders.indexOf(DISP_ID_HEADER));
+
+                    if(!displayId.isBlank()) {
+                        String description = null;
+                        String notes = null;
+
+                        if(colHeaders.contains(DESC_HEADER)) {
+                            description = colVals.get(colHeaders.indexOf(DESC_HEADER));
+                        }
+
+                        if(colHeaders.contains(NOTES_HEADER)) {
+                            notes = colVals.get(colHeaders.indexOf(NOTES_HEADER));
+                        }
+
+                        try {
+                            generator.addPlasmidAnnotations(inputFile, outFile, description, notes);
+                            updatedDesigns.put(displayId, inputFile.toFile().getAbsolutePath());
+                        } catch (SBOLValidationException | SBOLConversionException | IOException | URISyntaxException e) {
+                            logger.error(e.getMessage(), e);
+                        }
                     }
                 } catch(Exception e) {
                     // abort the run and print out all the successful rows up to this point
@@ -357,7 +436,7 @@ public class SynBioHandler {
         return designXml;
     }
 
-    protected void processRow(CommandOptions parameters, String cwd, 
+    protected void processUpdateRow(CommandOptions parameters, String cwd, 
             String collUrl, String url, String displayId, List<String> colHeaders,
             List<String> colVals, Map<String, String> updatedDesigns) {
         String attachFilename = null;
