@@ -55,6 +55,8 @@ public class UserInputPrompter {
             case UPDATE: return promptUpdateOptions(options);
             case GENERATE: return promptGenerateOptions(options);
             case CLEAN: return promptCleanOptions(options);
+            case FLATTEN: return promptFlattenOptions(options);
+            case ANNOTATE: return promptAnnotateOptions(options);
             default: throw new IllegalArgumentException("Unsupported command: "+command);
         }
     }
@@ -74,6 +76,8 @@ public class UserInputPrompter {
             case UPDATE: return UPDATE;
             case GENERATE: return GENERATE;
             case CLEAN: return CLEAN;
+            case FLATTEN: return FLATTEN;
+            case ANNOTATE: return ANNOTATE;
             default: throw new MissingOptionException("Unknown command "+command);
         }
     }
@@ -649,6 +653,179 @@ public class UserInputPrompter {
         return options;
     }
 
+    CommandOptions promptFlattenOptions(CommandOptions options) {
+        console.printf("%n");
+        console.printf("... flattening designs in designated SBOL document%n");
+        console.printf("%n");
+
+        if (options.inputFile == null) {
+            console.printf("Please enter the path to the SBOL file containing the designs to be flattened%n");
+            options.inputFile = console.readLine("Filename: ");
+
+            if (!validateDirPath(options.inputFile)) {
+                boolean isInput = true;    // must exist because it's input file
+                Path inputPath = null;
+                try {
+                    inputPath = validateInputPath(options.inputFile, isInput);
+                    options.inputFile = inputPath.toFile().getAbsolutePath();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid SBOL document input file path argument: "+options.inputFile);
+                }
+
+                if (inputPath == null || !inputPath.toFile().exists()) {
+                    throw new IllegalArgumentException("Invalid SBOL document input file path argumen: "+options.inputFile);
+                }
+            }
+        } else {
+            console.printf("Filename: %s", options.inputFile);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+
+        if (options.outputFile == null) {
+            console.printf("Please enter the path to the SBOL file that will be generated to contain the flattened designs%n");
+            options.outputFile = console.readLine("Filename: ");
+
+            if (!validateDirPath(options.outputFile)) {
+                boolean isInput = false;    // not an input file
+                Path outputPath = null;
+                try {
+                    outputPath = validateInputPath(options.outputFile, isInput);
+                    options.outputFile = outputPath.toFile().getAbsolutePath();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid output file path argument: "+options.outputFile);
+                }
+
+                if (outputPath == null) {
+                    throw new IllegalArgumentException("Invalid output file path argument: "+options.outputFile);
+                } else if(outputPath.toFile().exists()) {
+                    console.printf("%n");
+                    console.printf("You have selected an output file that already exists. If you continue, the existing SBOL document file will be overwritten.%n");
+                    console.printf("Do you wish to continue and overwrite designs if they already exist?%n");
+                    String overwriteAns = console.readLine("Y | N: ").strip();
+
+                    while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
+                        overwriteAns = console.readLine("Y | N: ").strip();
+                    }
+
+                    if (!Y_PATTERN.matcher(overwriteAns).matches()) {
+                        throw new IllegalArgumentException("Cannot continue with cleaning as existing SBOL document will be overwritten in "+options.outputFile);
+                    }
+                }
+            }
+        } else {
+            console.printf("Output Filename is: %s", options.outputFile);
+            console.printf("%n");
+        }
+
+        options.crateNew = false;
+        options.overwrite = true;
+
+        console.printf("%n");
+
+        return options;
+    }
+
+    CommandOptions promptAnnotateOptions(CommandOptions options) {
+        console.printf("%n");
+        console.printf("... annotating designs in designated SBOL document%n");
+        console.printf("%n");
+
+        if (options.xslFile == null) {
+            console.printf("Please enter the path to the Excel file with designs to update%n");
+            options.xslFile = console.readLine("Filename: ");
+
+            if (!validateDirPath(options.xslFile)) {
+                boolean isInput = true;    // must exist because it's input file
+                Path inputPath = null;
+                try {
+                    inputPath = validateInputPath(options.dir, isInput);
+                    options.xslFile = inputPath.toFile().getAbsolutePath();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.xslFile);
+                }
+
+                if (inputPath == null || !inputPath.toFile().exists()) {
+                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.xslFile);
+                }
+            }
+        } else {
+            console.printf("Excel File: %s", options.xslFile);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+
+        if (options.inputFile == null) {
+            console.printf("Please enter the path to the SBOL file containing the designs to be annotated%n");
+            options.inputFile = console.readLine("Filename: ");
+
+            if (!validateDirPath(options.inputFile)) {
+                boolean isInput = true;    // must exist because it's input file
+                Path inputPath = null;
+                try {
+                    inputPath = validateInputPath(options.inputFile, isInput);
+                    options.inputFile = inputPath.toFile().getAbsolutePath();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid SBOL document input file path argument: "+options.inputFile);
+                }
+
+                if (inputPath == null || !inputPath.toFile().exists()) {
+                    throw new IllegalArgumentException("Invalid SBOL document input file path argumen: "+options.inputFile);
+                }
+            }
+        } else {
+            console.printf("Filename: %s", options.inputFile);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+
+        if (options.outputFile == null) {
+            console.printf("Please enter the path to the SBOL file that will be generated to contain the annotated designs%n");
+            options.outputFile = console.readLine("Filename: ");
+
+            if (!validateDirPath(options.outputFile)) {
+                boolean isInput = false;    // not an input file
+                Path outputPath = null;
+                try {
+                    outputPath = validateInputPath(options.outputFile, isInput);
+                    options.outputFile = outputPath.toFile().getAbsolutePath();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid output file path argument: "+options.outputFile);
+                }
+
+                if (outputPath == null) {
+                    throw new IllegalArgumentException("Invalid output file path argument: "+options.outputFile);
+                } else if(outputPath.toFile().exists()) {
+                    console.printf("%n");
+                    console.printf("You have selected an output file that already exists. If you continue, the existing SBOL document file will be overwritten.%n");
+                    console.printf("Do you wish to continue and overwrite designs if they already exist?%n");
+                    String overwriteAns = console.readLine("Y | N: ").strip();
+
+                    while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
+                        overwriteAns = console.readLine("Y | N: ").strip();
+                    }
+
+                    if (!Y_PATTERN.matcher(overwriteAns).matches()) {
+                        throw new IllegalArgumentException("Cannot continue with cleaning as existing SBOL document will be overwritten in "+options.outputFile);
+                    }
+                }
+            }
+        } else {
+            console.printf("Output Filename is: %s", options.outputFile);
+            console.printf("%n");
+        }
+
+        options.crateNew = false;
+        options.overwrite = true;
+
+        console.printf("%n");
+
+        return options;
+    }
+
     public String getUsageTxt() {
         return "Usage:"
                 + "\n"
@@ -821,6 +998,14 @@ public class UserInputPrompter {
             options.removeColls = Boolean.parseBoolean(args.getOptionValues("r").get(0));
             options.isRemoveCollsDef = true;
         }
+    }
+
+    void setPassedFlattenOptions(CommandOptions options, ApplicationArguments args) {
+
+    }
+
+    void setPassedAnnotateOptions(CommandOptions options, ApplicationArguments args) {
+
     }
 
     boolean validateDirPath(String dirPath) {
