@@ -8,6 +8,7 @@ package ed.biordm.sbol.synbio.handler;
 import ed.biordm.cyanosource.plasmid.PlasmidsGenerator;
 import ed.biordm.sbol.synbio.client.SynBioClient;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
+import ed.biordm.sbol.toolkit.transform.ComponentAnnotator;
 import ed.biordm.sbol.toolkit.transform.ComponentFlattener;
 import ed.biordm.sbol.toolkit.transform.ComponentUtil;
 import static ed.biordm.sbol.toolkit.transform.ComponentUtil.emptyDocument;
@@ -66,6 +67,7 @@ public class SynBioHandler {
     final SynBioClient client;
     final ComponentFlattener flattener;
     final ComponentUtil compUtil;
+    final ComponentAnnotator annotator;
     final String SBOL_DISP_ID_TYPE;
     final JsonParser jsonParser;
 
@@ -86,14 +88,16 @@ public class SynBioHandler {
     public SynBioHandler(SynBioClient client) {
         // that should be probably injected in autowired constructor
         //this.jsonParser = JsonParserFactory.getJsonParser();        
-        this(client, JsonParserFactory.getJsonParser(), new ComponentFlattener(), new ComponentUtil());
+        this(client, JsonParserFactory.getJsonParser(), new ComponentFlattener(), 
+                new ComponentUtil(), new ComponentAnnotator());
     }
 
-    protected SynBioHandler(SynBioClient client, JsonParser jsonParser, ComponentFlattener flattener, ComponentUtil compUtil) {
+    protected SynBioHandler(SynBioClient client, JsonParser jsonParser, 
+            ComponentFlattener flattener, ComponentUtil compUtil,ComponentAnnotator annotator) {
         this.client = client;
         this.flattener = flattener;
         this.compUtil = compUtil;
-        
+        this.annotator = annotator;
         this.jsonParser = jsonParser;
         this.SBOL_DISP_ID_TYPE = encodeURL("<http://sbols.org/v2#displayId>");
     }
@@ -204,7 +208,29 @@ public class SynBioHandler {
     }
 
     void handleAnnotate(CommandOptions parameters) throws IOException, URISyntaxException {
-        processAnnotateExcel(parameters);
+        Path inputFile = Paths.get(parameters.inputFile);
+        Path outFile = Paths.get(parameters.outputFile);
+        Path excelFile = Paths.get(parameters.xslFile);
+        
+        
+        try {
+        
+            SBOLDocument doc = SBOLReader.read(inputFile.toFile());
+
+            ComponentAnnotator.Outcome outcome = annotator.annotate(doc, excelFile, parameters.overwrite, parameters.stopOnMissingId, parameters.stopOnMissingMeta);
+            
+            saveValidSbol(doc, outFile);
+            
+            // TODO printout outcome status, for example missing id and missing meta
+            // 
+            // if (!outcome.missingId.isEmpty()) {
+            //  print some designs were missing ....    
+            // }....
+
+        } catch (SBOLValidationException | SBOLConversionException e) {
+            logger.error(e.getMessage(), e);
+            throw new IOException(e);
+        }        
     }
 
     String login(CommandOptions parameters) throws URISyntaxException {
@@ -402,6 +428,7 @@ public class SynBioHandler {
         outputDesigns(updatedDesigns);
     }
 
+    @Deprecated
     void processAnnotateExcel(CommandOptions parameters) throws URISyntaxException, IOException {
         FeaturesReader featuresReader = new FeaturesReader();
 

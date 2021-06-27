@@ -53,6 +53,10 @@ public class CommandOptions implements Cloneable {
     public String compDefinitionId;
     public String suffix;
     
+    // annotate
+    public boolean stopOnMissingId;
+    public boolean stopOnMissingMeta;
+    
 
     public CommandOptions(Command command) {
         Objects.requireNonNull(command);
