@@ -84,15 +84,17 @@ public class SynBioHandler {
 
     @Autowired
     public SynBioHandler(SynBioClient client) {
-        this(client, new ComponentFlattener(), new ComponentUtil());
+        // that should be probably injected in autowired constructor
+        //this.jsonParser = JsonParserFactory.getJsonParser();        
+        this(client, JsonParserFactory.getJsonParser(), new ComponentFlattener(), new ComponentUtil());
     }
 
-    protected SynBioHandler(SynBioClient client, ComponentFlattener flattener, ComponentUtil compUtil) {
+    protected SynBioHandler(SynBioClient client, JsonParser jsonParser, ComponentFlattener flattener, ComponentUtil compUtil) {
         this.client = client;
         this.flattener = flattener;
         this.compUtil = compUtil;
-        // that should be probably injected in autowired constructor
-        this.jsonParser = JsonParserFactory.getJsonParser();
+        
+        this.jsonParser = jsonParser;
         this.SBOL_DISP_ID_TYPE = encodeURL("<http://sbols.org/v2#displayId>");
     }
     
