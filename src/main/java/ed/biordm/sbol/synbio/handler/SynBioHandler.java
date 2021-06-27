@@ -8,6 +8,9 @@ package ed.biordm.sbol.synbio.handler;
 import ed.biordm.cyanosource.plasmid.PlasmidsGenerator;
 import ed.biordm.sbol.synbio.client.SynBioClient;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
+import ed.biordm.sbol.toolkit.transform.ComponentFlattener;
+import ed.biordm.sbol.toolkit.transform.ComponentUtil;
+import static ed.biordm.sbol.toolkit.transform.ComponentUtil.emptyDocument;
 import ed.biordm.sbol.toolkit.transform.SynBioTamer;
 import java.io.File;
 import java.io.FileInputStream;
@@ -51,6 +54,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.stereotype.Service;
+import static ed.biordm.sbol.toolkit.transform.ComponentUtil.saveValidSbol;
 
 /**
  *
@@ -60,6 +64,10 @@ import org.springframework.stereotype.Service;
 public class SynBioHandler {
 
     final SynBioClient client;
+    final ComponentFlattener flattener;
+    final ComponentUtil compUtil;
+    final String SBOL_DISP_ID_TYPE;
+    final JsonParser jsonParser;
 
     final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -70,23 +78,32 @@ public class SynBioHandler {
     private static final String NOTES_HEADER = "notes";
 
     private static final String SBOL_OBJ_TYPE = "ComponentDefinition";
-    private static String SBOL_DISP_ID_TYPE;
 
-    private static final JsonParser JSON_PARSER = JsonParserFactory.getJsonParser();
 
     private static final Pattern COLL_URL_VERSION_PATTERN = Pattern.compile(".*/[0-9]+.*");
 
     @Autowired
     public SynBioHandler(SynBioClient client) {
-        this.client = client;
-
-        try {
-            SBOL_DISP_ID_TYPE = URLEncoder.encode("<http://sbols.org/v2#displayId>", StandardCharsets.UTF_8.name());
-        } catch (UnsupportedEncodingException e) {
-            logger.error("Failed to initialise SynBioHandler properly", e);
-        }
+        this(client, new ComponentFlattener(), new ComponentUtil());
     }
 
+    protected SynBioHandler(SynBioClient client, ComponentFlattener flattener, ComponentUtil compUtil) {
+        this.client = client;
+        this.flattener = flattener;
+        this.compUtil = compUtil;
+        // that should be probably injected in autowired constructor
+        this.jsonParser = JsonParserFactory.getJsonParser();
+        this.SBOL_DISP_ID_TYPE = encodeURL("<http://sbols.org/v2#displayId>");
+    }
+    
+    protected static String encodeURL(String url) {
+        try {
+            return URLEncoder.encode("<http://sbols.org/v2#displayId>", StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException(e);
+        }        
+    }
+    
     public void handle(CommandOptions command) throws URISyntaxException, IOException {
         switch (command.command) {
             case DEPOSIT: handleDeposit(command); break;
@@ -142,26 +159,43 @@ public class SynBioHandler {
 
         SBOLDocument orig;
 
-        try (InputStream is = new FileInputStream(inputFile.toFile()))
+        try 
         {
-            orig = SBOLReader.read(is);
+            orig = SBOLReader.read(inputFile.toFile());
             SBOLDocument output = tamer.tameForSynBio(orig, namespace, removeColls);
-            output.write(outputFile.toFile());
-        } catch (SBOLValidationException | SBOLConversionException | IOException e) {
+            //output.write(outputFile.toFile());
+            saveValidSbol(output,outputFile);
+        } catch (SBOLValidationException | SBOLConversionException e) {
             logger.error(e.getMessage(), e);
             throw new IOException(e);
         }
     }
 
     void handleFlatten(CommandOptions parameters) throws IOException {
+        
         Path inputFile = Paths.get(parameters.inputFile);
         Path outFile = Paths.get(parameters.outputFile);
 
-        PlasmidsGenerator generator = new PlasmidsGenerator();
+        SBOLDocument outDoc = emptyDocument();
+        if (parameters.namespace != null && !parameters.namespace.isBlank()) {
+            outDoc.setDefaultURIprefix(parameters.namespace);
+        }
 
         try {
-            generator.flattenPlasmidDesigns(inputFile, outFile);
-        } catch (SBOLValidationException | SBOLConversionException | IOException | URISyntaxException e) {
+        
+            SBOLDocument inDoc = SBOLReader.read(inputFile.toFile());
+
+
+            if (parameters.allRoots) {
+                flattener.flattenDesigns(inDoc, parameters.suffix, outDoc);
+            } else {
+                ComponentDefinition comp = compUtil.extractComponent(parameters.compDefinitionId, inDoc);
+                flattener.flattenDesign(comp, compUtil.nameOrId(comp)+parameters.suffix, outDoc);
+            }
+
+            saveValidSbol(outDoc, outFile);
+
+        } catch (SBOLValidationException | SBOLConversionException e) {
             logger.error(e.getMessage(), e);
             throw new IOException(e);
         }
@@ -394,6 +428,8 @@ public class SynBioHandler {
             rows.forEach((key, value) -> {
                 List<String> colVals = (List<String>) value;
 
+                if (true) throw new UnsupportedOperationException("fix me");
+                /* so it will compile
                 try {
                     final String displayId = colVals.get(colHeaders.indexOf(DISP_ID_HEADER));
 
@@ -420,7 +456,7 @@ public class SynBioHandler {
                     // abort the run and print out all the successful rows up to this point
                     outputDesigns(updatedDesigns);
                     throw(e);
-                }
+                } */
             });
         }
 
@@ -460,7 +496,7 @@ public class SynBioHandler {
 
         String metadata = client.searchMetadata(url, requestParams, parameters.sessionToken);
         //Object design = client.getSubmissionByDisplayId();
-        List<Object> designList = JSON_PARSER.parseList(metadata);
+        List<Object> designList = jsonParser.parseList(metadata);
 
         if(designList == null || designList.isEmpty()) {
             try {
@@ -628,7 +664,7 @@ public class SynBioHandler {
         String metadata = client.searchMetadata(url, requestParams, parameters.sessionToken);
 
         //Object design = client.getSubmissionByDisplayId();
-        List<Object> designList = JSON_PARSER.parseList(metadata);
+        List<Object> designList = jsonParser.parseList(metadata);
         List<Map<String,Object>> designMaps = new ArrayList();
 
         if(designList == null || designList.isEmpty()) {
@@ -663,7 +699,7 @@ public class SynBioHandler {
                     "&";
 
             String metadata = client.searchMetadata(client.hubFromUrl(verCollUrl), requestParams, parameters.sessionToken);
-            List<Object> collList = JSON_PARSER.parseList(metadata);
+            List<Object> collList = jsonParser.parseList(metadata);
 
             if(collList == null || collList.isEmpty()) {
                 String userMessage = "No collection found with persistent ID {}";

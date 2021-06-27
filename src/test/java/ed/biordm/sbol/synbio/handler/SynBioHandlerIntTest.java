@@ -66,6 +66,12 @@ public class SynBioHandlerIntTest {
         synBioUser = "j.hay@epcc.ed.ac.uk";
         synBioPassword = "admin";
     }
+    
+    @Test
+    public void setupWorks() {
+        assertNotNull(handler);
+        assertNotNull(handler.jsonParser);
+    }
 
     @Test
     public void testDepositSingleCollection() throws URISyntaxException {

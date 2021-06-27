@@ -47,6 +47,12 @@ public class CommandOptions implements Cloneable {
     public String namespace;
     public boolean removeColls;
     public boolean isRemoveCollsDef;
+    
+    // flatten
+    public boolean allRoots;
+    public String compDefinitionId;
+    public String suffix;
+    
 
     public CommandOptions(Command command) {
         Objects.requireNonNull(command);
