@@ -682,7 +682,7 @@ public class SynBioHandler {
         // ensure collection URL specifies version
         String verCollUrl = verifyCollectionUrlVersion(parameters);
 
-        final String collUrl = URLEncoder.encode("<"+verCollUrl+">", StandardCharsets.UTF_8.name());
+        final String collUrl = encodeURL("<"+verCollUrl+">");
 
         String objType = "http://sbols.org/v2#ComponentDefinition";
         objType = "ComponentDefinition";
