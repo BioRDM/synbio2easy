@@ -57,6 +57,7 @@ public class UserInputPrompter {
             case CLEAN: return promptCleanOptions(options);
             case FLATTEN: return promptFlattenOptions(options);
             case ANNOTATE: return promptAnnotateOptions(options);
+            case TEMPLATE4UPDATE: return promptTemplate4UpdateOptions(options);
             default: throw new IllegalArgumentException("Unsupported command: "+command);
         }
     }
@@ -78,6 +79,7 @@ public class UserInputPrompter {
             case CLEAN: return CLEAN;
             case FLATTEN: return FLATTEN;
             case ANNOTATE: return ANNOTATE;
+            case TEMPLATE4UPDATE: return TEMPLATE4UPDATE;
             default: throw new MissingOptionException("Unknown command "+command);
         }
     }
@@ -932,6 +934,87 @@ public class UserInputPrompter {
         console.printf("%n");
 
         options.crateNew = false;
+
+        return options;
+    }
+
+    CommandOptions promptTemplate4UpdateOptions(CommandOptions options) {
+        console.printf("%n");
+        console.printf("... creating template for updating SynBioHub designs in designated SBOL document%n");
+        console.printf("%n");
+
+        if (options.inputFile == null) {
+            console.printf("Please enter the path to the SBOL file containing the designs to be updated%n");
+            options.inputFile = console.readLine("Filename: ");
+
+            if (!validateDirPath(options.inputFile)) {
+                boolean isInput = true;    // must exist because it's input file
+                Path inputPath = null;
+                try {
+                    inputPath = validateInputPath(options.inputFile, isInput);
+                    options.inputFile = inputPath.toFile().getAbsolutePath();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid SBOL document input file path argument: "+options.inputFile);
+                }
+
+                if (inputPath == null || !inputPath.toFile().exists()) {
+                    throw new IllegalArgumentException("Invalid SBOL document input file path argumen: "+options.inputFile);
+                }
+            }
+        } else {
+            console.printf("Filename: %s", options.inputFile);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+
+        if (options.outputFile == null) {
+            console.printf("Please enter the path to the Excel file that will be generated to contain the template for update%n");
+            options.outputFile = console.readLine("Filename: ");
+
+            if (!validateDirPath(options.outputFile)) {
+                boolean isInput = false;    // not an input file
+                Path outputPath = null;
+                try {
+                    outputPath = validateInputPath(options.outputFile, isInput);
+                    options.outputFile = outputPath.toFile().getAbsolutePath();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid output file path argument: "+options.outputFile);
+                }
+
+                if (outputPath == null) {
+                    throw new IllegalArgumentException("Invalid output file path argument: "+options.outputFile);
+                } else if(outputPath.toFile().exists()) {
+                    console.printf("%n");
+                    console.printf("You have selected an output file that already exists. If you continue, the existing Excel template file will be overwritten.%n");
+                    console.printf("Do you wish to continue and overwrite the template?%n");
+                    String overwriteAns = console.readLine("Y | N: ").strip();
+
+                    while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
+                        overwriteAns = console.readLine("Y | N: ").strip();
+                    }
+
+                    if (!Y_PATTERN.matcher(overwriteAns).matches()) {
+                        throw new IllegalArgumentException("Cannot continue with cleaning as existing Excel template will be overwritten in "+options.outputFile);
+                    }
+                }
+            }
+        } else {
+            console.printf("Output Filename is: %s", options.outputFile);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+
+        if (options.url == null) {
+            console.printf("Please enter the URL for the existing collection%n");
+            options.url = console.readLine("URL: ");
+        } else {
+            console.printf("Collection URL: %s", options.url);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
 
         return options;
     }

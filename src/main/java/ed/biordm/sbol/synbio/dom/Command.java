@@ -98,6 +98,15 @@ public enum Command {
 
             return textBuf.toString();
         }
+    },
+    TEMPLATE4UPDATE {
+        @Override
+        public String getGuidanceText() {
+            StringBuffer textBuf = new StringBuffer();
+            textBuf.append("You selected the TEMPLATE4UPDATE operation%n%n");
+
+            return textBuf.toString();
+        }
     };
 
     public abstract String getGuidanceText();

@@ -118,6 +118,7 @@ public class SynBioHandler {
             case CLEAN: handleClean(command); break;
             case FLATTEN: handleFlatten(command); break;
             case ANNOTATE: handleAnnotate(command); break;
+            case TEMPLATE4UPDATE: handleTemplate4Update(command); break;
             default: throw new IllegalArgumentException("Unsuported command: "+command.command);
         }
     }
@@ -235,6 +236,31 @@ public class SynBioHandler {
         }        
     }
 
+    void handleTemplate4Update(CommandOptions parameters) throws URISyntaxException {
+        if (parameters.sessionToken == null) {
+            parameters.sessionToken = login(parameters);
+        }
+
+        // String csvLogFilename = new SimpleDateFormat("'deposit_log_'yyyy-MM-dd-HH-mm-ss'.csv'").format(new Date());
+        // Path csvOutputFile = Paths.get(System.getProperty("user.dir")).resolve(csvLogFilename);
+        List<String[]> dataLines = new ArrayList();
+        Path outputFile = Paths.get(parameters.outputFile);
+        Path inputFile = Paths.get(parameters.inputFile);
+
+        try {
+            // do output to CSV file of uploaded designs
+            dataLines.addAll(getUploadedDesignProperties(parameters, inputFile));
+        } catch (FileNotFoundException | UnsupportedEncodingException | URISyntaxException e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        try {
+            this.writeLogToCsv(outputFile, dataLines);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
     String login(CommandOptions parameters) throws URISyntaxException {
         String url = client.hubFromUrl(parameters.url);
 
@@ -285,13 +311,6 @@ public class SynBioHandler {
         }
 
         List<Path> files = getFiles(parameters);
-        String csvLogFilename = new SimpleDateFormat("'deposit_log_'yyyy-MM-dd-HH-mm-ss'.csv'").format(new Date());
-
-        Path csvOutputFile = Paths.get(System.getProperty("user.dir")).resolve(csvLogFilename);
-        CommandOptions outputParams = parameters.clone();
-        outputParams.url = collectionUrl;
-
-        List<String[]> dataLines = new ArrayList();
 
         for (Path file: files) {
 
@@ -299,19 +318,6 @@ public class SynBioHandler {
             // for example overwrite is needed here not only for the creation
             client.deposit(parameters.sessionToken, collectionUrl, file,
                     getOverwriteParam(parameters, true));
-
-            try {
-                // do output to CSV file of uploaded designs
-                dataLines.addAll(getUploadedDesignProperties(outputParams, file));
-            } catch (FileNotFoundException | UnsupportedEncodingException | URISyntaxException e) {
-                logger.error(e.getMessage(), e);
-            }
-        }
-
-        try {
-            this.writeLogToCsv(csvOutputFile, dataLines);
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
         }
     }
 

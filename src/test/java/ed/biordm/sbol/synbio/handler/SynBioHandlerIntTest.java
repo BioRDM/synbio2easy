@@ -547,13 +547,15 @@ public class SynBioHandlerIntTest {
 
         parameters.inputFile = new File(getClass().getResource("cyano_template.xml").getFile()).getAbsolutePath();
         parameters.outputFile = outputFile;
+        parameters.isAllRootsDef = true;
+        parameters.allRoots = true;
 
         handler.handleFlatten(parameters);
     }
 
     @Test
     public void testHandleAnnotate() throws IOException, URISyntaxException {
-        CommandOptions parameters = new CommandOptions(Command.GENERATE);
+        CommandOptions parameters = new CommandOptions(Command.ANNOTATE);
         Path outputDir = Paths.get("D:\\temp\\sbol\\");
         //Path outputDir = tmpDir;
         String outputFile = outputDir.resolve("cyano_template_annotated.xml").toFile().getAbsolutePath();
@@ -561,6 +563,10 @@ public class SynBioHandlerIntTest {
         parameters.inputFile = new File(getClass().getResource("cyano_sl1099.xml").getFile()).getAbsolutePath();
         parameters.outputFile = outputFile;
         parameters.xslFile = new File(getClass().getResource("update_designs_tz.xlsx").getFile()).getAbsolutePath();
+        parameters.isStopOnMissingIdDef = true;
+        parameters.stopOnMissingId = false;
+        parameters.isStopOnMissingMetaDef = true;
+        parameters.stopOnMissingMeta = false;
 
         /*String nowTime = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss").format(new Date());
         parameters.description = "This is Johnny's latest update to the description at "+ nowTime;
@@ -568,4 +574,25 @@ public class SynBioHandlerIntTest {
 
         handler.handleAnnotate(parameters);
     }
+
+    @Test
+    public void testHandleTemplate4Update() throws IOException, URISyntaxException {
+        CommandOptions parameters = new CommandOptions(Command.TEMPLATE4UPDATE);
+        Path outputDir = Paths.get("D:\\temp\\sbol\\");
+        //Path outputDir = tmpDir;
+        String outputFile = outputDir.resolve("template4update.csv").toFile().getAbsolutePath();
+
+        parameters.inputFile = new File(getClass().getResource("cyano_sl1099.xml").getFile()).getAbsolutePath();
+        parameters.outputFile = outputFile;
+        parameters.url = "http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection";
+        parameters.user = synBioUser;
+        parameters.password = synBioPassword;
+
+        /*String nowTime = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss").format(new Date());
+        parameters.description = "This is Johnny's latest update to the description at "+ nowTime;
+        parameters.notes = "This is Johnny's latest update to the notes at "+ nowTime;*/
+
+        handler.handleTemplate4Update(parameters);
+    }
+
 }
