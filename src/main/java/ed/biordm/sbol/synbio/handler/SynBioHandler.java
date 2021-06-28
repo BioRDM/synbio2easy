@@ -116,6 +116,8 @@ public class SynBioHandler {
             case UPDATE: handleUpdate(command); break;
             case GENERATE: handleGenerate(command); break;
             case CLEAN: handleClean(command); break;
+            case FLATTEN: handleFlatten(command); break;
+            case ANNOTATE: handleAnnotate(command); break;
             default: throw new IllegalArgumentException("Unsuported command: "+command.command);
         }
     }

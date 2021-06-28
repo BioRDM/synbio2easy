@@ -52,10 +52,13 @@ public class CommandOptions implements Cloneable {
     public boolean allRoots;
     public String compDefinitionId;
     public String suffix;
+    public boolean isAllRootsDef;
     
     // annotate
     public boolean stopOnMissingId;
     public boolean stopOnMissingMeta;
+    public boolean isStopOnMissingIdDef;
+    public boolean isStopOnMissingMetaDef;
     
 
     public CommandOptions(Command command) {

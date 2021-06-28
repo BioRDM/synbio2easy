@@ -719,6 +719,54 @@ public class UserInputPrompter {
             console.printf("%n");
         }
 
+        console.printf("%n");
+
+        if (options.isAllRootsDef == false && options.allRoots == false) {
+            console.printf("Do you wish to flatten all root components in the SBOL document (Y) or one particular component (N)?%n");
+            String allRootsAns = console.readLine("Y | N: ").strip();
+
+            while(!Y_N_PATTERN.matcher(allRootsAns).matches()) {
+                allRootsAns = console.readLine("Y | N: ").strip();
+            }
+
+            if (Y_PATTERN.matcher(allRootsAns).matches()) {
+                options.allRoots = true;
+            } else {
+                options.allRoots = false;
+
+                if (options.compDefinitionId == null) {
+                    console.printf("Please enter the display ID of the component definition to flatten%n");
+                    options.compDefinitionId = console.readLine("Component Definition Display ID: ");
+                } else {
+                    console.printf("Component Definition Display ID to flatten: %s", options.compDefinitionId);
+                    console.printf("%n");
+                }
+            }
+        } else {
+            console.printf("Flatten only root components: %s", options.allRoots);
+            console.printf("%n");
+
+            if(options.allRoots == false) {
+                console.printf("Component Definition Display ID to flatten: %s", options.compDefinitionId);
+                console.printf("%n");
+            }
+        }
+
+        console.printf("%n");
+
+        if (options.suffix == null) {
+            console.printf("Please enter a suffix for the flattened components if desired%n");
+            options.suffix = console.readLine("Flattened Component Suffix [<ENTER> for blank]: ");
+
+            if (options.suffix == null || options.suffix.trim().isEmpty()) {
+                options.suffix = "";
+            }
+        } else {
+            console.printf("%n");
+            console.printf("Flattened Component Suffix: %s", options.suffix);
+            console.printf("%n");
+        }
+
         options.crateNew = false;
         options.overwrite = true;
 
@@ -818,10 +866,72 @@ public class UserInputPrompter {
             console.printf("%n");
         }
 
-        options.crateNew = false;
-        options.overwrite = true;
+        console.printf("%n");
+
+        if (options.isOverwriteDef == false && options.overwrite == false) {
+            console.printf("Do you wish to overwrite existing descriptions and comments if they exist (Y) or append to them (N)?%n");
+            String overwriteAns = console.readLine("Y | N: ").strip();
+
+            while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
+                overwriteAns = console.readLine("Y | N: ").strip();
+            }
+
+            if (Y_PATTERN.matcher(overwriteAns).matches()) {
+                options.overwrite = true;
+            } else {
+                options.overwrite = false;
+            }
+        } else {
+            console.printf("%n");
+            console.printf("Overwrite: %s", options.overwrite);
+            console.printf("%n");
+        }
 
         console.printf("%n");
+
+        if (options.isStopOnMissingIdDef == false && options.stopOnMissingId == false) {
+            console.printf("Do you wish to halt the annotating procedure if a missing component ID is encountered?%n");
+            String stopOnMissingIdAns = console.readLine("Y | N: ").strip();
+
+            while(!Y_N_PATTERN.matcher(stopOnMissingIdAns).matches()) {
+                stopOnMissingIdAns = console.readLine("Y | N: ").strip();
+            }
+
+            if (Y_PATTERN.matcher(stopOnMissingIdAns).matches()) {
+                options.stopOnMissingId = true;
+            } else {
+                options.stopOnMissingId = false;
+            }
+        } else {
+            console.printf("%n");
+            console.printf("Stop on missing ID: %s", options.stopOnMissingId);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+
+        if (options.isStopOnMissingMetaDef == false && options.stopOnMissingMeta == false) {
+            console.printf("Do you wish to halt the annotating procedure if missing metadata is encountered?%n");
+            String stopOnMissingMetaAns = console.readLine("Y | N: ").strip();
+
+            while(!Y_N_PATTERN.matcher(stopOnMissingMetaAns).matches()) {
+                stopOnMissingMetaAns = console.readLine("Y | N: ").strip();
+            }
+
+            if (Y_PATTERN.matcher(stopOnMissingMetaAns).matches()) {
+                options.stopOnMissingMeta = true;
+            } else {
+                options.stopOnMissingMeta = false;
+            }
+        } else {
+            console.printf("%n");
+            console.printf("Stop on missing metadata: %s", options.stopOnMissingMeta);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+
+        options.crateNew = false;
 
         return options;
     }
