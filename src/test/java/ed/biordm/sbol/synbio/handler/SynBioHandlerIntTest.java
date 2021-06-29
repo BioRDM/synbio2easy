@@ -265,7 +265,7 @@ public class SynBioHandlerIntTest {
 
         parameters.sessionToken = token;
         String filename = file.getAbsolutePath();
-        parameters.xslFile = filename;
+        parameters.metaFile = filename;
 
         handler.processUpdateExcel(parameters);
     }
@@ -285,7 +285,7 @@ public class SynBioHandlerIntTest {
 
         parameters.sessionToken = token;
         String filename = file.getAbsolutePath();
-        parameters.xslFile = filename;
+        parameters.metaFile = filename;
 
         handler.processUpdateExcel(parameters);
     }
@@ -562,7 +562,7 @@ public class SynBioHandlerIntTest {
 
         parameters.inputFile = new File(getClass().getResource("cyano_sl1099.xml").getFile()).getAbsolutePath();
         parameters.outputFile = outputFile;
-        parameters.xslFile = new File(getClass().getResource("update_designs_tz.xlsx").getFile()).getAbsolutePath();
+        parameters.metaFile = new File(getClass().getResource("update_designs_tz.xlsx").getFile()).getAbsolutePath();
         parameters.isStopOnMissingIdDef = true;
         parameters.stopOnMissingId = false;
         parameters.isStopOnMissingMetaDef = true;
