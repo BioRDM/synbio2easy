@@ -155,7 +155,7 @@ public class SynBioHandler {
         String name = parameters.filenamePrefix;
         String version = parameters.version;
         Path templateFile = Paths.get(parameters.templateFile);
-        Path flankFile = Paths.get(parameters.flankFile);
+        Path flankFile = Paths.get(parameters.metaFile);
         Path outDir = Paths.get(parameters.outputDir);
 
         try {
@@ -170,7 +170,7 @@ public class SynBioHandler {
         String name = parameters.filenamePrefix;
         String defVersion = parameters.version;
         Path templateFile = Paths.get(parameters.templateFile);
-        Path metaFile = Paths.get(parameters.flankFile);
+        Path metaFile = Paths.get(parameters.metaFile);
         Path outDir = Paths.get(parameters.outputDir);
         boolean stopOnMissing = parameters.stopOnMissingMeta;
         
@@ -248,14 +248,14 @@ public class SynBioHandler {
     void handleAnnotate(CommandOptions parameters) throws IOException, URISyntaxException {
         Path inputFile = Paths.get(parameters.inputFile);
         Path outFile = Paths.get(parameters.outputFile);
-        Path excelFile = Paths.get(parameters.xslFile);
+        Path metaFile = Paths.get(parameters.metaFile);
         
         
         try {
         
             SBOLDocument doc = SBOLReader.read(inputFile.toFile());
 
-            Outcome outcome = annotator.annotate(doc, excelFile, parameters.overwrite, parameters.stopOnMissingId, parameters.stopOnMissingMeta);
+            Outcome outcome = annotator.annotate(doc, metaFile, parameters.overwrite, parameters.stopOnMissingId, parameters.stopOnMissingMeta);
             
             saveValidSbol(doc, outFile);
             
@@ -433,7 +433,7 @@ public class SynBioHandler {
 
         final String collUrl = URLEncoder.encode("<"+verCollUrl+">", StandardCharsets.UTF_8.name());
 
-        String filename = parameters.xslFile;
+        String filename = parameters.metaFile;
         File file = new File(filename);
         String cwd = file.getParent();
         Map<String, String> updatedDesigns = new LinkedHashMap();
@@ -475,7 +475,7 @@ public class SynBioHandler {
     void processAnnotateExcel(CommandOptions parameters) throws URISyntaxException, IOException {
         FeaturesReader featuresReader = new FeaturesReader();
 
-        String filename = parameters.xslFile;
+        String filename = parameters.metaFile;
         File file = new File(filename);
         String cwd = file.getParent();
         Map<String, String> updatedDesigns = new LinkedHashMap();

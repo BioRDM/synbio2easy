@@ -398,7 +398,7 @@ public class SynBioHandlerIntTest {
         new File(outputDir).mkdirs();
 
         parameters.templateFile = new File(getClass().getResource("cyano_template.xml").getFile()).getAbsolutePath();
-        parameters.flankFile = new File(getClass().getResource("flank-list_20200821_fix2_short.xlsx").getFile()).getAbsolutePath();
+        parameters.metaFile = new File(getClass().getResource("flank-list_20200821_fix2_short.xlsx").getFile()).getAbsolutePath();
         parameters.filenamePrefix = "plasmid";
         parameters.outputDir = outputDir;
         parameters.overwrite = true;

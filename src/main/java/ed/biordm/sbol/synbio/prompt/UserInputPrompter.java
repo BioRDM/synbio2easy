@@ -355,26 +355,26 @@ public class UserInputPrompter {
         console.printf("... updating existing designs in SynBioHub%n");
         console.printf("%n");
 
-        if (options.xslFile == null) {
+        if (options.metaFile == null) {
             console.printf("Please enter the path to the Excel file with designs to update%n");
-            options.xslFile = console.readLine("Filename: ");
+            options.metaFile = console.readLine("Filename: ");
 
-            if (!validateDirPath(options.xslFile)) {
+            if (!validateDirPath(options.metaFile)) {
                 boolean isInput = true;    // must exist because it's input file
                 Path inputPath = null;
                 try {
                     inputPath = validateInputPath(options.dir, isInput);
-                    options.xslFile = inputPath.toFile().getAbsolutePath();
+                    options.metaFile = inputPath.toFile().getAbsolutePath();
                 } catch (Exception e) {
-                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.xslFile);
+                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.metaFile);
                 }
 
                 if (inputPath == null || !inputPath.toFile().exists()) {
-                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.xslFile);
+                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.metaFile);
                 }
             }
         } else {
-            console.printf("Excel File: %s", options.xslFile);
+            console.printf("Excel File: %s", options.metaFile);
             console.printf("%n");
         }
 
@@ -445,26 +445,26 @@ public class UserInputPrompter {
 
         console.printf("%n");
 
-        if (options.flankFile == null) {
+        if (options.metaFile == null) {
             console.printf("Please enter the path to the Excel file with designs descriptions and concrete sequences for child components%n");
-            options.flankFile = console.readLine("Filename: ");
+            options.metaFile = console.readLine("Filename: ");
 
-            if (!validateDirPath(options.flankFile)) {
+            if (!validateDirPath(options.metaFile)) {
                 boolean isInput = true;    // must exist because it's input file
                 Path inputPath = null;
                 try {
-                    inputPath = validateInputPath(options.flankFile, isInput);
-                    options.flankFile = inputPath.toFile().getAbsolutePath();
+                    inputPath = validateInputPath(options.metaFile, isInput);
+                    options.metaFile = inputPath.toFile().getAbsolutePath();
                 } catch (Exception e) {
-                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.flankFile);
+                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.metaFile);
                 }
 
                 if (inputPath == null || !inputPath.toFile().exists()) {
-                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.flankFile);
+                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.metaFile);
                 }
             }
         } else {
-            console.printf("Excel Flank File: %s", options.flankFile);
+            console.printf("Excel Flank File: %s", options.metaFile);
             console.printf("%n");
         }
 
@@ -609,26 +609,26 @@ public class UserInputPrompter {
 
         console.printf("%n");
 
-        if (options.flankFile == null) {
+        if (options.metaFile == null) {
             console.printf("Please enter the path to the Excel file with flank sequences to generate%n");
-            options.flankFile = console.readLine("Filename: ");
+            options.metaFile = console.readLine("Filename: ");
 
-            if (!validateDirPath(options.flankFile)) {
+            if (!validateDirPath(options.metaFile)) {
                 boolean isInput = true;    // must exist because it's input file
                 Path inputPath = null;
                 try {
-                    inputPath = validateInputPath(options.flankFile, isInput);
-                    options.flankFile = inputPath.toFile().getAbsolutePath();
+                    inputPath = validateInputPath(options.metaFile, isInput);
+                    options.metaFile = inputPath.toFile().getAbsolutePath();
                 } catch (Exception e) {
-                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.flankFile);
+                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.metaFile);
                 }
 
                 if (inputPath == null || !inputPath.toFile().exists()) {
-                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.flankFile);
+                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.metaFile);
                 }
             }
         } else {
-            console.printf("Excel Flank File: %s", options.flankFile);
+            console.printf("Excel Flank File: %s", options.metaFile);
             console.printf("%n");
         }
 
@@ -959,26 +959,26 @@ public class UserInputPrompter {
         console.printf("... annotating designs in designated SBOL document%n");
         console.printf("%n");
 
-        if (options.xslFile == null) {
+        if (options.metaFile == null) {
             console.printf("Please enter the path to the Excel file with designs to update%n");
-            options.xslFile = console.readLine("Filename: ");
+            options.metaFile = console.readLine("Filename: ");
 
-            if (!validateDirPath(options.xslFile)) {
+            if (!validateDirPath(options.metaFile)) {
                 boolean isInput = true;    // must exist because it's input file
                 Path inputPath = null;
                 try {
                     inputPath = validateInputPath(options.dir, isInput);
-                    options.xslFile = inputPath.toFile().getAbsolutePath();
+                    options.metaFile = inputPath.toFile().getAbsolutePath();
                 } catch (Exception e) {
-                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.xslFile);
+                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.metaFile);
                 }
 
                 if (inputPath == null || !inputPath.toFile().exists()) {
-                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.xslFile);
+                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.metaFile);
                 }
             }
         } else {
-            console.printf("Excel File: %s", options.xslFile);
+            console.printf("Excel File: %s", options.metaFile);
             console.printf("%n");
         }
 
@@ -1264,11 +1264,11 @@ public class UserInputPrompter {
             }
             setPassedDepositOptions(options, args);
         } else if(options.command == Command.UPDATE) {
-            if (args.getOptionNames().contains("excel-file") && !args.getOptionValues("excel-file").isEmpty()) {
-                options.xslFile = args.getOptionValues("excel-file").get(0);
+            if (args.getOptionNames().contains("meta-file") && !args.getOptionValues("meta-file").isEmpty()) {
+                options.metaFile = args.getOptionValues("meta-file").get(0);
             }
             if (args.getOptionNames().contains("e") && !args.getOptionValues("e").isEmpty()) {
-                options.xslFile = args.getOptionValues("e").get(0);
+                options.metaFile = args.getOptionValues("e").get(0);
             }
         } else if(options.command == Command.GENERATE) {
             setPassedGenerateOptions(options, args);
@@ -1284,10 +1284,10 @@ public class UserInputPrompter {
         }
 
         if (args.getOptionNames().contains("flank-file") && !args.getOptionValues("flank-file").isEmpty()) {
-            options.flankFile = args.getOptionValues("flank-file").get(0);
+            options.metaFile = args.getOptionValues("flank-file").get(0);
         }
         if (args.getOptionNames().contains("f") && !args.getOptionValues("f").isEmpty()) {
-            options.flankFile = args.getOptionValues("f").get(0);
+            options.metaFile = args.getOptionValues("f").get(0);
         }
 
         if (args.getOptionNames().contains("filename-prefix") && !args.getOptionValues("filename-prefix").isEmpty()) {
