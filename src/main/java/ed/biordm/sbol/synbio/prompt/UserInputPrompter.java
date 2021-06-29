@@ -80,6 +80,7 @@ public class UserInputPrompter {
             case DEPOSIT: return DEPOSIT;
             case UPDATE: return UPDATE;
             case GENERATE: return GENERATE;
+            case CYANO: return CYANO;
             case CLEAN: return CLEAN;
             case FLATTEN: return FLATTEN;
             case ANNOTATE: return ANNOTATE;
@@ -1263,7 +1264,7 @@ public class UserInputPrompter {
     public String getUsageTxt() {
         return "Usage:"
                 + "\n"
-                + "deposit | update | generate";
+                + "deposit | update | generate | cyano | clean | flatten | annotate | template4update";
     }
 
     void setPassedOptions(CommandOptions options, ApplicationArguments args) {
