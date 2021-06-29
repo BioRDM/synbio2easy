@@ -54,6 +54,7 @@ public class UserInputPrompter {
             case DEPOSIT: return promptDepositOptions(options);
             case UPDATE: return promptUpdateOptions(options);
             case GENERATE: return promptGenerateOptions(options);
+            case CYANO: return promptCyanoOptions(options);
             case CLEAN: return promptCleanOptions(options);
             case FLATTEN: return promptFlattenOptions(options);
             case ANNOTATE: return promptAnnotateOptions(options);
@@ -415,6 +416,170 @@ public class UserInputPrompter {
     }
 
     CommandOptions promptGenerateOptions(CommandOptions options) {
+        console.printf("%n");
+        console.printf("... generating library designs from SBOL template%n");
+        console.printf("%n");
+
+        if (options.templateFile == null) {
+            console.printf("Please enter the path to the template SBOL file for generating component definition library%n");
+            options.templateFile = console.readLine("Filename: ");
+
+            if (!validateDirPath(options.templateFile)) {
+                boolean isInput = true;    // must exist because it's input file
+                Path inputPath = null;
+                try {
+                    inputPath = validateInputPath(options.templateFile, isInput);
+                    options.templateFile = inputPath.toFile().getAbsolutePath();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid template SBOL file path argument: "+options.templateFile);
+                }
+
+                if (inputPath == null || !inputPath.toFile().exists()) {
+                    throw new IllegalArgumentException("Invalid template SBOL file path argument: "+options.templateFile);
+                }
+            }
+        } else {
+            console.printf("Template SBOL File: %s", options.templateFile);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+
+        if (options.flankFile == null) {
+            console.printf("Please enter the path to the Excel file with designs descriptions and concrete sequences for child components%n");
+            options.flankFile = console.readLine("Filename: ");
+
+            if (!validateDirPath(options.flankFile)) {
+                boolean isInput = true;    // must exist because it's input file
+                Path inputPath = null;
+                try {
+                    inputPath = validateInputPath(options.flankFile, isInput);
+                    options.flankFile = inputPath.toFile().getAbsolutePath();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.flankFile);
+                }
+
+                if (inputPath == null || !inputPath.toFile().exists()) {
+                    throw new IllegalArgumentException("Invalid Excel file path argument: "+options.flankFile);
+                }
+            }
+        } else {
+            console.printf("Excel Flank File: %s", options.flankFile);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+
+        if (options.filenamePrefix == null) {
+            console.printf("Please enter the filename prefix for the generated SBOL document files%n");
+            options.filenamePrefix = console.readLine("Filename Prefix [<ENTER> for 'plasmid']: ");
+
+            if (options.filenamePrefix == null || options.filenamePrefix.trim().isEmpty()) {
+                options.filenamePrefix = "plasmid";
+            }
+        } else {
+            console.printf("%n");
+            console.printf("Filename Prefix: %s", options.filenamePrefix);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+
+        if (options.version == null) {
+            console.printf("Please enter the default version number for new designs%n");
+            options.version = console.readLine("Version [<ENTER> for 1.0]: ");
+
+            if (options.version == null || options.version.trim().isEmpty()) {
+                options.version = "1.0";
+            }
+        } else {
+            console.printf("%n");
+            console.printf("Version: %s", options.version);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+        
+        if (options.isStopOnMissingMetaDef == false && options.stopOnMissingMeta == false) {
+            console.printf("Do you wish to halt the generation procedure if missing metadata is encountered?%n");
+            String stopOnMissingMetaAns = console.readLine("Y | N [<ENTER> for 'N' if you are not sure]: ").strip();
+
+            if(stopOnMissingMetaAns.isEmpty()) {
+                stopOnMissingMetaAns = "N";
+            }
+
+            while(!Y_N_PATTERN.matcher(stopOnMissingMetaAns).matches()) {
+                stopOnMissingMetaAns = console.readLine("Y | N [<ENTER> for 'N' if you are not sure]: ").strip();
+
+                if(stopOnMissingMetaAns.isEmpty()) {
+                    stopOnMissingMetaAns = "N";
+                }
+            }
+
+            if (Y_PATTERN.matcher(stopOnMissingMetaAns).matches()) {
+                options.stopOnMissingMeta = true;
+            } else {
+                options.stopOnMissingMeta = false;
+            }
+        } else {
+            console.printf("%n");
+            console.printf("Stop on missing metadata: %s", options.stopOnMissingMeta);
+            console.printf("%n");
+        }
+        
+        console.printf("%n");
+        
+        if (options.outputDir == null) {
+            console.printf("Please enter the directory path in which to put the generated SBOL files%n");
+            options.outputDir = console.readLine("Directory path [<ENTER> for 'library']: ");
+
+            if(options.outputDir.isEmpty()) {
+                options.outputDir = Paths.get(System.getProperty("user.dir")).resolve("library").toFile().getAbsolutePath();
+                console.printf("Directory: %s", options.outputDir);
+            } else {
+                boolean isInput = false;    // doesn't matter that it doesn't exist because it's for output
+                Path outputDirPath = validateInputPath(options.outputDir, isInput);
+                options.outputDir = outputDirPath.toFile().getAbsolutePath();
+            }
+        } else {
+            console.printf("Directory: %s", options.outputDir);
+            console.printf("%n");
+        }
+
+        if (new File(options.outputDir).exists()) {
+            console.printf("%n");
+
+            if (options.isOverwriteDef == false && options.overwrite == false) {
+                console.printf("%n");
+                console.printf("You have selected a directory that already exists. If you continue, existing designs may be overwritten by newly generated designs.%n");
+                console.printf("Do you wish to continue and overwrite designs if they already exist?%n");
+                String overwriteAns = console.readLine("Y | N: ").strip();
+
+                while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
+                    overwriteAns = console.readLine("Y | N: ").strip();
+                }
+
+                if (Y_PATTERN.matcher(overwriteAns).matches()) {
+                    options.overwrite = true;
+                } else {
+                    throw new IllegalArgumentException("Cannot continue with generation as existing designs will be overwritten in "+options.outputDir);
+                }
+            } else {
+                console.printf("%n");
+                console.printf("Overwrite: %s", options.overwrite);
+                console.printf("%n");
+            }
+        } else {
+            options.overwrite = false;
+        }
+
+        console.printf("%n");
+
+        return options;
+    }
+    
+    
+    CommandOptions promptCyanoOptions(CommandOptions options) {
         console.printf("%n");
         console.printf("... generating plasmid designs in SBOL documents%n");
         console.printf("%n");

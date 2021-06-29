@@ -56,6 +56,7 @@ import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.stereotype.Service;
 import static ed.biordm.sbol.toolkit.transform.ComponentUtil.saveValidSbol;
+import ed.biordm.sbol.toolkit.transform.LibraryGenerator;
 import ed.biordm.sbol.toolkit.transform.Outcome;
 
 /**
@@ -69,6 +70,8 @@ public class SynBioHandler {
     final ComponentFlattener flattener;
     final ComponentUtil compUtil;
     final ComponentAnnotator annotator;
+    final LibraryGenerator generator;
+    
     final String SBOL_DISP_ID_TYPE;
     final JsonParser jsonParser;
 
@@ -90,15 +93,17 @@ public class SynBioHandler {
         // that should be probably injected in autowired constructor
         //this.jsonParser = JsonParserFactory.getJsonParser();        
         this(client, JsonParserFactory.getJsonParser(), new ComponentFlattener(), 
-                new ComponentUtil(), new ComponentAnnotator());
+                new ComponentUtil(), new ComponentAnnotator(), new LibraryGenerator());
     }
 
     protected SynBioHandler(SynBioClient client, JsonParser jsonParser, 
-            ComponentFlattener flattener, ComponentUtil compUtil,ComponentAnnotator annotator) {
+            ComponentFlattener flattener, ComponentUtil compUtil,ComponentAnnotator annotator,
+            LibraryGenerator generator) {
         this.client = client;
         this.flattener = flattener;
         this.compUtil = compUtil;
         this.annotator = annotator;
+        this.generator = generator;
         this.jsonParser = jsonParser;
         this.SBOL_DISP_ID_TYPE = encodeURL("<http://sbols.org/v2#displayId>");
     }
@@ -116,6 +121,7 @@ public class SynBioHandler {
             case DEPOSIT: handleDeposit(command); break;
             case UPDATE: handleUpdate(command); break;
             case GENERATE: handleGenerate(command); break;
+            case CYANO: handleCyano(command); break;
             case CLEAN: handleClean(command); break;
             case FLATTEN: handleFlatten(command); break;
             case ANNOTATE: handleAnnotate(command); break;
@@ -144,7 +150,7 @@ public class SynBioHandler {
         processUpdateExcel(parameters);
     }
 
-    void handleGenerate(CommandOptions parameters) throws URISyntaxException, IOException {
+    void handleCyano(CommandOptions parameters) throws URISyntaxException, IOException {
         PlasmidsGenerator generator = new PlasmidsGenerator();
         String name = parameters.filenamePrefix;
         String version = parameters.version;
@@ -158,6 +164,34 @@ public class SynBioHandler {
             logger.error(e.getMessage(), e);
             throw new IOException(e);
         }
+    }
+    
+    void handleGenerate(CommandOptions parameters) throws URISyntaxException, IOException {
+        String name = parameters.filenamePrefix;
+        String defVersion = parameters.version;
+        Path templateFile = Paths.get(parameters.templateFile);
+        Path metaFile = Paths.get(parameters.flankFile);
+        Path outDir = Paths.get(parameters.outputDir);
+        boolean stopOnMissing = parameters.stopOnMissingMeta;
+        
+        int batchSize = generator.DEF_BATCH;
+        generator.DEBUG = true;
+        Outcome outcome = generator.generateFromFiles(name, defVersion, templateFile, metaFile, outDir, stopOnMissing, batchSize);
+        
+            // TODO printout outcome status, for example id of missing meta
+            // 
+            // if (!outcome.missingMeta.isEmpty()) {
+            //  print some designs were missing ....    
+            // }....
+            
+            
+        /*try {
+            
+            generator.generateFromFiles(name, version, templateFile, flankFile, outDir);
+        } catch (SBOLValidationException | SBOLConversionException | ed.biordm.sbol.toolkit.transform.SBOLConversionException e) {
+            logger.error(e.getMessage(), e);
+            throw new IOException(e);
+        }*/
     }
 
     void handleClean(CommandOptions parameters) throws URISyntaxException, IOException {
