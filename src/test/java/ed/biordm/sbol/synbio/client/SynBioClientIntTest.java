@@ -5,12 +5,16 @@
  */
 package ed.biordm.sbol.synbio.client;
 
+import ed.biordm.sbol.synbio.dom.Command;
+import ed.biordm.sbol.synbio.dom.CommandOptions;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -212,7 +216,8 @@ public class SynBioClientIntTest {
 
         requestParams = "/objectType="+objType+"&collection="+collUrl+"&"+dispIdType+"='"+searchStr+"'&/?offset=0&limit=10";
 
-        String metadata = client.searchMetadata(synBioUrl, requestParams, token);
+        // String metadata = client.searchMetadata(synBioUrl, requestParams, token);
+        List<Object> metadata = client.searchMetadata(synBioUrl, requestParams, token);
         System.out.println(metadata);
     }
 
@@ -254,7 +259,8 @@ public class SynBioClientIntTest {
         // retrieve existing design and description
         String requestParams = "/objectType="+objType+"&collection="+collUrl+"&"+dispIdType+"='"+searchStr+"'&/?offset=0&limit=10";
 
-        String metadata = client.searchMetadata(synBioUrl, requestParams, token);
+        // String metadata = client.searchMetadata(synBioUrl, requestParams, token);
+        List<Object> metadata = client.searchMetadata(synBioUrl, requestParams, token);
         System.out.println(metadata);
 
         String designUri = "http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km/1.0.0/";
@@ -282,7 +288,8 @@ public class SynBioClientIntTest {
         // retrieve existing design and description
         String requestParams = "/objectType="+objType+"&collection="+collUrl+"&"+dispIdType+"='"+searchStr+"'&/?offset=0&limit=10";
 
-        String metadata = client.searchMetadata(synBioUrl, requestParams, token);
+        // String metadata = client.searchMetadata(synBioUrl, requestParams, token);
+        List<Object> metadata = client.searchMetadata(synBioUrl, requestParams, token);
         System.out.println(metadata);
 
         String designUri = "http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km/1.0.0/";
@@ -359,5 +366,25 @@ public class SynBioClientIntTest {
         String description = client.getDesignAnnotation(designXml, designUri, CommonAnnotations.SBH_DESCRIPTION);
         
         assertTrue(description.contains("Here's a new line in the description"));
+    }
+
+    @Test
+    public void testVerifyCollectionUrlVersion() throws URISyntaxException, UnsupportedEncodingException {
+        CommandOptions parameters = new CommandOptions(Command.UPDATE);
+
+        String collPidUrl = "http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection";
+        parameters.url = collPidUrl;
+        parameters.user = synBioUser;
+        parameters.password = synBioPassword;
+
+        String token = client.login(synBioUrl, synBioUser, synBioPassword);
+        System.out.println(token);
+        assertNotNull(token);
+
+        parameters.sessionToken = token;
+
+        String verCollUrl = client.verifyCollectionUrlVersion(parameters);
+
+        assertEquals(collPidUrl.concat("/1.1-alpha"), verCollUrl);
     }
 }
