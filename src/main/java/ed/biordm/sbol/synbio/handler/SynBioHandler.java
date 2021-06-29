@@ -14,10 +14,8 @@ import ed.biordm.sbol.toolkit.transform.ComponentUtil;
 import static ed.biordm.sbol.toolkit.transform.ComponentUtil.emptyDocument;
 import ed.biordm.sbol.toolkit.transform.SynBioTamer;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
@@ -27,16 +25,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -471,78 +465,6 @@ public class SynBioHandler {
         outputDesigns(updatedDesigns);
     }
 
-    @Deprecated
-    void processAnnotateExcel(CommandOptions parameters) throws URISyntaxException, IOException {
-        FeaturesReader featuresReader = new FeaturesReader();
-
-        String filename = parameters.metaFile;
-        File file = new File(filename);
-        String cwd = file.getParent();
-        Map<String, String> updatedDesigns = new LinkedHashMap();
-
-        Path inputFile = Paths.get(parameters.inputFile);
-        Path outFile = Paths.get(parameters.outputFile);
-
-        PlasmidsGenerator generator = new PlasmidsGenerator();
-
-        System.out.println("");
-
-        try (Workbook workbook = WorkbookFactory.create(file, null, true)) {
-            Sheet sheet = workbook.getSheetAt(0);
-
-            FormulaEvaluator formEval = workbook.getCreationHelper().createFormulaEvaluator();
-            formEval.setIgnoreMissingWorkbooks(true);
-
-            // assume always 4 column names in header
-            List<String> colHeaders = featuresReader.readWorksheetHeader(sheet, 4, formEval);
-            Map<String, List<String>> rows = featuresReader.readWorksheetRows(sheet, 1, 4, formEval);
-
-            rows.forEach((key, value) -> {
-                List<String> colVals = (List<String>) value;
-
-                if (true) throw new UnsupportedOperationException("fix me");
-                /* so it will compile
-                try {
-                    final String displayId = colVals.get(colHeaders.indexOf(DISP_ID_HEADER));
-
-                    if(!displayId.isBlank()) {
-                        String description = null;
-                        String notes = null;
-
-                        if(colHeaders.contains(DESC_HEADER)) {
-                            description = colVals.get(colHeaders.indexOf(DESC_HEADER));
-                        }
-
-                        if(colHeaders.contains(NOTES_HEADER)) {
-                            notes = colVals.get(colHeaders.indexOf(NOTES_HEADER));
-                        }
-
-                        try {
-                            generator.addPlasmidAnnotations(inputFile, outFile, description, notes);
-                            updatedDesigns.put(displayId, inputFile.toFile().getAbsolutePath());
-                        } catch (SBOLValidationException | SBOLConversionException | IOException | URISyntaxException e) {
-                            logger.error(e.getMessage(), e);
-                        }
-                    }
-                } catch(Exception e) {
-                    // abort the run and print out all the successful rows up to this point
-                    outputDesigns(updatedDesigns);
-                    throw(e);
-                } */
-            });
-        }
-
-        outputDesigns(updatedDesigns);
-    }
-
-    String getDesignXml(CommandOptions parameters, String designUri) throws URISyntaxException {
-        String token = login(parameters);
-
-        // String designUri = "http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km/1.0.0/";
-        String designXml = client.getDesign(token, designUri);
-
-        return designXml;
-    }
 
     protected void processUpdateRow(CommandOptions parameters, String cwd, 
             String collUrl, String url, String displayId, List<String> colHeaders,
