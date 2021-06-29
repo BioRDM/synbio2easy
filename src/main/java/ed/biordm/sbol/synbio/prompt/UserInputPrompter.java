@@ -633,10 +633,14 @@ public class UserInputPrompter {
 
         if (options.isRemoveCollsDef == false && options.removeColls == false) {
             console.printf("Do you wish to remove references to any SynBioHub collections in the cleaned SBOL output document?%n");
-            String removeCollsAns = console.readLine("Y | N [enter 'Y' if you are not sure]: ").strip();
+            String removeCollsAns = console.readLine("Y | N [<ENTER> for 'Y' if you are not sure]: ").strip();
 
             while(!Y_N_PATTERN.matcher(removeCollsAns).matches()) {
-                removeCollsAns = console.readLine("Y | N [enter 'Y' if you are not sure]: ").strip();
+                removeCollsAns = console.readLine("Y | N [<ENTER> for 'Y' if you are not sure]: ").strip();
+
+                if(removeCollsAns.isEmpty()) {
+                    removeCollsAns = "Y";
+                }
             }
 
             if (Y_PATTERN.matcher(removeCollsAns).matches()) {
@@ -725,10 +729,18 @@ public class UserInputPrompter {
 
         if (options.isAllRootsDef == false && options.allRoots == false) {
             console.printf("Do you wish to flatten all root components in the SBOL document (Y) or one particular component (N)?%n");
-            String allRootsAns = console.readLine("Y | N: ").strip();
+            String allRootsAns = console.readLine("Y | N [<ENTER> for 'Y' if you are not sure]: ").strip();
+
+            if(allRootsAns.isEmpty()) {
+                allRootsAns = "Y";
+            }
 
             while(!Y_N_PATTERN.matcher(allRootsAns).matches()) {
-                allRootsAns = console.readLine("Y | N: ").strip();
+                allRootsAns = console.readLine("Y | N [<ENTER> for 'Y' if you are not sure]: ").strip();
+
+                if(allRootsAns.isEmpty()) {
+                    allRootsAns = "Y";
+                }
             }
 
             if (Y_PATTERN.matcher(allRootsAns).matches()) {
@@ -872,10 +884,18 @@ public class UserInputPrompter {
 
         if (options.isOverwriteDef == false && options.overwrite == false) {
             console.printf("Do you wish to overwrite existing descriptions and comments if they exist (Y) or append to them (N)?%n");
-            String overwriteAns = console.readLine("Y | N: ").strip();
+            String overwriteAns = console.readLine("Y | N [<ENTER> for 'N' if you are not sure]: ").strip();
+
+            if(overwriteAns.isEmpty()) {
+                overwriteAns = "N";
+            }
 
             while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
-                overwriteAns = console.readLine("Y | N: ").strip();
+                overwriteAns = console.readLine("Y | N [<ENTER> for 'N' if you are not sure]: ").strip();
+
+                if(overwriteAns.isEmpty()) {
+                    overwriteAns = "N";
+                }
             }
 
             if (Y_PATTERN.matcher(overwriteAns).matches()) {
@@ -893,10 +913,18 @@ public class UserInputPrompter {
 
         if (options.isStopOnMissingIdDef == false && options.stopOnMissingId == false) {
             console.printf("Do you wish to halt the annotating procedure if a missing component ID is encountered?%n");
-            String stopOnMissingIdAns = console.readLine("Y | N: ").strip();
+            String stopOnMissingIdAns = console.readLine("Y | N [<ENTER> for 'N' if you are not sure]: ").strip();
+
+            if(stopOnMissingIdAns.isEmpty()) {
+                stopOnMissingIdAns = "N";
+            }
 
             while(!Y_N_PATTERN.matcher(stopOnMissingIdAns).matches()) {
-                stopOnMissingIdAns = console.readLine("Y | N: ").strip();
+                stopOnMissingIdAns = console.readLine("Y | N [<ENTER> for 'N' if you are not sure]: ").strip();
+
+                if(stopOnMissingIdAns.isEmpty()) {
+                    stopOnMissingIdAns = "N";
+                }
             }
 
             if (Y_PATTERN.matcher(stopOnMissingIdAns).matches()) {
@@ -914,10 +942,18 @@ public class UserInputPrompter {
 
         if (options.isStopOnMissingMetaDef == false && options.stopOnMissingMeta == false) {
             console.printf("Do you wish to halt the annotating procedure if missing metadata is encountered?%n");
-            String stopOnMissingMetaAns = console.readLine("Y | N: ").strip();
+            String stopOnMissingMetaAns = console.readLine("Y | N [<ENTER> for 'N' if you are not sure]: ").strip();
+
+            if(stopOnMissingMetaAns.isEmpty()) {
+                stopOnMissingMetaAns = "N";
+            }
 
             while(!Y_N_PATTERN.matcher(stopOnMissingMetaAns).matches()) {
-                stopOnMissingMetaAns = console.readLine("Y | N: ").strip();
+                stopOnMissingMetaAns = console.readLine("Y | N [<ENTER> for 'N' if you are not sure]: ").strip();
+
+                if(stopOnMissingMetaAns.isEmpty()) {
+                    stopOnMissingMetaAns = "N";
+                }
             }
 
             if (Y_PATTERN.matcher(stopOnMissingMetaAns).matches()) {
