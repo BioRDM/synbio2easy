@@ -7,11 +7,11 @@ package ed.biordm.sbol.synbio.handler;
 
 import ed.biordm.sbol.synbio.client.SynBioClient;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
-import static ed.biordm.sbol.synbio.handler.SynBioHandler.encodeURL;
 import static ed.biordm.sbol.toolkit.meta.ExcelMetaReader.ATTACH_FILE_HEADER;
 import static ed.biordm.sbol.toolkit.meta.ExcelMetaReader.DESC_HEADER;
 import static ed.biordm.sbol.toolkit.meta.ExcelMetaReader.DISP_ID_HEADER;
 import static ed.biordm.sbol.toolkit.meta.ExcelMetaReader.NOTES_HEADER;
+import ed.biordm.sbol.toolkit.transform.Outcome;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -28,7 +28,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -45,11 +44,11 @@ public class ExcelHandler {
         // that should be probably injected in autowired constructor
         //this.jsonParser = JsonParserFactory.getJsonParser();        
         this.client = client;
-        this.SBOL_DISP_ID_TYPE = encodeURL("<http://sbols.org/v2#displayId>");
+        this.SBOL_DISP_ID_TYPE = client.encodeURL("<http://sbols.org/v2#displayId>");
         this.SBOL_OBJ_TYPE = "ComponentDefinition";
     }
 
-    void processUpdateExcel(CommandOptions parameters) throws URISyntaxException, IOException {
+    public Outcome processUpdateExcel(CommandOptions parameters) throws URISyntaxException, IOException {
         FeaturesReader featuresReader = new FeaturesReader();
         String url = client.hubFromUrl(parameters.url);
 
@@ -62,6 +61,7 @@ public class ExcelHandler {
         File file = new File(filename);
         String cwd = file.getParent();
         Map<String, String> updatedDesigns = new LinkedHashMap();
+        Outcome outcome = new Outcome();
 
         System.out.println("");
 
@@ -83,7 +83,7 @@ public class ExcelHandler {
 
                     if(!displayId.isBlank()) {
                         processUpdateRow(parameters, cwd, collUrl, url, displayId,
-                            colHeaders, colVals, updatedDesigns);
+                            colHeaders, colVals, updatedDesigns, outcome);
                     }
                 } catch(Exception e) {
                     // abort the run and print out all the successful rows up to this point
@@ -94,12 +94,13 @@ public class ExcelHandler {
         }
 
         outputDesigns(updatedDesigns);
+        return outcome;
     }
 
 
     protected void processUpdateRow(CommandOptions parameters, String cwd, 
             String collUrl, String url, String displayId, List<String> colHeaders,
-            List<String> colVals, Map<String, String> updatedDesigns) {
+            List<String> colVals, Map<String, String> updatedDesigns, Outcome outcome) {
         String attachFilename = null;
         String description = null;
         String notes = null;
@@ -132,6 +133,7 @@ public class ExcelHandler {
 
                 // replace with UI logger
                 System.out.printf("No design found with displayId %s in collection %s%n%n", displayId, decCollUrl);
+                outcome.missingId.add(displayId);
                 return;
             } catch (UnsupportedEncodingException e) {
                 logger.error(e.getMessage(), e);
@@ -157,6 +159,7 @@ public class ExcelHandler {
             }
 
             updatedDesigns.put(displayId, collUrl);
+            outcome.successful.add(displayId);
         }
     }
 
