@@ -68,7 +68,6 @@ public class SynBioHandlerIntTest {
     @Test
     public void setupWorks() {
         assertNotNull(handler);
-        assertNotNull(handler.jsonParser);
     }
 
     @Test
@@ -248,67 +247,6 @@ public class SynBioHandlerIntTest {
     }
 
     @Test
-    public void testReadExcel() throws URISyntaxException, IOException {
-        // File file = new File(getClass().getResource("update_designs_test.xlsx").getFile());
-        File file = new File(getClass().getResource("update_designs_tz.xlsx").getFile());
-        CommandOptions parameters = new CommandOptions(Command.UPDATE);
-
-        parameters.url = "http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection/1";
-        parameters.user = synBioUser;
-        parameters.password = synBioPassword;
-
-        String token = handler.login(parameters);
-        System.out.println(token);
-        assertNotNull(token);
-
-        parameters.sessionToken = token;
-        String filename = file.getAbsolutePath();
-        parameters.metaFile = filename;
-
-        handler.processUpdateExcel(parameters);
-    }
-
-    @Test
-    public void testReadExcelUnsorted() throws URISyntaxException, IOException {
-        File file = new File(getClass().getResource("update_designs_test_unsorted.xlsx").getFile());
-        CommandOptions parameters = new CommandOptions(Command.UPDATE);
-
-        parameters.url = "http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection/1";
-        parameters.user = synBioUser;
-        parameters.password = synBioPassword;
-
-        String token = handler.login(parameters);
-        System.out.println(token);
-        assertNotNull(token);
-
-        parameters.sessionToken = token;
-        String filename = file.getAbsolutePath();
-        parameters.metaFile = filename;
-
-        handler.processUpdateExcel(parameters);
-    }
-
-    @Test
-    public void testVerifyCollectionUrlVersion() throws URISyntaxException, UnsupportedEncodingException {
-        CommandOptions parameters = new CommandOptions(Command.UPDATE);
-
-        String collPidUrl = "http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection";
-        parameters.url = collPidUrl;
-        parameters.user = synBioUser;
-        parameters.password = synBioPassword;
-
-        String token = handler.login(parameters);
-        System.out.println(token);
-        assertNotNull(token);
-
-        parameters.sessionToken = token;
-
-        String verCollUrl = handler.verifyCollectionUrlVersion(parameters);
-
-        assertEquals(collPidUrl.concat("/1.1-alpha"), verCollUrl);
-    }
-
-    @Test
     public void testUploadDifferentVersions() throws URISyntaxException, UnsupportedEncodingException {
         CommandOptions parameters = new CommandOptions(Command.UPDATE);
 
@@ -323,7 +261,7 @@ public class SynBioHandlerIntTest {
 
         parameters.sessionToken = token;
 
-        String verCollUrl = handler.verifyCollectionUrlVersion(parameters);
+        String verCollUrl = handler.client.verifyCollectionUrlVersion(parameters);
 
         assertEquals(collPidUrl.concat("/1"), verCollUrl);
         

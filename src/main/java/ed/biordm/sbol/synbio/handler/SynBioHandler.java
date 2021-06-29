@@ -65,9 +65,7 @@ public class SynBioHandler {
     final ComponentUtil compUtil;
     final ComponentAnnotator annotator;
     final LibraryGenerator generator;
-    
-    final String SBOL_DISP_ID_TYPE;
-    final JsonParser jsonParser;
+    final ExcelHandler excelHandler;
 
     final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -77,29 +75,25 @@ public class SynBioHandler {
     private static final String DESC_HEADER = "description";
     private static final String NOTES_HEADER = "notes";
 
-    private static final String SBOL_OBJ_TYPE = "ComponentDefinition";
-
-
-    private static final Pattern COLL_URL_VERSION_PATTERN = Pattern.compile(".*/[0-9]+.*");
-
     @Autowired
     public SynBioHandler(SynBioClient client) {
         // that should be probably injected in autowired constructor
         //this.jsonParser = JsonParserFactory.getJsonParser();        
-        this(client, JsonParserFactory.getJsonParser(), new ComponentFlattener(), 
-                new ComponentUtil(), new ComponentAnnotator(), new LibraryGenerator());
+        this(client, new ComponentFlattener(),
+                new ComponentUtil(), new ComponentAnnotator(),
+                new LibraryGenerator(), new ExcelHandler(client));
     }
 
-    protected SynBioHandler(SynBioClient client, JsonParser jsonParser, 
-            ComponentFlattener flattener, ComponentUtil compUtil,ComponentAnnotator annotator,
-            LibraryGenerator generator) {
+    protected SynBioHandler(SynBioClient client,
+            ComponentFlattener flattener, ComponentUtil compUtil,
+            ComponentAnnotator annotator, LibraryGenerator generator,
+            ExcelHandler excelHandler) {
         this.client = client;
         this.flattener = flattener;
         this.compUtil = compUtil;
         this.annotator = annotator;
         this.generator = generator;
-        this.jsonParser = jsonParser;
-        this.SBOL_DISP_ID_TYPE = encodeURL("<http://sbols.org/v2#displayId>");
+        this.excelHandler = excelHandler;
     }
     
     protected static String encodeURL(String url) {
@@ -141,7 +135,7 @@ public class SynBioHandler {
             parameters.sessionToken = login(parameters);
         }
 
-        processUpdateExcel(parameters);
+        excelHandler.processUpdateExcel(parameters);
     }
 
     void handleCyano(CommandOptions parameters) throws URISyntaxException, IOException {
@@ -346,7 +340,7 @@ public class SynBioHandler {
             // some other params as needed by the API
             // for example overwrite is needed here not only for the creation
             client.deposit(parameters.sessionToken, collectionUrl, file,
-                    getOverwriteParam(parameters, true));
+                    client.getOverwriteParam(parameters, true));
         }
     }
 
@@ -361,7 +355,7 @@ public class SynBioHandler {
         String citations = "";
 
         boolean isOverwrite = parameters.overwrite;
-        int overwriteMerge = getOverwriteParam(parameters, false);
+        int overwriteMerge = client.getOverwriteParam(parameters, false);
 
         logger.info("URL in parameters: {}", parameters.url);
 
@@ -416,166 +410,6 @@ public class SynBioHandler {
     protected String sanitizeName(String name) {
         String cleanName = name.replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit}]", "_");
         return cleanName;
-    }
-
-    void processUpdateExcel(CommandOptions parameters) throws URISyntaxException, IOException {
-        FeaturesReader featuresReader = new FeaturesReader();
-        String url = client.hubFromUrl(parameters.url);
-
-        // ensure collection URL specifies version
-        String verCollUrl = verifyCollectionUrlVersion(parameters);
-
-        final String collUrl = URLEncoder.encode("<"+verCollUrl+">", StandardCharsets.UTF_8.name());
-
-        String filename = parameters.metaFile;
-        File file = new File(filename);
-        String cwd = file.getParent();
-        Map<String, String> updatedDesigns = new LinkedHashMap();
-
-        System.out.println("");
-
-        try (Workbook workbook = WorkbookFactory.create(file, null, true)) {
-            Sheet sheet = workbook.getSheetAt(0);
-
-            FormulaEvaluator formEval = workbook.getCreationHelper().createFormulaEvaluator();
-            formEval.setIgnoreMissingWorkbooks(true);
-
-            // assume always 4 column names in header
-            List<String> colHeaders = featuresReader.readWorksheetHeader(sheet, 4, formEval);
-            Map<String, List<String>> rows = featuresReader.readWorksheetRows(sheet, 1, 4, formEval);
-
-            rows.forEach((key, value) -> {
-                List<String> colVals = (List<String>) value;
-
-                try {
-                    final String displayId = colVals.get(colHeaders.indexOf(DISP_ID_HEADER));
-
-                    if(!displayId.isBlank()) {
-                        processUpdateRow(parameters, cwd, collUrl, url, displayId,
-                            colHeaders, colVals, updatedDesigns);
-                    }
-                } catch(Exception e) {
-                    // abort the run and print out all the successful rows up to this point
-                    outputDesigns(updatedDesigns);
-                    throw(e);
-                }
-            });
-        }
-
-        outputDesigns(updatedDesigns);
-    }
-
-
-    protected void processUpdateRow(CommandOptions parameters, String cwd, 
-            String collUrl, String url, String displayId, List<String> colHeaders,
-            List<String> colVals, Map<String, String> updatedDesigns) {
-        String attachFilename = null;
-        String description = null;
-        String notes = null;
-
-        if(colHeaders.contains(ATTACH_FILE_HEADER)) {
-            attachFilename = colVals.get(colHeaders.indexOf(ATTACH_FILE_HEADER));
-        }
-
-        if(colHeaders.contains(DESC_HEADER)) {
-            description = colVals.get(colHeaders.indexOf(DESC_HEADER));
-        }
-
-        if(colHeaders.contains(NOTES_HEADER)) {
-            notes = colVals.get(colHeaders.indexOf(NOTES_HEADER));
-        }
-
-        String requestParams = "/objectType="+SBOL_OBJ_TYPE+"&collection="+collUrl+
-            "&"+SBOL_DISP_ID_TYPE+"='"+displayId+"'&/?offset=0&limit=10";
-
-        String metadata = client.searchMetadata(url, requestParams, parameters.sessionToken);
-        //Object design = client.getSubmissionByDisplayId();
-        List<Object> designList = jsonParser.parseList(metadata);
-
-        if(designList == null || designList.isEmpty()) {
-            try {
-                String decCollUrl = URLDecoder.decode(collUrl, StandardCharsets.UTF_8.name());
-                String userMessage = "No design found with displayId {} in collection {}";
-                logger.info(userMessage, displayId, decCollUrl);
-
-                // replace with UI logger
-                System.out.printf("No design found with displayId %s in collection %s%n%n", displayId, decCollUrl);
-                return;
-            } catch (UnsupportedEncodingException e) {
-                logger.error(e.getMessage(), e);
-            }
-        }
-
-        Object design = designList.get(0);
-
-        if (design instanceof Map) {
-            Map<String,Object> map = (Map<String,Object>) design;
-            String designUri = (String)map.get("uri");
-
-            if(attachFilename != null) {
-                attachFileToDesign(parameters, cwd, designUri, attachFilename);
-            }
-
-            if(description != null) {
-                updateDesignDescription(parameters, cwd, designUri, description);
-            }
-
-            if(notes != null) {
-                updateDesignNotes(parameters, cwd, designUri, notes);
-            }
-
-            updatedDesigns.put(displayId, collUrl);
-        }
-    }
-
-    protected void attachFileToDesign(CommandOptions parameters, String cwd,
-            String designUri, String attachFilename) {
-        if (attachFilename != null && !attachFilename.isEmpty()) {
-            File attachFile = new File(attachFilename);
-
-            if (!attachFile.exists()) {
-                // assume this must be a relative file path, so prepend parent dir path
-                attachFilename = cwd+System.getProperty("file.separator")+attachFilename;
-                attachFile = new File(attachFilename);
-            }
-
-            if (attachFile.exists()) {
-                client.attachFile(parameters.sessionToken, designUri+"/",
-                        attachFilename, getOverwriteParam(parameters, true));
-            }
-        }
-    }
-
-    protected void updateDesignDescription(CommandOptions parameters, String cwd,
-            String designUri, String description) {
-        if (description != null && !description.isEmpty()) {
-            client.appendToDescription(parameters.sessionToken, designUri+"/", description);
-        }
-    }
-
-    protected void updateDesignNotes(CommandOptions parameters, String cwd,
-            String designUri, String notes) {
-        if (notes != null && !notes.isEmpty()) {
-            client.appendToNotes(parameters.sessionToken, designUri+"/", notes);
-        }
-    }
-
-    protected void outputDesigns(Map<String, String> updatedDesigns) {
-        // replace this with UI logger
-        System.out.println("");
-        System.out.println("Successfully updated the following designs...\n");
-        System.out.println("");
-
-        updatedDesigns.forEach((key, value) -> {
-            try {
-                String decVal = URLDecoder.decode(value, StandardCharsets.UTF_8.name());
-                System.out.printf("DisplayId: %s in collection %s%n%n", key, decVal);
-            } catch (UnsupportedEncodingException e) {
-                logger.error(e.getMessage(), e);
-            }
-        });
-
-        System.out.println("");
     }
 
     protected List<String[]> getUploadedDesignProperties(CommandOptions parameters, Path sbolFile)
@@ -645,7 +479,7 @@ public class SynBioHandler {
         String url = client.hubFromUrl(parameters.url);
 
         // ensure collection URL specifies version
-        String verCollUrl = verifyCollectionUrlVersion(parameters);
+        String verCollUrl = client.verifyCollectionUrlVersion(parameters);
 
         final String collUrl = encodeURL("<"+verCollUrl+">");
 
@@ -655,10 +489,11 @@ public class SynBioHandler {
         // retrieve existing design and description
         String requestParams = "/objectType="+objType+"&collection="+collUrl+"&/?offset=0&limit=10";
 
-        String metadata = client.searchMetadata(url, requestParams, parameters.sessionToken);
+        // String metadata = client.searchMetadata(url, requestParams, parameters.sessionToken);
 
         //Object design = client.getSubmissionByDisplayId();
-        List<Object> designList = jsonParser.parseList(metadata);
+        // List<Object> designList = jsonParser.parseList(metadata);
+        List<Object> designList = client.searchMetadata(client.hubFromUrl(verCollUrl), requestParams, parameters.sessionToken);
         List<Map<String,Object>> designMaps = new ArrayList();
 
         if(designList == null || designList.isEmpty()) {
@@ -678,81 +513,5 @@ public class SynBioHandler {
         }
 
         return designMaps;
-    }
-
-    protected String verifyCollectionUrlVersion(CommandOptions parameters)
-            throws UnsupportedEncodingException, URISyntaxException {
-        String verCollUrl = parameters.url;
-
-        boolean hasVersion = COLL_URL_VERSION_PATTERN.matcher(verCollUrl).matches();
-
-        if(hasVersion == false) {
-            // retrieve the latest version as the default if none provided in URL
-            String requestParams = "/persistentIdentity=" +
-                    URLEncoder.encode("<"+verCollUrl+">", StandardCharsets.UTF_8.name()) +
-                    "&";
-
-            String metadata = client.searchMetadata(client.hubFromUrl(verCollUrl), requestParams, parameters.sessionToken);
-            List<Object> collList = jsonParser.parseList(metadata);
-
-            if(collList == null || collList.isEmpty()) {
-                String userMessage = "No collection found with persistent ID {}";
-                logger.info(userMessage, verCollUrl);
-
-                // replace with UI logger
-                System.out.printf("No collection found with persistent ID %s%n%n", verCollUrl);
-                return null;
-            }
-
-            //Object collUrl = collList.get(0);
-            List<String> versions = new ArrayList();
-            ComparableVersion maxCmpVersion = new ComparableVersion("0");
-
-            // Find the latest version and return that URL
-            for(Object collObj: collList) {
-                if (collObj instanceof Map) {
-                    Map collObjMap = (Map) collObj;
-                    if(collObjMap.containsKey("version") && collObjMap.containsKey("uri")) {
-                        String curVersion = (String)collObjMap.get("version");
-                        ComparableVersion curCmpVersion = new ComparableVersion(curVersion);
-
-                        if(curCmpVersion.compareTo(maxCmpVersion) > 0) {
-                            maxCmpVersion = curCmpVersion;
-                            verCollUrl = (String)collObjMap.get("uri");
-                        }
-                    }
-                }
-            }
-        }
-
-        return verCollUrl;
-    }
-
-    protected int getOverwriteParam(CommandOptions parameters, boolean isFile) {
-        boolean isOverwrite = parameters.overwrite;
-        int overwriteMerge = 0; // Assume we prevent overwriting if exists
-
-        if(isOverwrite) {
-            // never want to accidentally overwrite files if they already exist
-            // when the user chose to create a new collection
-            overwriteMerge = 3;
-            /*if(parameters.crateNew) {
-                overwriteMerge = 1;
-            } else {
-                overwriteMerge = 3;
-            }*/
-        } else {
-            if(parameters.crateNew) {
-                if(isFile == true) {
-                    overwriteMerge = 2;
-                } else {
-                    overwriteMerge = 0;
-                }
-            } else {
-                overwriteMerge = 2;
-            }
-        }
-
-        return overwriteMerge;
     }
 }
