@@ -581,8 +581,7 @@ public class UserInputPrompter {
 
         return options;
     }
-    
-    
+
     CommandOptions promptCyanoOptions(CommandOptions options) {
         console.printf("%n");
         console.printf("... generating plasmid designs in SBOL documents%n");
@@ -1253,6 +1252,26 @@ public class UserInputPrompter {
             options.url = console.readLine("URL: ");
         } else {
             console.printf("Collection URL: %s", options.url);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+
+        if (options.user == null) {
+            console.printf("Please enter your SynBioHub username%n");
+            options.user = console.readLine("Username (email): ");
+        } else {
+            console.printf("Username: %s", options.user);
+            console.printf("%n");
+        }
+
+        console.printf("%n");
+
+        if (options.password == null) {
+            console.printf("Please enter your SynBioHub password%n");
+            options.password = new String(console.readPassword("Password: "));
+        } else {
+            console.printf("Password: *****");
             console.printf("%n");
         }
 
