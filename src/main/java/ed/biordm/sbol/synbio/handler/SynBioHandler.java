@@ -56,6 +56,7 @@ import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.stereotype.Service;
 import static ed.biordm.sbol.toolkit.transform.ComponentUtil.saveValidSbol;
+import ed.biordm.sbol.toolkit.transform.Outcome;
 
 /**
  *
@@ -220,7 +221,7 @@ public class SynBioHandler {
         
             SBOLDocument doc = SBOLReader.read(inputFile.toFile());
 
-            ComponentAnnotator.Outcome outcome = annotator.annotate(doc, excelFile, parameters.overwrite, parameters.stopOnMissingId, parameters.stopOnMissingMeta);
+            Outcome outcome = annotator.annotate(doc, excelFile, parameters.overwrite, parameters.stopOnMissingId, parameters.stopOnMissingMeta);
             
             saveValidSbol(doc, outFile);
             
