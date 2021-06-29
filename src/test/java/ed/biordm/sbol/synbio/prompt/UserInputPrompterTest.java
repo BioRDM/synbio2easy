@@ -59,13 +59,13 @@ public class UserInputPrompterTest {
         String suffix = "_annotated";
         String output = instance.renameFileWithSuffix(inputFilename, suffix);
 
-        String expOutput = "sl0199_annotated.xml";
+        String expOutput = "D:\\temp\\sbol\\sl0199_annotated.xml";
 
         assertEquals(expOutput, output);
 
         Path inputFilePath = Paths.get(inputFilename);
         Path parentDir = inputFilePath.getParent();
-        String outputFilePath = parentDir.resolve(output).toFile().getAbsolutePath();
+        String outputFilePath = parentDir.resolve("sl0199_annotated.xml").toFile().getAbsolutePath();
 
         String expFilePath = "D:\\temp\\sbol\\sl0199_annotated.xml";
 

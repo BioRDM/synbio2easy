@@ -747,7 +747,6 @@ public class UserInputPrompter {
         console.printf("%n");
 
         if (options.outputFile == null) {
-            String inputFile = options.inputFile;
             String suffix = "_clean";
 
             String defOutputFile = renameFileWithSuffix(options.inputFile, suffix);
@@ -811,6 +810,10 @@ public class UserInputPrompter {
         if (options.isRemoveCollsDef == false && options.removeColls == false) {
             console.printf("Do you wish to remove references to any SynBioHub collections in the cleaned SBOL output document?%n");
             String removeCollsAns = console.readLine("Y | N [<ENTER> for 'Y' if you are not sure]: ").strip();
+
+            if(removeCollsAns.isEmpty()) {
+                removeCollsAns = "Y";
+            }
 
             while(!Y_N_PATTERN.matcher(removeCollsAns).matches()) {
                 removeCollsAns = console.readLine("Y | N [<ENTER> for 'Y' if you are not sure]: ").strip();
@@ -1515,13 +1518,14 @@ public class UserInputPrompter {
         Path inputFilePath = Paths.get(inputFilename);
         Path filename = inputFilePath.getFileName();
         Path parentDir = inputFilePath.getParent();
+
         String[] origFilenameBits = filename.toString().split("\\.");
         String origFilePrefix = origFilenameBits[0];
         String origFileExts = Arrays.stream(Arrays.copyOfRange(origFilenameBits, 1, origFilenameBits.length)).collect(Collectors.joining(""));
 
         String newFilePrefix = origFilePrefix.concat(suffix);
         String newFilename = newFilePrefix.concat(".").concat(origFileExts);
-        return newFilename;
+        return parentDir.resolve(newFilename).toFile().getAbsolutePath();
     }
 
     Optional<String> getFilenameExtension(String filename) {
