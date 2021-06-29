@@ -32,12 +32,9 @@ public class CommandOptions implements Cloneable {
     public boolean overwrite;
     public boolean isOverwriteDef;
 
-    // Attachment command options
-    public String xslFile;
-
     // Generate command options
     public String templateFile;
-    public String flankFile;
+    public String metaFile;
     public String outputDir;
     public String filenamePrefix;
 

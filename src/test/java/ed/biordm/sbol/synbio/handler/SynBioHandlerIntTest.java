@@ -18,9 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.assertj.core.util.Arrays;
@@ -265,7 +263,7 @@ public class SynBioHandlerIntTest {
 
         parameters.sessionToken = token;
         String filename = file.getAbsolutePath();
-        parameters.xslFile = filename;
+        parameters.metaFile = filename;
 
         handler.processUpdateExcel(parameters);
     }
@@ -285,7 +283,7 @@ public class SynBioHandlerIntTest {
 
         parameters.sessionToken = token;
         String filename = file.getAbsolutePath();
-        parameters.xslFile = filename;
+        parameters.metaFile = filename;
 
         handler.processUpdateExcel(parameters);
     }
@@ -398,7 +396,7 @@ public class SynBioHandlerIntTest {
         new File(outputDir).mkdirs();
 
         parameters.templateFile = new File(getClass().getResource("cyano_template.xml").getFile()).getAbsolutePath();
-        parameters.flankFile = new File(getClass().getResource("flank-list_20200821_fix2_short.xlsx").getFile()).getAbsolutePath();
+        parameters.metaFile = new File(getClass().getResource("flank-list_20200821_fix2_short.xlsx").getFile()).getAbsolutePath();
         parameters.filenamePrefix = "plasmid";
         parameters.outputDir = outputDir;
         parameters.overwrite = true;
@@ -562,7 +560,7 @@ public class SynBioHandlerIntTest {
 
         parameters.inputFile = new File(getClass().getResource("cyano_sl1099.xml").getFile()).getAbsolutePath();
         parameters.outputFile = outputFile;
-        parameters.xslFile = new File(getClass().getResource("update_designs_tz.xlsx").getFile()).getAbsolutePath();
+        parameters.metaFile = new File(getClass().getResource("update_designs_tz.xlsx").getFile()).getAbsolutePath();
         parameters.isStopOnMissingIdDef = true;
         parameters.stopOnMissingId = false;
         parameters.isStopOnMissingMetaDef = true;
