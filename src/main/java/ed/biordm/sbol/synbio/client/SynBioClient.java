@@ -603,4 +603,12 @@ public class SynBioClient {
 
         return overwriteMerge;
     }
+
+    public static String encodeURL(String url) {
+        try {
+            return URLEncoder.encode("<http://sbols.org/v2#displayId>", StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 }
