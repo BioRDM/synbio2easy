@@ -15,8 +15,11 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Component;
 
@@ -579,8 +582,17 @@ public class UserInputPrompter {
         console.printf("%n");
 
         if (options.outputFile == null) {
+            String inputFile = options.inputFile;
+            String suffix = "_clean";
+
+            String defOutputFile = renameFileWithSuffix(options.inputFile, suffix);
+
             console.printf("Please enter the path to the cleaned output file to generate%n");
-            options.outputFile = console.readLine("Filename: ");
+            options.outputFile = console.readLine(String.format("Filename [<ENTER> for default '%s' path]: ", defOutputFile)).strip();
+
+            if(options.outputFile.isEmpty()) {
+                options.outputFile = defOutputFile;
+            }
 
             if (!validateDirPath(options.outputFile)) {
                 boolean isInput = false;    // not an input file
@@ -690,8 +702,17 @@ public class UserInputPrompter {
         console.printf("%n");
 
         if (options.outputFile == null) {
+            String inputFile = options.inputFile;
+            String suffix = "_flat";
+
+            String defOutputFile = renameFileWithSuffix(options.inputFile, suffix);
+
             console.printf("Please enter the path to the SBOL file that will be generated to contain the flattened designs%n");
-            options.outputFile = console.readLine("Filename: ");
+            options.outputFile = console.readLine(String.format("Filename [<ENTER> for default '%s' path]: ", defOutputFile)).strip();
+
+            if(options.outputFile.isEmpty()) {
+                options.outputFile = defOutputFile;
+            }
 
             if (!validateDirPath(options.outputFile)) {
                 boolean isInput = false;    // not an input file
@@ -845,8 +866,16 @@ public class UserInputPrompter {
         console.printf("%n");
 
         if (options.outputFile == null) {
+            String suffix = "_annotated";
+
+            String defOutputFile = renameFileWithSuffix(options.inputFile, suffix);
+
             console.printf("Please enter the path to the SBOL file that will be generated to contain the annotated designs%n");
-            options.outputFile = console.readLine("Filename: ");
+            options.outputFile = console.readLine(String.format("Filename [<ENTER> for default '%s' path]: ", defOutputFile)).strip();
+
+            if(options.outputFile.isEmpty()) {
+                options.outputFile = defOutputFile;
+            }
 
             if (!validateDirPath(options.outputFile)) {
                 boolean isInput = false;    // not an input file
@@ -1005,8 +1034,16 @@ public class UserInputPrompter {
         console.printf("%n");
 
         if (options.outputFile == null) {
+            String noExtFilePath = removeFileExtension(options.inputFile, false);
+
+            String defOutputFile = noExtFilePath.concat(".xlsx");
+
             console.printf("Please enter the path to the Excel file that will be generated to contain the template for update%n");
-            options.outputFile = console.readLine("Filename: ");
+            options.outputFile = console.readLine(String.format("Filename [<ENTER> for default '%s' path]: ", defOutputFile)).strip();
+
+            if(options.outputFile.isEmpty()) {
+                options.outputFile = defOutputFile;
+            }
 
             if (!validateDirPath(options.outputFile)) {
                 boolean isInput = false;    // not an input file
@@ -1307,5 +1344,35 @@ public class UserInputPrompter {
         }
 
         return isSubs;
+    }
+
+    String renameFileWithSuffix(String inputFilename, String suffix) {
+        Path inputFilePath = Paths.get(inputFilename);
+        Path filename = inputFilePath.getFileName();
+        Path parentDir = inputFilePath.getParent();
+        String[] origFilenameBits = filename.toString().split("\\.");
+        String origFilePrefix = origFilenameBits[0];
+        String origFileExts = Arrays.stream(Arrays.copyOfRange(origFilenameBits, 1, origFilenameBits.length)).collect(Collectors.joining(""));
+
+        String newFilePrefix = origFilePrefix.concat(suffix);
+        String newFilename = newFilePrefix.concat(".").concat(origFileExts);
+        return newFilename;
+    }
+
+    Optional<String> getFilenameExtension(String filename) {
+        Optional<String> ext = Optional.ofNullable(filename)
+          .filter(f -> f.contains("."))
+          .map(f -> f.substring(filename.lastIndexOf(".") + 1));
+
+        return ext;
+    }
+
+    String removeFileExtension(String filename, boolean removeAllExtensions) {
+        if (filename == null || filename.isEmpty()) {
+            return filename;
+        }
+
+        String extPattern = "(?<!^)[.]" + (removeAllExtensions ? ".*" : "[^.]*$");
+        return filename.replaceAll(extPattern, "");
     }
 }

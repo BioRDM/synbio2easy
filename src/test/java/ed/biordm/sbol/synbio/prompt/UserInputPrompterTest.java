@@ -5,6 +5,8 @@
  */
 package ed.biordm.sbol.synbio.prompt;
 import ed.biordm.sbol.synbio.dom.Command;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,4 +53,40 @@ public class UserInputPrompterTest {
         assertEquals(Command.DEPOSIT, cmd);
     }
 
+    @Test
+    public void testRenameFileWithSuffix() {
+        String inputFilename = "D:\\temp\\sbol\\sl0199.xml";
+        String suffix = "_annotated";
+        String output = instance.renameFileWithSuffix(inputFilename, suffix);
+
+        String expOutput = "sl0199_annotated.xml";
+
+        assertEquals(expOutput, output);
+
+        Path inputFilePath = Paths.get(inputFilename);
+        Path parentDir = inputFilePath.getParent();
+        String outputFilePath = parentDir.resolve(output).toFile().getAbsolutePath();
+
+        String expFilePath = "D:\\temp\\sbol\\sl0199_annotated.xml";
+
+        assertEquals(expFilePath, outputFilePath);
+    }
+
+    @Test
+    public void testRemoveFileExtension() {
+        String inputFilename = "D:\\temp\\sbol\\sl0199.xml";
+        String output = instance.removeFileExtension(inputFilename, false);
+
+        String expOutput = "D:\\temp\\sbol\\sl0199";
+
+        assertEquals(expOutput, output);
+
+        Path inputFilePath = Paths.get(inputFilename);
+        Path parentDir = inputFilePath.getParent();
+        String outputFilePath = parentDir.resolve(output.concat(".xlsx")).toFile().getAbsolutePath();
+
+        String expFilePath = "D:\\temp\\sbol\\sl0199.xlsx";
+
+        assertEquals(expFilePath, outputFilePath);
+    }
 }
