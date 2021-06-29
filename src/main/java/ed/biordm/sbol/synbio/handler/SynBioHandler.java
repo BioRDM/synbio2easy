@@ -66,6 +66,7 @@ public class SynBioHandler {
     final ComponentAnnotator annotator;
     final LibraryGenerator generator;
     final ExcelHandler excelHandler;
+    final TemplateGenerator templateGenerator;
 
     final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -81,27 +82,21 @@ public class SynBioHandler {
         //this.jsonParser = JsonParserFactory.getJsonParser();        
         this(client, new ComponentFlattener(),
                 new ComponentUtil(), new ComponentAnnotator(),
-                new LibraryGenerator(), new ExcelHandler(client));
+                new LibraryGenerator(), new ExcelHandler(client),
+                new TemplateGenerator(client));
     }
 
     protected SynBioHandler(SynBioClient client,
             ComponentFlattener flattener, ComponentUtil compUtil,
             ComponentAnnotator annotator, LibraryGenerator generator,
-            ExcelHandler excelHandler) {
+            ExcelHandler excelHandler, TemplateGenerator templateGenerator) {
         this.client = client;
         this.flattener = flattener;
         this.compUtil = compUtil;
         this.annotator = annotator;
         this.generator = generator;
         this.excelHandler = excelHandler;
-    }
-    
-    protected static String encodeURL(String url) {
-        try {
-            return URLEncoder.encode("<http://sbols.org/v2#displayId>", StandardCharsets.UTF_8.name());
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException(e);
-        }        
+        this.templateGenerator = templateGenerator;
     }
     
     public void handle(CommandOptions command) throws URISyntaxException, IOException {
@@ -135,7 +130,13 @@ public class SynBioHandler {
             parameters.sessionToken = login(parameters);
         }
 
-        excelHandler.processUpdateExcel(parameters);
+        Outcome outcome = excelHandler.processUpdateExcel(parameters);
+
+        // TODO printout outcome status, for example id of missing meta
+        //
+        // if (!outcome.missingMeta.isEmpty()) {
+        //  print some designs were missing ....
+        // }....
     }
 
     void handleCyano(CommandOptions parameters) throws URISyntaxException, IOException {
@@ -161,17 +162,16 @@ public class SynBioHandler {
         Path metaFile = Paths.get(parameters.metaFile);
         Path outDir = Paths.get(parameters.outputDir);
         boolean stopOnMissing = parameters.stopOnMissingMeta;
-        
+
         int batchSize = generator.DEF_BATCH;
         generator.DEBUG = true;
         Outcome outcome = generator.generateFromFiles(name, defVersion, templateFile, metaFile, outDir, stopOnMissing, batchSize);
-        
+
             // TODO printout outcome status, for example id of missing meta
-            // 
+            //
             // if (!outcome.missingMeta.isEmpty()) {
-            //  print some designs were missing ....    
+            //  print some designs were missing ....
             // }....
-            
             
         /*try {
             
@@ -266,22 +266,13 @@ public class SynBioHandler {
 
         // String csvLogFilename = new SimpleDateFormat("'deposit_log_'yyyy-MM-dd-HH-mm-ss'.csv'").format(new Date());
         // Path csvOutputFile = Paths.get(System.getProperty("user.dir")).resolve(csvLogFilename);
-        List<String[]> dataLines = new ArrayList();
-        Path outputFile = Paths.get(parameters.outputFile);
-        Path inputFile = Paths.get(parameters.inputFile);
+        Outcome outcome = templateGenerator.generateTemplate(parameters);
 
-        try {
-            // do output to CSV file of uploaded designs
-            dataLines.addAll(getUploadedDesignProperties(parameters, inputFile));
-        } catch (FileNotFoundException | UnsupportedEncodingException | URISyntaxException e) {
-            logger.error(e.getMessage(), e);
-        }
-
-        try {
-            this.writeLogToCsv(outputFile, dataLines);
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-        }
+        // TODO printout outcome status, for example id of missing meta
+        //
+        // if (!outcome.missingMeta.isEmpty()) {
+        //  print some designs were missing ....
+        // }....
     }
 
     String login(CommandOptions parameters) throws URISyntaxException {
@@ -410,108 +401,5 @@ public class SynBioHandler {
     protected String sanitizeName(String name) {
         String cleanName = name.replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit}]", "_");
         return cleanName;
-    }
-
-    protected List<String[]> getUploadedDesignProperties(CommandOptions parameters, Path sbolFile)
-            throws FileNotFoundException, UnsupportedEncodingException, URISyntaxException {
-        Set<ComponentDefinition> cmpDefs = client.getComponentDefinitions(sbolFile);
-        List<Map<String,Object>> designMaps = listCollectionDesigns(parameters);
-        List<String[]> dataLines = new ArrayList<>();
-
-        for(ComponentDefinition cmpDef: cmpDefs) {
-            String name = cmpDef.getName();
-            String displayId = cmpDef.getDisplayId();
-            String version = cmpDef.getVersion();
-
-            // match the ComponentDefinition properties from the SBOL file with those
-            // in the uploaded collection
-            for(Map<String,Object> designMap: designMaps) {
-                String upldName = (String)designMap.get("name");
-                String upldDisplayId = (String)designMap.get("displayId");
-                String upldVersion = (String)designMap.get("version");
-
-                if(upldDisplayId.equals(displayId) && upldVersion.equals(version)) {
-                    String cleanUpName = escapeSpecialCharacters(upldName);
-                    String cleanOrigName = escapeSpecialCharacters(name);
-                    String cleanDisplayId = escapeSpecialCharacters(upldDisplayId);
-                    String cleanVersion = escapeSpecialCharacters(upldVersion);
-                    String cleanUri = escapeSpecialCharacters((String)designMap.get("uri"));
-
-                    dataLines.add(new String[]
-                        { cleanDisplayId, cleanUpName, cleanOrigName, cleanVersion, cleanUri });
-                }
-            }
-        }
-
-        return dataLines;
-    }
-
-    protected String convertToCSV(String[] data) {
-        return Stream.of(data)
-          .map(this::escapeSpecialCharacters)
-          .collect(Collectors.joining(","));
-    }
-
-    protected String escapeSpecialCharacters(String data) {
-        if(data == null) {
-            return "";
-        }
-
-        String escapedData = data.replaceAll("\\R", " ");
-        if (data.contains(",") || data.contains("\"") || data.contains("'")) {
-            data = data.replace("\"", "\"\"");
-            escapedData = "\"" + data + "\"";
-        }
-        return escapedData;
-    }
-
-    public void writeLogToCsv(Path csvOutputFile, List<String[]> dataLines) throws IOException {
-        // add header row
-        String[] header = new String[]{"display_id", "uploaded_name", "original_name", "version", "uri"};
-        dataLines.add(0, header);
-
-        try (PrintWriter pw = new PrintWriter(csvOutputFile.toFile())) {
-            dataLines.stream().map(this::convertToCSV).forEach(pw::println);
-        }
-    }
-
-    protected List<Map<String,Object>> listCollectionDesigns(CommandOptions parameters) throws UnsupportedEncodingException, URISyntaxException {
-        String url = client.hubFromUrl(parameters.url);
-
-        // ensure collection URL specifies version
-        String verCollUrl = client.verifyCollectionUrlVersion(parameters);
-
-        final String collUrl = encodeURL("<"+verCollUrl+">");
-
-        String objType = "http://sbols.org/v2#ComponentDefinition";
-        objType = "ComponentDefinition";
-
-        // retrieve existing design and description
-        String requestParams = "/objectType="+objType+"&collection="+collUrl+"&/?offset=0&limit=10";
-
-        // String metadata = client.searchMetadata(url, requestParams, parameters.sessionToken);
-
-        //Object design = client.getSubmissionByDisplayId();
-        // List<Object> designList = jsonParser.parseList(metadata);
-        List<Object> designList = client.searchMetadata(client.hubFromUrl(verCollUrl), requestParams, parameters.sessionToken);
-        List<Map<String,Object>> designMaps = new ArrayList();
-
-        if(designList == null || designList.isEmpty()) {
-            System.out.printf("Collection %s is empty!%n", verCollUrl);
-        }
-
-        for(Object cmpDef: designList) {
-            if (cmpDef instanceof Map) {
-                Map<String,Object> cmpDefMap = (Map<String,Object>) cmpDef;
-                String uri = (String)cmpDefMap.get("uri");
-                String displayId = (String)cmpDefMap.get("displayId");
-                String version = (String)cmpDefMap.get("version");
-                String name = (String)cmpDefMap.get("name");
-
-                designMaps.add(cmpDefMap);
-            }
-        }
-
-        return designMaps;
     }
 }
