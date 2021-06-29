@@ -5,23 +5,29 @@
  */
 package ed.biordm.sbol.synbio.client;
 
+import ed.biordm.sbol.synbio.dom.CommandOptions;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 import javax.xml.namespace.QName;
+import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.tika.Tika;
 import org.sbolstandard.core2.Annotation;
 import org.sbolstandard.core2.ComponentDefinition;
@@ -31,6 +37,8 @@ import org.sbolstandard.core2.SBOLReader;
 import org.sbolstandard.core2.SBOLValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.json.JsonParser;
+import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -56,9 +64,12 @@ public class SynBioClient {
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     final RestTemplateBuilder restBuilder;
+    private static final Pattern COLL_URL_VERSION_PATTERN = Pattern.compile(".*/[0-9]+.*");
+    final JsonParser jsonParser;
     
     public SynBioClient(RestTemplateBuilder restBuilder) {
         this.restBuilder = restBuilder;
+        this.jsonParser = JsonParserFactory.getJsonParser();
     }
 
     public String hubFromUrl(String url) throws URISyntaxException {
@@ -278,7 +289,7 @@ public class SynBioClient {
         }
     }
 
-    public String searchMetadata(String hubUrl, String requestParams, String sessionToken) {
+    public List<Object> searchMetadata(String hubUrl, String requestParams, String sessionToken) {
         HttpHeaders headers = authenticatedHeaders(sessionToken);
         //headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Arrays.asList(MediaType.TEXT_PLAIN));
@@ -307,7 +318,8 @@ public class SynBioClient {
                 logger.warn("Request Failed: {}", response.getStatusCode());
             }
 
-            return responseData;
+            List<Object> objList = jsonParser.parseList(responseData);
+            return objList;
         } catch (RuntimeException e) {
             throw reportError("Could not search metadata", e);
         }
@@ -514,5 +526,81 @@ public class SynBioClient {
         }
 
         return cmpDefs;
+    }
+
+    public String verifyCollectionUrlVersion(CommandOptions parameters)
+            throws UnsupportedEncodingException, URISyntaxException {
+        String verCollUrl = parameters.url;
+
+        boolean hasVersion = COLL_URL_VERSION_PATTERN.matcher(verCollUrl).matches();
+
+        if(hasVersion == false) {
+            // retrieve the latest version as the default if none provided in URL
+            String requestParams = "/persistentIdentity=" +
+                    URLEncoder.encode("<"+verCollUrl+">", StandardCharsets.UTF_8.name()) +
+                    "&";
+
+            // String metadata = this.searchMetadata(this.hubFromUrl(verCollUrl), requestParams, parameters.sessionToken);
+            List<Object> collList = this.searchMetadata(this.hubFromUrl(verCollUrl), requestParams, parameters.sessionToken);
+
+            if(collList == null || collList.isEmpty()) {
+                String userMessage = "No collection found with persistent ID {}";
+                logger.info(userMessage, verCollUrl);
+
+                // replace with UI logger
+                System.out.printf("No collection found with persistent ID %s%n%n", verCollUrl);
+                return null;
+            }
+
+            //Object collUrl = collList.get(0);
+            List<String> versions = new ArrayList();
+            ComparableVersion maxCmpVersion = new ComparableVersion("0");
+
+            // Find the latest version and return that URL
+            for(Object collObj: collList) {
+                if (collObj instanceof Map) {
+                    Map collObjMap = (Map) collObj;
+                    if(collObjMap.containsKey("version") && collObjMap.containsKey("uri")) {
+                        String curVersion = (String)collObjMap.get("version");
+                        ComparableVersion curCmpVersion = new ComparableVersion(curVersion);
+
+                        if(curCmpVersion.compareTo(maxCmpVersion) > 0) {
+                            maxCmpVersion = curCmpVersion;
+                            verCollUrl = (String)collObjMap.get("uri");
+                        }
+                    }
+                }
+            }
+        }
+
+        return verCollUrl;
+    }
+
+    public int getOverwriteParam(CommandOptions parameters, boolean isFile) {
+        boolean isOverwrite = parameters.overwrite;
+        int overwriteMerge = 0; // Assume we prevent overwriting if exists
+
+        if(isOverwrite) {
+            // never want to accidentally overwrite files if they already exist
+            // when the user chose to create a new collection
+            overwriteMerge = 3;
+            /*if(parameters.crateNew) {
+                overwriteMerge = 1;
+            } else {
+                overwriteMerge = 3;
+            }*/
+        } else {
+            if(parameters.crateNew) {
+                if(isFile == true) {
+                    overwriteMerge = 2;
+                } else {
+                    overwriteMerge = 0;
+                }
+            } else {
+                overwriteMerge = 2;
+            }
+        }
+
+        return overwriteMerge;
     }
 }
