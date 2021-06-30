@@ -13,32 +13,15 @@ import ed.biordm.sbol.toolkit.transform.ComponentFlattener;
 import ed.biordm.sbol.toolkit.transform.ComponentUtil;
 import static ed.biordm.sbol.toolkit.transform.ComponentUtil.emptyDocument;
 import ed.biordm.sbol.toolkit.transform.SynBioTamer;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.function.Predicate;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.apache.maven.artifact.versioning.ComparableVersion;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.sbolstandard.core2.ComponentDefinition;
 import org.sbolstandard.core2.SBOLConversionException;
 import org.sbolstandard.core2.SBOLDocument;
@@ -46,8 +29,6 @@ import org.sbolstandard.core2.SBOLReader;
 import org.sbolstandard.core2.SBOLValidationException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.JsonParser;
-import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.stereotype.Service;
 import static ed.biordm.sbol.toolkit.transform.ComponentUtil.saveValidSbol;
 import ed.biordm.sbol.toolkit.transform.LibraryGenerator;
@@ -155,7 +136,7 @@ public class SynBioHandler {
         }
     }
     
-    void handleGenerate(CommandOptions parameters) throws URISyntaxException, IOException {
+    void handleGenerate(CommandOptions parameters) throws IOException {
         String name = parameters.filenamePrefix;
         String defVersion = parameters.version;
         Path templateFile = Paths.get(parameters.templateFile);
@@ -219,10 +200,12 @@ public class SynBioHandler {
 
 
             if (parameters.allRoots) {
-                flattener.flattenDesigns(inDoc, parameters.suffix, outDoc);
+                // should add handling of what was actually flattened or not
+                flattener.flattenDesigns(inDoc, parameters.suffix, outDoc, false);
             } else {
                 ComponentDefinition comp = compUtil.extractComponent(parameters.compDefinitionId, inDoc);
-                flattener.flattenDesign(comp, compUtil.nameOrId(comp)+parameters.suffix, outDoc);
+                flattener.flattenDesign(comp, comp.getDisplayId()+parameters.suffix,
+                                              compUtil.nameOrId(comp)+parameters.suffix, outDoc);
             }
 
             saveValidSbol(outDoc, outFile);
