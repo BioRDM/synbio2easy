@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import org.assertj.core.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
@@ -166,8 +167,10 @@ public class TemplateGeneratorTest {
 
         List<Map<String,Object>> designMaps = handler.listCollectionDesigns(parameters);
 
-        List<String> designNames = new ArrayList(Arrays.asList(new String[]{"sl0199_flatten", "sll0199_left", "insert", "sll0199_right"}));
-        List<String> designDisplayIds = new ArrayList(Arrays.asList(new String[]{"sl0199_flatten", "sll0199_left", "insert", "sll0199_right"}));
+        assertFalse(designMaps.isEmpty());
+
+        List<String> designNames = new ArrayList(Arrays.asList(new String[]{"sl0199_flatten", "sll0199_left", "insert", "sll0199_right", "sll0199", "backbone", "right_flank", "ori", "left_flank", "barcode", "cyano_codA_Km", "codA"}));
+        List<String> designDisplayIds = new ArrayList(Arrays.asList(new String[]{"sl0199_flatten", "sll0199_left", "insert", "sll0199_right", "sll0199", "backbone", "right_flank", "ori", "left_flank", "barcode", "cyano_codA_Km", "codA"}));
         List<String> designVersions = new ArrayList(Arrays.asList(new String[]{"2.0.0", "2.0.8", "1.1.0", "2.0.6", "2.0.1"}));
 
         for(Map<String,Object> designMap: designMaps) {

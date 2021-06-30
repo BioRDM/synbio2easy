@@ -146,7 +146,7 @@ public class TemplateGenerator {
         objType = "ComponentDefinition";
 
         // retrieve existing design and description
-        String requestParams = "/objectType="+objType+"&collection="+collUrl+"&/?offset=0&limit=10";
+        String requestParams = "/objectType="+objType+"&collection="+collUrl+"&/?offset=0&limit=10000";
 
         // String metadata = client.searchMetadata(url, requestParams, parameters.sessionToken);
 
