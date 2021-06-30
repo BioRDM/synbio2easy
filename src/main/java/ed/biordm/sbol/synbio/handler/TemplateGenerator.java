@@ -7,6 +7,7 @@ package ed.biordm.sbol.synbio.handler;
 
 import ed.biordm.sbol.synbio.client.SynBioClient;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
+import ed.biordm.sbol.toolkit.meta.ExcelMetaReader;
 import ed.biordm.sbol.toolkit.transform.Outcome;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -66,7 +67,11 @@ public class TemplateGenerator {
 
     protected void writeLogToCsv(Path csvOutputFile, List<String[]> dataLines) throws IOException {
         // add header row
-        String[] header = new String[]{"display_id", "uploaded_name", "original_name", "version", "uri"};
+        String[] header = new String[]{ ExcelMetaReader.DISP_ID_HEADER,
+            "uploaded_name", "original_name",
+            ExcelMetaReader.VERSION_HEADER, "uri",
+            ExcelMetaReader.ATTACH_FILE_HEADER,
+            ExcelMetaReader.DESC_HEADER, ExcelMetaReader.NOTES_HEADER };
         dataLines.add(0, header);
 
         try (PrintWriter pw = new PrintWriter(csvOutputFile.toFile())) {
