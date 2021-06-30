@@ -5,6 +5,7 @@
  */
 package ed.biordm.sbol.synbio.handler;
 
+import ed.biordm.sbol.synbio.client.SynBioClient;
 import ed.biordm.sbol.synbio.dom.Command;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
 import ed.biordm.sbol.toolkit.transform.Outcome;
@@ -28,18 +29,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  *
  * @author jhay
  */
+@SpringBootTest
 public class TemplateGeneratorTest {
 
     @TempDir
     Path tmpDir;        
 
-    @Autowired
     TemplateGenerator handler;
+
+    @Autowired
+    SynBioClient client;
 
     String synBioUrl;
     String synBioUser;
@@ -59,6 +64,8 @@ public class TemplateGeneratorTest {
         
         synBioUser = "j.hay@epcc.ed.ac.uk";
         synBioPassword = "admin";
+
+        handler = new TemplateGenerator(client);
     }
 
     @Test
@@ -151,7 +158,7 @@ public class TemplateGeneratorTest {
         parameters.user = synBioUser;
         parameters.password = synBioPassword;
 
-        String token = handler.client.login(parameters.url, synBioUser, synBioPassword);
+        String token = handler.client.login(handler.client.hubFromUrl(parameters.url), synBioUser, synBioPassword);
         System.out.println(token);
         assertNotNull(token);
 
