@@ -416,4 +416,24 @@ public class SynBioHandlerIntTest {
         handler.handleTemplate4Update(parameters);
     }
 
+    @Test
+    public void testHandleUpdate() throws IOException, URISyntaxException {
+        CommandOptions parameters = new CommandOptions(Command.UPDATE);
+        Path outputDir = Paths.get("D:\\temp\\sbol\\");
+        //Path outputDir = tmpDir;
+        String outputFile = outputDir.resolve("template4update.csv").toFile().getAbsolutePath();
+
+        parameters.metaFile = new File("D:\\Users\\Chickens\\Documents\\EPCC\\SynthSys\\code_projects\\synbio-toolkit\\examples\\template_4_update.xlsx").getAbsolutePath();
+        parameters.outputFile = outputFile;
+        parameters.url = "http://localhost:7777/user/Johnny/examples_1_cleaned/examples_1_cleaned_collection/1.0";
+        parameters.user = synBioUser;
+        parameters.password = synBioPassword;
+
+        /*String nowTime = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss").format(new Date());
+        parameters.description = "This is Johnny's latest update to the description at "+ nowTime;
+        parameters.notes = "This is Johnny's latest update to the notes at "+ nowTime;*/
+
+        handler.handleUpdate(parameters);
+    }
+
 }
