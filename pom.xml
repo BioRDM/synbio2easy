@@ -10,7 +10,7 @@
     </parent>
     <groupId>ed.biordm</groupId>
     <artifactId>sbol-synbio-toolkit</artifactId>
-    <version>1.4.2-SNAPSHOT</version>
+    <version>1.4.3-SNAPSHOT</version>
     <name>sbol-synbio-toolkit</name>
     <description>SynBioHub client</description>
     <properties>
@@ -67,7 +67,7 @@
         <dependency>
             <groupId>ed.biordm.sbol</groupId>
             <artifactId>sbol-toolkit</artifactId>
-            <version>1.4.2-SNAPSHOT</version>
+            <version>1.4.3-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

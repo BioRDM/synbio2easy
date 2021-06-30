@@ -130,7 +130,7 @@ public class SynBioHandler {
 
         try {
             generator.generateFromFiles(name, version, templateFile, flankFile, outDir);
-        } catch (SBOLValidationException | SBOLConversionException | ed.biordm.sbol.toolkit.transform.SBOLConversionException e) {
+        } catch (SBOLValidationException | SBOLConversionException e) {
             logger.error(e.getMessage(), e);
             throw new IOException(e);
         }
