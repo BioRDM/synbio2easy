@@ -770,19 +770,21 @@ public class UserInputPrompter {
 
                 if (outputPath == null) {
                     throw new IllegalArgumentException("Invalid output file path argument: "+options.outputFile);
-                } else if(outputPath.toFile().exists()) {
-                    console.printf("%n");
-                    console.printf("You have selected an output file that already exists. If you continue, the existing SBOL document file will be overwritten.%n");
-                    console.printf("Do you wish to continue and overwrite designs if they already exist?%n");
-                    String overwriteAns = console.readLine("Y | N: ").strip();
+                }
+            }
 
-                    while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
-                        overwriteAns = console.readLine("Y | N: ").strip();
-                    }
+            if(Paths.get(options.outputFile).toFile().exists()) {
+                console.printf("%n");
+                console.printf("You have selected an output file that already exists. If you continue, the existing SBOL document file will be overwritten.%n");
+                console.printf("Do you wish to continue and overwrite designs if they already exist?%n");
+                String overwriteAns = console.readLine("Y | N: ").strip();
 
-                    if (!Y_PATTERN.matcher(overwriteAns).matches()) {
-                        throw new IllegalArgumentException("Cannot continue with cleaning as existing SBOL document will be overwritten in "+options.outputFile);
-                    }
+                while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
+                    overwriteAns = console.readLine("Y | N: ").strip();
+                }
+
+                if (!Y_PATTERN.matcher(overwriteAns).matches()) {
+                    throw new IllegalArgumentException("Cannot continue with cleaning as existing SBOL document will be overwritten in "+options.outputFile);
                 }
             }
         } else {
@@ -894,19 +896,21 @@ public class UserInputPrompter {
 
                 if (outputPath == null) {
                     throw new IllegalArgumentException("Invalid output file path argument: "+options.outputFile);
-                } else if(outputPath.toFile().exists()) {
-                    console.printf("%n");
-                    console.printf("You have selected an output file that already exists. If you continue, the existing SBOL document file will be overwritten.%n");
-                    console.printf("Do you wish to continue and overwrite designs if they already exist?%n");
-                    String overwriteAns = console.readLine("Y | N: ").strip();
+                }
+            }
 
-                    while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
-                        overwriteAns = console.readLine("Y | N: ").strip();
-                    }
+            if(Paths.get(options.outputFile).toFile().exists()) {
+                console.printf("%n");
+                console.printf("You have selected an output file that already exists. If you continue, the existing SBOL document file will be overwritten.%n");
+                console.printf("Do you wish to continue and overwrite designs if they already exist?%n");
+                String overwriteAns = console.readLine("Y | N: ").strip();
 
-                    if (!Y_PATTERN.matcher(overwriteAns).matches()) {
-                        throw new IllegalArgumentException("Cannot continue with cleaning as existing SBOL document will be overwritten in "+options.outputFile);
-                    }
+                while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
+                    overwriteAns = console.readLine("Y | N: ").strip();
+                }
+
+                if (!Y_PATTERN.matcher(overwriteAns).matches()) {
+                    throw new IllegalArgumentException("Cannot continue with cleaning as existing SBOL document will be overwritten in "+options.outputFile);
                 }
             }
         } else {
@@ -1057,19 +1061,21 @@ public class UserInputPrompter {
 
                 if (outputPath == null) {
                     throw new IllegalArgumentException("Invalid output file path argument: "+options.outputFile);
-                } else if(outputPath.toFile().exists()) {
-                    console.printf("%n");
-                    console.printf("You have selected an output file that already exists. If you continue, the existing SBOL document file will be overwritten.%n");
-                    console.printf("Do you wish to continue and overwrite designs if they already exist?%n");
-                    String overwriteAns = console.readLine("Y | N: ").strip();
+                }
+            }
 
-                    while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
-                        overwriteAns = console.readLine("Y | N: ").strip();
-                    }
+            if(Paths.get(options.outputFile).toFile().exists()) {
+                console.printf("%n");
+                console.printf("You have selected an output file that already exists. If you continue, the existing SBOL document file will be overwritten.%n");
+                console.printf("Do you wish to continue and overwrite designs if they already exist?%n");
+                String overwriteAns = console.readLine("Y | N: ").strip();
 
-                    if (!Y_PATTERN.matcher(overwriteAns).matches()) {
-                        throw new IllegalArgumentException("Cannot continue with cleaning as existing SBOL document will be overwritten in "+options.outputFile);
-                    }
+                while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
+                    overwriteAns = console.readLine("Y | N: ").strip();
+                }
+
+                if (!Y_PATTERN.matcher(overwriteAns).matches()) {
+                    throw new IllegalArgumentException("Cannot continue with cleaning as existing SBOL document will be overwritten in "+options.outputFile);
                 }
             }
         } else {
@@ -1204,9 +1210,9 @@ public class UserInputPrompter {
         if (options.outputFile == null) {
             String noExtFilePath = removeFileExtension(options.inputFile, false);
 
-            String defOutputFile = noExtFilePath.concat(".xlsx");
+            String defOutputFile = noExtFilePath.concat(".csv");
 
-            console.printf("Please enter the path to the Excel file that will be generated to contain the template for update%n");
+            console.printf("Please enter the path to the CSV file that will be generated to contain the template for update%n");
             options.outputFile = console.readLine(String.format("Filename [<ENTER> for default '%s' path]: ", defOutputFile)).strip();
 
             if(options.outputFile.isEmpty()) {
@@ -1225,19 +1231,21 @@ public class UserInputPrompter {
 
                 if (outputPath == null) {
                     throw new IllegalArgumentException("Invalid output file path argument: "+options.outputFile);
-                } else if(outputPath.toFile().exists()) {
-                    console.printf("%n");
-                    console.printf("You have selected an output file that already exists. If you continue, the existing Excel template file will be overwritten.%n");
-                    console.printf("Do you wish to continue and overwrite the template?%n");
-                    String overwriteAns = console.readLine("Y | N: ").strip();
+                }
+            }
 
-                    while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
-                        overwriteAns = console.readLine("Y | N: ").strip();
-                    }
+            if(Paths.get(options.outputFile).toFile().exists()) {
+                console.printf("%n");
+                console.printf("You have selected an output file that already exists. If you continue, the existing CSV template file will be overwritten.%n");
+                console.printf("Do you wish to continue and overwrite the template?%n");
+                String overwriteAns = console.readLine("Y | N: ").strip();
 
-                    if (!Y_PATTERN.matcher(overwriteAns).matches()) {
-                        throw new IllegalArgumentException("Cannot continue with cleaning as existing Excel template will be overwritten in "+options.outputFile);
-                    }
+                while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
+                    overwriteAns = console.readLine("Y | N: ").strip();
+                }
+
+                if (!Y_PATTERN.matcher(overwriteAns).matches()) {
+                    throw new IllegalArgumentException("Cannot continue with cleaning as existing Excel template will be overwritten in "+options.outputFile);
                 }
             }
         } else {
