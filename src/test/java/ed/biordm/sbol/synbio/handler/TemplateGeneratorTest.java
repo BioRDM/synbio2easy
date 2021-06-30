@@ -84,7 +84,7 @@ public class TemplateGeneratorTest {
         parameters.user = synBioUser;
         parameters.password = synBioPassword;
 
-        String token = handler.client.login(parameters.url, synBioUser, synBioPassword);
+        String token = handler.client.login(handler.client.hubFromUrl(parameters.url), synBioUser, synBioPassword);
         System.out.println(token);
         assertNotNull(token);
 

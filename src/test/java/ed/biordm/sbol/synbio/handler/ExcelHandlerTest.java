@@ -5,30 +5,34 @@
  */
 package ed.biordm.sbol.synbio.handler;
 
+import ed.biordm.sbol.synbio.client.SynBioClient;
 import ed.biordm.sbol.synbio.dom.Command;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  *
  * @author jhay
  */
+@SpringBootTest
 public class ExcelHandlerTest {
 
     @TempDir
     Path tmpDir;        
 
-    @Autowired
     ExcelHandler handler;
+
+    @Autowired
+    SynBioClient client;
 
     String synBioUrl;
     String synBioUser;
@@ -48,6 +52,8 @@ public class ExcelHandlerTest {
         
         synBioUser = "j.hay@epcc.ed.ac.uk";
         synBioPassword = "admin";
+
+        handler = new ExcelHandler(client);
     }
 
     @Test
@@ -60,7 +66,7 @@ public class ExcelHandlerTest {
         parameters.user = synBioUser;
         parameters.password = synBioPassword;
 
-        String token = handler.client.login(parameters.url, synBioUser, synBioPassword);
+        String token = handler.client.login(handler.client.hubFromUrl(parameters.url), synBioUser, synBioPassword);
         System.out.println(token);
         assertNotNull(token);
 
@@ -80,7 +86,7 @@ public class ExcelHandlerTest {
         parameters.user = synBioUser;
         parameters.password = synBioPassword;
 
-        String token = handler.client.login(parameters.url, synBioUser, synBioPassword);
+        String token = handler.client.login(handler.client.hubFromUrl(parameters.url), synBioUser, synBioPassword);
         System.out.println(token);
         assertNotNull(token);
 
