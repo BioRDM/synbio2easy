@@ -1,0 +1,372 @@
+<?xml version="1.0" ?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sbh="http://wiki.synbiohub.org/wiki/Terms/synbiohub#" xmlns:sbol="http://sbols.org/v2#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:gbconv="http://sbols.org/genBankConversion#" xmlns:prov="http://www.w3.org/ns/prov#" xmlns:om="http://www.ontology-of-units-of-measure.org/resource/om-2/">
+  <sbol:ComponentDefinition rdf:about="http://bio.ed.ac.uk/biordm/codA/1.0">
+    <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/codA"/>
+    <sbol:displayId>codA</sbol:displayId>
+    <sbol:version>1.0</sbol:version>
+    <sbh:mutableDescription>Codon optimised (V153A, F317C)&#x2028; ndoi:10.1111/tpj.12675</sbh:mutableDescription>
+    <sbol:type rdf:resource="http://www.biopax.org/release/biopax-level3.owl#DnaRegion"/>
+    <sbol:role rdf:resource="http://identifiers.org/so/SO:0000316"/>
+    <sbol:sequence rdf:resource="http://bio.ed.ac.uk/biordm/codA_seq/1.0"/>
+  </sbol:ComponentDefinition>
+  <sbol:ComponentDefinition rdf:about="http://bio.ed.ac.uk/biordm/ori/1.0">
+    <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/ori"/>
+    <sbol:displayId>ori</sbol:displayId>
+    <sbol:version>1.0</sbol:version>
+    <sbh:mutableDescription>high-copy-number ColE1/pMB1/pBR322/pUC origin of replication</sbh:mutableDescription>
+    <sbol:type rdf:resource="http://www.biopax.org/release/biopax-level3.owl#DnaRegion"/>
+    <sbol:role rdf:resource="http://identifiers.org/so/SO:0000296"/>
+    <sbol:sequence rdf:resource="http://bio.ed.ac.uk/biordm/ori_seq/1.0"/>
+  </sbol:ComponentDefinition>
+  <sbol:ComponentDefinition rdf:about="http://bio.ed.ac.uk/biordm/insert/1.0">
+    <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/insert"/>
+    <sbol:displayId>insert</sbol:displayId>
+    <sbol:version>1.0</sbol:version>
+    <dcterms:title>insert</dcterms:title>
+    <dcterms:description>transgene insert with codA and Km</dcterms:description>
+    <sbol:type rdf:resource="http://www.biopax.org/release/biopax-level3.owl#DnaRegion"/>
+    <sbol:role rdf:resource="http://identifiers.org/so/SO:0000915"/>
+    <sbol:component>
+      <sbol:Component rdf:about="http://bio.ed.ac.uk/biordm/insert/codA_inst/1.0">
+        <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/insert/codA_inst"/>
+        <sbol:displayId>codA_inst</sbol:displayId>
+        <sbol:version>1.0</sbol:version>
+        <sbol:access rdf:resource="http://sbols.org/v2#public"/>
+        <sbol:definition rdf:resource="http://bio.ed.ac.uk/biordm/codA/1.0"/>
+      </sbol:Component>
+    </sbol:component>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="http://bio.ed.ac.uk/biordm/insert/KanR_prom/1.0">
+        <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/insert/KanR_prom"/>
+        <sbol:displayId>KanR_prom</sbol:displayId>
+        <sbol:version>1.0</sbol:version>
+        <dcterms:title>KanR prom</dcterms:title>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000167"/>
+        <sbol:location>
+          <sbol:Range rdf:about="http://bio.ed.ac.uk/biordm/insert/KanR_prom/KanR_prom/1.0">
+            <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/insert/KanR_prom/KanR_prom"/>
+            <sbol:displayId>KanR_prom</sbol:displayId>
+            <sbol:version>1.0</sbol:version>
+            <sbol:start>2664</sbol:start>
+            <sbol:end>2773</sbol:end>
+            <sbol:orientation rdf:resource="http://sbols.org/v2#reverseComplement"/>
+          </sbol:Range>
+        </sbol:location>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="http://bio.ed.ac.uk/biordm/insert/rrnBT1_T7_term/1.0">
+        <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/insert/rrnBT1_T7_term"/>
+        <sbol:displayId>rrnBT1_T7_term</sbol:displayId>
+        <sbol:version>1.0</sbol:version>
+        <dcterms:title>rrnBT1/T7 term</dcterms:title>
+        <sbh:mutableDescription>BBa_B0015 double terminator (B0010-B0012) pC0.082 https://doi.org/10.1104/pp.18.01401</sbh:mutableDescription>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000141"/>
+        <sbol:location>
+          <sbol:Range rdf:about="http://bio.ed.ac.uk/biordm/insert/rrnBT1_T7_term/rrnBT1_T7_term/1.0">
+            <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/insert/rrnBT1_T7_term/rrnBT1_T7_term"/>
+            <sbol:displayId>rrnBT1_T7_term</sbol:displayId>
+            <sbol:version>1.0</sbol:version>
+            <sbol:start>1445</sbol:start>
+            <sbol:end>1559</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="http://bio.ed.ac.uk/biordm/insert/codA/1.0">
+        <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/insert/codA"/>
+        <sbol:displayId>codA</sbol:displayId>
+        <sbol:version>1.0</sbol:version>
+        <sbol:location>
+          <sbol:Range rdf:about="http://bio.ed.ac.uk/biordm/insert/codA/codA/1.0">
+            <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/insert/codA/codA"/>
+            <sbol:displayId>codA</sbol:displayId>
+            <sbol:version>1.0</sbol:version>
+            <sbol:start>157</sbol:start>
+            <sbol:end>1440</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:component rdf:resource="http://bio.ed.ac.uk/biordm/insert/codA_inst/1.0"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="http://bio.ed.ac.uk/biordm/insert/KanR_term/1.0">
+        <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/insert/KanR_term"/>
+        <sbol:displayId>KanR_term</sbol:displayId>
+        <sbol:version>1.0</sbol:version>
+        <dcterms:title>KanR term</dcterms:title>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000141"/>
+        <sbol:location>
+          <sbol:Range rdf:about="http://bio.ed.ac.uk/biordm/insert/KanR_term/KanR_term/1.0">
+            <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/insert/KanR_term/KanR_term"/>
+            <sbol:displayId>KanR_term</sbol:displayId>
+            <sbol:version>1.0</sbol:version>
+            <sbol:start>1564</sbol:start>
+            <sbol:end>1847</sbol:end>
+            <sbol:orientation rdf:resource="http://sbols.org/v2#reverseComplement"/>
+          </sbol:Range>
+        </sbol:location>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="http://bio.ed.ac.uk/biordm/insert/J23101MH_prom/1.0">
+        <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/insert/J23101MH_prom"/>
+        <sbol:displayId>J23101MH_prom</sbol:displayId>
+        <sbol:version>1.0</sbol:version>
+        <dcterms:title>J23101MH prom</dcterms:title>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000167"/>
+        <sbol:location>
+          <sbol:Range rdf:about="http://bio.ed.ac.uk/biordm/insert/J23101MH_prom/J23101MH_prom/1.0">
+            <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/insert/J23101MH_prom/J23101MH_prom"/>
+            <sbol:displayId>J23101MH_prom</sbol:displayId>
+            <sbol:version>1.0</sbol:version>
+            <sbol:start>68</sbol:start>
+            <sbol:end>156</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="http://bio.ed.ac.uk/biordm/insert/KanR/1.0">
+        <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/insert/KanR"/>
+        <sbol:displayId>KanR</sbol:displayId>
+        <sbol:version>1.0</sbol:version>
+        <sbh:mutableDescription>Gene: aph(3')-Ia aminoglycoside phosphotransferase confers resistance to kanamycin in bacteria or G418 (Geneticin(R)) in eukaryotes</sbh:mutableDescription>
+        <gbconv:gene>aph(3')-Ia</gbconv:gene>
+        <gbconv:product>aminoglycoside phosphotransferase</gbconv:product>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000316"/>
+        <sbol:location>
+          <sbol:Range rdf:about="http://bio.ed.ac.uk/biordm/insert/KanR/KanR/1.0">
+            <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/insert/KanR/KanR"/>
+            <sbol:displayId>KanR</sbol:displayId>
+            <sbol:version>1.0</sbol:version>
+            <sbol:start>1848</sbol:start>
+            <sbol:end>2663</sbol:end>
+            <sbol:orientation rdf:resource="http://sbols.org/v2#reverseComplement"/>
+          </sbol:Range>
+        </sbol:location>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequence rdf:resource="http://bio.ed.ac.uk/biordm/insert_seq/1.0"/>
+  </sbol:ComponentDefinition>
+  <sbol:ComponentDefinition rdf:about="http://bio.ed.ac.uk/biordm/plasmid_template/1.0">
+    <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/plasmid_template"/>
+    <sbol:displayId>plasmid_template</sbol:displayId>
+    <sbol:version>1.0</sbol:version>
+    <dcterms:description>Recombinant plasmid targeting {key}</dcterms:description>
+    <sbh:mutableDescription>Recombinant plasmid targeting {key}
+Target organism: Synechocystis sp. PCC 6803
+Assembly method: MoClo
+</sbh:mutableDescription>
+    <sbol:type rdf:resource="http://www.biopax.org/release/biopax-level3.owl#DnaRegion"/>
+    <sbol:type rdf:resource="http://identifiers.org/so/SO:0000988"/>
+    <sbol:role rdf:resource="http://identifiers.org/so/SO:0000637"/>
+    <sbol:component>
+      <sbol:Component rdf:about="http://bio.ed.ac.uk/biordm/plasmid_template/left/1.0">
+        <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/plasmid_template/left"/>
+        <sbol:displayId>left</sbol:displayId>
+        <sbol:version>1.0</sbol:version>
+        <sbol:access rdf:resource="http://sbols.org/v2#public"/>
+        <sbol:definition rdf:resource="http://bio.ed.ac.uk/biordm/left_flank"/>
+      </sbol:Component>
+    </sbol:component>
+    <sbol:component>
+      <sbol:Component rdf:about="http://bio.ed.ac.uk/biordm/plasmid_template/insert/1.0">
+        <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/plasmid_template/insert"/>
+        <sbol:displayId>insert</sbol:displayId>
+        <sbol:version>1.0</sbol:version>
+        <sbol:access rdf:resource="http://sbols.org/v2#public"/>
+        <sbol:definition rdf:resource="http://bio.ed.ac.uk/biordm/insert"/>
+      </sbol:Component>
+    </sbol:component>
+    <sbol:component>
+      <sbol:Component rdf:about="http://bio.ed.ac.uk/biordm/plasmid_template/right/1.0">
+        <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/plasmid_template/right"/>
+        <sbol:displayId>right</sbol:displayId>
+        <sbol:version>1.0</sbol:version>
+        <sbol:access rdf:resource="http://sbols.org/v2#public"/>
+        <sbol:definition rdf:resource="http://bio.ed.ac.uk/biordm/right_flank"/>
+      </sbol:Component>
+    </sbol:component>
+    <sbol:component>
+      <sbol:Component rdf:about="http://bio.ed.ac.uk/biordm/plasmid_template/barcode/1.0">
+        <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/plasmid_template/barcode"/>
+        <sbol:displayId>barcode</sbol:displayId>
+        <sbol:version>1.0</sbol:version>
+        <sbol:access rdf:resource="http://sbols.org/v2#public"/>
+        <sbol:definition rdf:resource="http://bio.ed.ac.uk/biordm/barcode"/>
+      </sbol:Component>
+    </sbol:component>
+    <sbol:component>
+      <sbol:Component rdf:about="http://bio.ed.ac.uk/biordm/plasmid_template/backbone/1.0">
+        <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/plasmid_template/backbone"/>
+        <sbol:displayId>backbone</sbol:displayId>
+        <sbol:version>1.0</sbol:version>
+        <sbol:access rdf:resource="http://sbols.org/v2#public"/>
+        <sbol:definition rdf:resource="http://bio.ed.ac.uk/biordm/backbone"/>
+      </sbol:Component>
+    </sbol:component>
+    <sbol:sequenceConstraint>
+      <sbol:SequenceConstraint rdf:about="http://bio.ed.ac.uk/biordm/plasmid_template/cs2/1.0">
+        <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/plasmid_template/cs2"/>
+        <sbol:displayId>cs2</sbol:displayId>
+        <sbol:version>1.0</sbol:version>
+        <sbol:restriction rdf:resource="http://sbols.org/v2#precedes"/>
+        <sbol:subject rdf:resource="http://bio.ed.ac.uk/biordm/plasmid_template/left/1.0"/>
+        <sbol:object rdf:resource="http://bio.ed.ac.uk/biordm/plasmid_template/barcode/1.0"/>
+      </sbol:SequenceConstraint>
+    </sbol:sequenceConstraint>
+    <sbol:sequenceConstraint>
+      <sbol:SequenceConstraint rdf:about="http://bio.ed.ac.uk/biordm/plasmid_template/cs3/1.0">
+        <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/plasmid_template/cs3"/>
+        <sbol:displayId>cs3</sbol:displayId>
+        <sbol:version>1.0</sbol:version>
+        <sbol:restriction rdf:resource="http://sbols.org/v2#precedes"/>
+        <sbol:subject rdf:resource="http://bio.ed.ac.uk/biordm/plasmid_template/barcode/1.0"/>
+        <sbol:object rdf:resource="http://bio.ed.ac.uk/biordm/plasmid_template/insert/1.0"/>
+      </sbol:SequenceConstraint>
+    </sbol:sequenceConstraint>
+    <sbol:sequenceConstraint>
+      <sbol:SequenceConstraint rdf:about="http://bio.ed.ac.uk/biordm/plasmid_template/cs1/1.0">
+        <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/plasmid_template/cs1"/>
+        <sbol:displayId>cs1</sbol:displayId>
+        <sbol:version>1.0</sbol:version>
+        <sbol:restriction rdf:resource="http://sbols.org/v2#precedes"/>
+        <sbol:subject rdf:resource="http://bio.ed.ac.uk/biordm/plasmid_template/backbone/1.0"/>
+        <sbol:object rdf:resource="http://bio.ed.ac.uk/biordm/plasmid_template/left/1.0"/>
+      </sbol:SequenceConstraint>
+    </sbol:sequenceConstraint>
+    <sbol:sequenceConstraint>
+      <sbol:SequenceConstraint rdf:about="http://bio.ed.ac.uk/biordm/plasmid_template/cs4/1.0">
+        <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/plasmid_template/cs4"/>
+        <sbol:displayId>cs4</sbol:displayId>
+        <sbol:version>1.0</sbol:version>
+        <sbol:restriction rdf:resource="http://sbols.org/v2#precedes"/>
+        <sbol:subject rdf:resource="http://bio.ed.ac.uk/biordm/plasmid_template/insert/1.0"/>
+        <sbol:object rdf:resource="http://bio.ed.ac.uk/biordm/plasmid_template/right/1.0"/>
+      </sbol:SequenceConstraint>
+    </sbol:sequenceConstraint>
+  </sbol:ComponentDefinition>
+  <sbol:ComponentDefinition rdf:about="http://bio.ed.ac.uk/biordm/right_flank/1.0">
+    <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/right_flank"/>
+    <sbol:displayId>right_flank</sbol:displayId>
+    <sbol:version>1.0</sbol:version>
+    <sbol:type rdf:resource="http://www.biopax.org/release/biopax-level3.owl#DnaRegion"/>
+    <sbol:role rdf:resource="http://identifiers.org/so/SO:0000342"/>
+  </sbol:ComponentDefinition>
+  <sbol:ComponentDefinition rdf:about="http://bio.ed.ac.uk/biordm/backbone/1.0">
+    <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/backbone"/>
+    <sbol:displayId>backbone</sbol:displayId>
+    <sbol:version>1.0</sbol:version>
+    <sbol:type rdf:resource="http://www.biopax.org/release/biopax-level3.owl#DnaRegion"/>
+    <sbol:role rdf:resource="http://identifiers.org/so/SO:0000804"/>
+    <sbol:component>
+      <sbol:Component rdf:about="http://bio.ed.ac.uk/biordm/backbone/ori_instance/1.0">
+        <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/backbone/ori_instance"/>
+        <sbol:displayId>ori_instance</sbol:displayId>
+        <sbol:version>1.0</sbol:version>
+        <sbol:access rdf:resource="http://sbols.org/v2#public"/>
+        <sbol:definition rdf:resource="http://bio.ed.ac.uk/biordm/ori/1.0"/>
+      </sbol:Component>
+    </sbol:component>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="http://bio.ed.ac.uk/biordm/backbone/AmpR/1.0">
+        <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/backbone/AmpR"/>
+        <sbol:displayId>AmpR</sbol:displayId>
+        <sbol:version>1.0</sbol:version>
+        <sbh:mutableDescription>confers resistance to ampicillin, carbenicillin, and related antibiotics</sbh:mutableDescription>
+        <gbconv:gene>bla</gbconv:gene>
+        <gbconv:product>beta-lactamase</gbconv:product>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000316"/>
+        <sbol:location>
+          <sbol:Range rdf:about="http://bio.ed.ac.uk/biordm/backbone/AmpR/AmpR/1.0">
+            <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/backbone/AmpR/AmpR"/>
+            <sbol:displayId>AmpR</sbol:displayId>
+            <sbol:version>1.0</sbol:version>
+            <sbol:start>281</sbol:start>
+            <sbol:end>1141</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="http://bio.ed.ac.uk/biordm/backbone/ori/1.0">
+        <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/backbone/ori"/>
+        <sbol:displayId>ori</sbol:displayId>
+        <sbol:version>1.0</sbol:version>
+        <sbol:location>
+          <sbol:Range rdf:about="http://bio.ed.ac.uk/biordm/backbone/ori/ori/1.0">
+            <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/backbone/ori/ori"/>
+            <sbol:displayId>ori</sbol:displayId>
+            <sbol:version>1.0</sbol:version>
+            <sbol:start>1312</sbol:start>
+            <sbol:end>1900</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:component rdf:resource="http://bio.ed.ac.uk/biordm/backbone/ori_instance/1.0"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="http://bio.ed.ac.uk/biordm/backbone/AmpR_prom/1.0">
+        <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/backbone/AmpR_prom"/>
+        <sbol:displayId>AmpR_prom</sbol:displayId>
+        <sbol:version>1.0</sbol:version>
+        <gbconv:gene>bla</gbconv:gene>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000167"/>
+        <sbol:location>
+          <sbol:Range rdf:about="http://bio.ed.ac.uk/biordm/backbone/AmpR_prom/AmpR_prom/1.0">
+            <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/backbone/AmpR_prom/AmpR_prom"/>
+            <sbol:displayId>AmpR_prom</sbol:displayId>
+            <sbol:version>1.0</sbol:version>
+            <sbol:start>176</sbol:start>
+            <sbol:end>280</sbol:end>
+          </sbol:Range>
+        </sbol:location>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequence rdf:resource="http://bio.ed.ac.uk/biordm/backbone_seq/1.0"/>
+  </sbol:ComponentDefinition>
+  <sbol:ComponentDefinition rdf:about="http://bio.ed.ac.uk/biordm/left_flank/1.0">
+    <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/left_flank"/>
+    <sbol:displayId>left_flank</sbol:displayId>
+    <sbol:version>1.0</sbol:version>
+    <sbol:type rdf:resource="http://www.biopax.org/release/biopax-level3.owl#DnaRegion"/>
+    <sbol:role rdf:resource="http://identifiers.org/so/SO:0000342"/>
+  </sbol:ComponentDefinition>
+  <sbol:ComponentDefinition rdf:about="http://bio.ed.ac.uk/biordm/barcode/1.0">
+    <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/barcode"/>
+    <sbol:displayId>barcode</sbol:displayId>
+    <sbol:version>1.0</sbol:version>
+    <sbol:type rdf:resource="http://www.biopax.org/release/biopax-level3.owl#DnaRegion"/>
+    <sbol:role rdf:resource="http://identifiers.org/so/SO:0000730"/>
+  </sbol:ComponentDefinition>
+  <sbol:Sequence rdf:about="http://bio.ed.ac.uk/biordm/backbone_seq/1.0">
+    <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/backbone_seq"/>
+    <sbol:displayId>backbone_seq</sbol:displayId>
+    <sbol:version>1.0</sbol:version>
+    <sbol:elements>CGCTGCTTACAGACAAGCTGTGACCGTCTCCGGGAGCTGCATGTGTCAGAGGTTTTCACCGTCATCACCGAAACGCGCGAGACGAAAGGGCCTCGTGATACGCCTATTTTTATAGGTTAATGTCATGATAATAATGGTTTCTTAGACGTCAGGTGGCACTTTTCGGGGAAATGTGCGCGGAACCCCTATTTGTTTATTTTTCTAAATACATTCAAATATGTATCCGCTCATGAGACAATAACCCTGATAAATGCTTCAATAATATTGAAAAAGGAAGAGTATGAGTATTCAACATTTCCGTGTCGCCCTTATTCCCTTTTTTGCGGCATTTTGCCTTCCTGTTTTTGCTCACCCAGAAACGCTGGTGAAAGTAAAAGATGCTGAAGATCAGTTGGGTGCACGAGTGGGTTACATCGAACTGGATCTCAACAGCGGTAAGATCCTTGAGAGTTTTCGCCCCGAAGAACGTTTTCCAATGATGAGCACTTTTAAAGTTCTGCTATGTGGCGCGGTATTATCCCGTATTGACGCCGGGCAAGAGCAACTCGGTCGCCGCATACACTATTCTCAGAATGACTTGGTTGAGTACTCACCAGTCACAGAAAAGCATCTTACGGATGGCATGACAGTAAGAGAATTATGCAGTGCTGCCATAACCATGAGTGATAACACTGCGGCCAACTTACTTCTGACAACGATCGGAGGACCGAAGGAGCTAACCGCTTTTTTGCACAACATGGGGGATCATGTAACTCGCCTTGATCGTTGGGAACCGGAGCTGAATGAAGCCATACCAAACGACGAGCGTGACACCACGATGCCTGTAGCAATGGCAACAACGTTGCGCAAACTATTAACTGGCGAACTACTTACTCTAGCTTCCCGGCAACAATTAATAGACTGGATGGAGGCGGATAAAGTTGCAGGACCACTTCTGCGCTCGGCCCTTCCGGCTGGCTGGTTTATTGCTGATAAATCTGGAGCCGGTGAGCGTGGTTCTCGCGGTATCATTGCAGCACTGGGGCCAGATGGTAAGCCCTCCCGTATCGTAGTTATCTACACGACGGGGAGTCAGGCAACTATGGATGAACGAAATAGACAGATCGCTGAGATAGGTGCCTCACTGATTAAGCATTGGTAACTGTCAGACCAAGTTTACTCATATATACTTTAGATTGATTTAAAACTTCATTTTTAATTTAAAAGGATCTAGGTGAAGATCCTTTTTGATAATCTCATGACCAAAATCCCTTAACGTGAGTTTTCGTTCCACTGAGCGTCAGACCCCGTAGAAAAGATCAAAGGATCTTCTTGAGATCCTTTTTTTCTGCGCGTAATCTGCTGCTTGCAAACAAAAAAACCACCGCTACCAGCGGTGGTTTGTTTGCCGGATCAAGAGCTACCAACTCTTTTTCCGAAGGTAACTGGCTTCAGCAGAGCGCAGATACCAAATACTGTTCTTCTAGTGTAGCCGTAGTTAGGCCACCACTTCAAGAACTCTGTAGCACCGCCTACATACCTCGCTCTGCTAATCCTGTTACCAGTGGCTGCTGCCAGTGGCGATAAGTCGTGTCTTACCGGGTTGGACTCAAGACGATAGTTACCGGATAAGGCGCAGCGGTCGGGCTGAACGGGGGGTTCGTGCACACAGCCCAGCTTGGAGCGAACGACCTACACCGAACTGAGATACCTACAGCGTGAGCTATGAGAAAGCGCCACGCTTCCCGAAGGGAGAAAGGCGGACAGGTATCCGGTAAGCGGCAGGGTCGGAACAGGAGAGCGCACGAGGGAGCTTCCAGGGGGAAACGCCTGGTATCTTTATAGTCCTGTCGGGTTTCGCCACCTCTGACTTGAGCGTCGATTTTTGTGATGCTCGTCAGGGGGGCGGAGCCTATGGAAAAACGCCAGCAACGCGGCCTTTTTACGGTTCCTGGCCTTTTGCTGGCCTTTTGCTCACATGTTCTTTCCTGCGTTATCCCCTGATTCTGTGGATAACCGTATTACCGCCTTTGAGTGAGCTGATACCGCTCGCCGCAGCCGAACGACCGAGCGCAGCGAGTCAGTGAGCGAGGAAGCGGATGAGCGCCCAATACGCAAACCGCCTCTCCCCGCGCGTTGGCCGATTCATTAATGCAGCTGGCACGACAGGTTTCggag</sbol:elements>
+    <sbol:encoding rdf:resource="http://www.chem.qmul.ac.uk/iubmb/misc/naseq.html"/>
+  </sbol:Sequence>
+  <sbol:Sequence rdf:about="http://bio.ed.ac.uk/biordm/ori_seq/1.0">
+    <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/ori_seq"/>
+    <sbol:displayId>ori_seq</sbol:displayId>
+    <sbol:version>1.0</sbol:version>
+    <sbol:elements>TTGAGATCCTTTTTTTCTGCGCGTAATCTGCTGCTTGCAAACAAAAAAACCACCGCTACCAGCGGTGGTTTGTTTGCCGGATCAAGAGCTACCAACTCTTTTTCCGAAGGTAACTGGCTTCAGCAGAGCGCAGATACCAAATACTGTTCTTCTAGTGTAGCCGTAGTTAGGCCACCACTTCAAGAACTCTGTAGCACCGCCTACATACCTCGCTCTGCTAATCCTGTTACCAGTGGCTGCTGCCAGTGGCGATAAGTCGTGTCTTACCGGGTTGGACTCAAGACGATAGTTACCGGATAAGGCGCAGCGGTCGGGCTGAACGGGGGGTTCGTGCACACAGCCCAGCTTGGAGCGAACGACCTACACCGAACTGAGATACCTACAGCGTGAGCTATGAGAAAGCGCCACGCTTCCCGAAGGGAGAAAGGCGGACAGGTATCCGGTAAGCGGCAGGGTCGGAACAGGAGAGCGCACGAGGGAGCTTCCAGGGGGAAACGCCTGGTATCTTTATAGTCCTGTCGGGTTTCGCCACCTCTGACTTGAGCGTCGATTTTTGTGATGCTCGTCAGGGGGGCGGAGCCTATGGAAA</sbol:elements>
+    <sbol:encoding rdf:resource="http://www.chem.qmul.ac.uk/iubmb/misc/naseq.html"/>
+  </sbol:Sequence>
+  <sbol:Sequence rdf:about="http://bio.ed.ac.uk/biordm/codA_seq/1.0">
+    <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/codA_seq"/>
+    <sbol:displayId>codA_seq</sbol:displayId>
+    <sbol:version>1.0</sbol:version>
+    <sbol:elements>ATGTCTAACAACGCGCTGCAAACCATCATCAATGCACGCCTGCCTGGAGAGGAAGGGTTGTGGCAGATTCACTTACAGGACGGCAAAATCTCCGCGATCGACGCACAATCTGGGGTTATGCCGATCACCGAAAACTCTTTGGATGCCGAACAAGGGTTAGTCATTCCCCCATTCGTTGAACCACATATTCACCTGGATACTACTCAGACAGCCGGTCAGCCCAATTGGAACCAGTCCGGTACGCTGTTCGAAGGTATCGAACGATGGGCGGAGCGAAAAGCTCTACTCACGCATGACGATGTCAAGCAACGGGCCTGGCAGACCCTGAAGTGGCAGATCGCCAACGGAATACAGCACGTACGCACTCACGTGGATGTTTCCGATGCCACTTTGACGGCATTGAAGGCAATGCTCGAAGTTAAGCAGGAAGTAGCCCCGTGGATTGACTTGCAAATCGCTGCCTTCCCTCAGGAAGGCATCCTAAGTTATCCGAATGGAGAAGCGCTCCTGGAGGAGGCATTGCGGTTAGGAGCAGACGTGGTGGGAGCGATTCCCCATTTCGAGTTTACCCGCGAGTACGGTGTTGAATCTCTGCATAAAACATTTGCTTTAGCTCAGAAGTATGACCGTCTGATCGACGTACACTGCGACGAGATCGATGACGAACAGAGTCGCTTCGTGGAGACGGTGGCTGCGCTGGCGCATCACGAAGGCATGGGTGCACGTGTAACTGCAAGCCATACGACGGCTATGCACAGCTATAATGGGGCATATACATCTCGTTTGTTCCGATTACTAAAAATGAGCGGAATCAACTTTGTTGCCAATCCATTGGTCAACATTCATCTACAAGGACGCTTCGACACCTACCCGAAACGGCGAGGAATCACACGAGTTAAGGAAATGCTAGAGTCTGGTATCAATGTGTGTTTCGGGCATGATGACGTGTGTGGTCCCTGGTACCCTCTAGGAACAGCCAACATGCTGCAAGTTCTCCACATGGGTCTACACGTGTGTCAACTCATGGGGTATGGACAAATTAACGATGGACTCAATCTAATTACACACCATTCCGCCCGAACACTGAACCTCCAGGATTACGGGATCGCGGCGGGAAATTCTGCCAACCTCATCATTCTGCCCGCGGAAAACGGGTTCGACGCTCTACGCCGTCAAGTGCCAGTTCGGTATTCTGTTCGTGGGGGTAAGGTAATTGCAAGTACCCAACCGGCTCAGACCACGGTCTATTTAGAGCAACCGGAAGCTATCGACTACAAACGATGA</sbol:elements>
+    <sbol:encoding rdf:resource="http://www.chem.qmul.ac.uk/iubmb/misc/naseq.html"/>
+  </sbol:Sequence>
+  <sbol:Sequence rdf:about="http://bio.ed.ac.uk/biordm/insert_seq/1.0">
+    <sbol:persistentIdentity rdf:resource="http://bio.ed.ac.uk/biordm/insert_seq"/>
+    <sbol:displayId>insert_seq</sbol:displayId>
+    <sbol:version>1.0</sbol:version>
+    <sbol:elements>ATGaGAAGAGCACGGTAGCCTTNNNNNNNNNNNNNNNNNNTGCCCAGTCTTCTGCCTAAGGCAGGTGtttacagctagctcagtcctaggtattatgctagctattgtgagcggataacaatttcacacatactagagaaagaggagaaatactaaATGTCTAACAACGCGCTGCAAACCATCATCAATGCACGCCTGCCTGGAGAGGAAGGGTTGTGGCAGATTCACTTACAGGACGGCAAAATCTCCGCGATCGACGCACAATCTGGGGTTATGCCGATCACCGAAAACTCTTTGGATGCCGAACAAGGGTTAGTCATTCCCCCATTCGTTGAACCACATATTCACCTGGATACTACTCAGACAGCCGGTCAGCCCAATTGGAACCAGTCCGGTACGCTGTTCGAAGGTATCGAACGATGGGCGGAGCGAAAAGCTCTACTCACGCATGACGATGTCAAGCAACGGGCCTGGCAGACCCTGAAGTGGCAGATCGCCAACGGAATACAGCACGTACGCACTCACGTGGATGTTTCCGATGCCACTTTGACGGCATTGAAGGCAATGCTCGAAGTTAAGCAGGAAGTAGCCCCGTGGATTGACTTGCAAATCGCTGCCTTCCCTCAGGAAGGCATCCTAAGTTATCCGAATGGAGAAGCGCTCCTGGAGGAGGCATTGCGGTTAGGAGCAGACGTGGTGGGAGCGATTCCCCATTTCGAGTTTACCCGCGAGTACGGTGTTGAATCTCTGCATAAAACATTTGCTTTAGCTCAGAAGTATGACCGTCTGATCGACGTACACTGCGACGAGATCGATGACGAACAGAGTCGCTTCGTGGAGACGGTGGCTGCGCTGGCGCATCACGAAGGCATGGGTGCACGTGTAACTGCAAGCCATACGACGGCTATGCACAGCTATAATGGGGCATATACATCTCGTTTGTTCCGATTACTAAAAATGAGCGGAATCAACTTTGTTGCCAATCCATTGGTCAACATTCATCTACAAGGACGCTTCGACACCTACCCGAAACGGCGAGGAATCACACGAGTTAAGGAAATGCTAGAGTCTGGTATCAATGTGTGTTTCGGGCATGATGACGTGTGTGGTCCCTGGTACCCTCTAGGAACAGCCAACATGCTGCAAGTTCTCCACATGGGTCTACACGTGTGTCAACTCATGGGGTATGGACAAATTAACGATGGACTCAATCTAATTACACACCATTCCGCCCGAACACTGAACCTCCAGGATTACGGGATCGCGGCGGGAAATTCTGCCAACCTCATCATTCTGCCCGCGGAAAACGGGTTCGACGCTCTACGCCGTCAAGTGCCAGTTCGGTATTCTGTTCGTGGGGGTAAGGTAATTGCAAGTACCCAACCGGCTCAGACCACGGTCTATTTAGAGCAACCGGAAGCTATCGACTACAAACGATGAgcttcaaataaaacgaaaggctcagtcgaaagactgggcctttcgttttatctgttgtttgtcggtgaacgctctctactagagtcacactggctcaccttcgggtgggcctttctgcgcgctCTGAGGTCTGCCTCGTGAAGAAGGTGTTGCTGACTCATACCAGGCCTGAATCGCCCCATCATCCAGCCAGAAAGTGAGGGAGCCACGGTTGATGAGAGCTTTGTTGTAGGTGGACCAGTTGGTGATTTTGAACTTTTGCTTTGCCACGGAACGGTCTGCGTTGTCGGGAAGATGCGTGATCTGATCCTTCAACTCAGCAAAAGTTCGATTTATTCAACAAAGCCGCCGTCCCGTCAAGTCAGCGTAATGCTCTGCCAGTGTTACAACCAATTAACCAATTCTGATTAGAAAAACTCATCGAGCATCAAATGAAACTGCAATTTATTCATATCAGGATTATCAATACCATATTTTTGAAAAAGCCGTTTCTGTAATGAAGGAGAAAACTCACCGAGGCAGTTCCATAGGATGGCAAGATCCTGGTATCGGTCTGCGATTCCGACTCGTCCAACATCAATACAACCTATTAATTTCCCCTCGTCAAAAATAAGGTTATCAAGTGAGAAATCACCATGAGTGACGACTGAATCCGGTGAGAATGGCAAAAGCTTATGCATTTCTTTCCAGACTTGTTCAACAGGCCAGCCATTACGCTCGTCATCAAAATCACTCGCATCAACCAAACCGTTATTCATTCGTGATTGCGCCTGAGCGAGACGAAATACGCGATCGCTGTTAAAAGGACAATTACAAACAGGAATCGAATGCAACCGGCGCAGGAACACTGCCAGCGCATCAACAATATTTTCACCTGAATCAGGATATTCTTCTAATACCTGGAATGCTGTTTTCCCGGGGATCGCAGTGGTGAGTAACCATGCATCATCAGGAGTACGGATAAAATGCTTGATGGTCGGAAGAGGCATAAATTCCGTCAGCCAGTTTAGTCTGACCATCTCATCTGTAACATCATTGGCAACGCTACCTTTGCCATGTTTCAGAAACAACTCTGGCGCATCGGGCTTCCCATACAATCGATAGATTGTCGCACCTGATTGCCCGACATTATCGCGAGCCCATTTATACCCATATAAATCAGCATCCATGTTGGAATTTAATCGCGGCCTCGAGCAAGACGTTTCCCGTTGAATATGGCTCATAACACCCCTTGTATTACTGTTTATGTAAGCAGACAGTTTTATTGTTCATGATGATATATTTTTATCTTGTGCAATGTAACATCAGAGATTTTGAGACACAACGTGGCTTTCACCTGCCATTGGGAGAAGACTTGGGAGCTCTTCgtaa</sbol:elements>
+    <sbol:encoding rdf:resource="http://www.chem.qmul.ac.uk/iubmb/misc/naseq.html"/>
+  </sbol:Sequence>
+</rdf:RDF>
