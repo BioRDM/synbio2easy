@@ -7,11 +7,8 @@ package ed.biordm.sbol.synbio.handler;
 
 import ed.biordm.sbol.synbio.client.SynBioClient;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
-import static ed.biordm.sbol.toolkit.meta.ExcelMetaReader.ATTACH_FILE_HEADER;
-import static ed.biordm.sbol.toolkit.meta.ExcelMetaReader.DESC_HEADER;
-import static ed.biordm.sbol.toolkit.meta.ExcelMetaReader.DISP_ID_HEADER;
-import static ed.biordm.sbol.toolkit.meta.ExcelMetaReader.NOTES_HEADER;
-import ed.biordm.sbol.toolkit.transform.Outcome;
+import static ed.biordm.sbol.sbol2easy.meta.ExcelMetaReader.*;
+import ed.biordm.sbol.sbol2easy.transform.Outcome;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

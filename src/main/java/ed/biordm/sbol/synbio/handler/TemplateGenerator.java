@@ -7,8 +7,8 @@ package ed.biordm.sbol.synbio.handler;
 
 import ed.biordm.sbol.synbio.client.SynBioClient;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
-import ed.biordm.sbol.toolkit.meta.ExcelMetaReader;
-import ed.biordm.sbol.toolkit.transform.Outcome;
+import ed.biordm.sbol.sbol2easy.meta.ExcelMetaReader;
+import ed.biordm.sbol.sbol2easy.transform.Outcome;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;

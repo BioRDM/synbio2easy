@@ -8,11 +8,11 @@ package ed.biordm.sbol.synbio.handler;
 import ed.biordm.cyanosource.plasmid.PlasmidsGenerator;
 import ed.biordm.sbol.synbio.client.SynBioClient;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
-import ed.biordm.sbol.toolkit.transform.ComponentAnnotator;
-import ed.biordm.sbol.toolkit.transform.ComponentFlattener;
-import ed.biordm.sbol.toolkit.transform.ComponentUtil;
-import static ed.biordm.sbol.toolkit.transform.ComponentUtil.emptyDocument;
-import ed.biordm.sbol.toolkit.transform.SynBioTamer;
+import ed.biordm.sbol.sbol2easy.transform.ComponentAnnotator;
+import ed.biordm.sbol.sbol2easy.transform.ComponentFlattener;
+import ed.biordm.sbol.sbol2easy.transform.ComponentUtil;
+import static ed.biordm.sbol.sbol2easy.transform.ComponentUtil.emptyDocument;
+import ed.biordm.sbol.sbol2easy.transform.SynBioTamer;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -30,9 +30,9 @@ import org.sbolstandard.core2.SBOLValidationException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import static ed.biordm.sbol.toolkit.transform.ComponentUtil.saveValidSbol;
-import ed.biordm.sbol.toolkit.transform.LibraryGenerator;
-import ed.biordm.sbol.toolkit.transform.Outcome;
+import static ed.biordm.sbol.sbol2easy.transform.ComponentUtil.saveValidSbol;
+import ed.biordm.sbol.sbol2easy.transform.LibraryGenerator;
+import ed.biordm.sbol.sbol2easy.transform.Outcome;
 
 /**
  *
