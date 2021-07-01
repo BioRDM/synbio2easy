@@ -157,8 +157,7 @@ public class TemplateGeneratorTest {
         dataLines.add(1, row2);
         dataLines.add(2, row3);
 
-//        Path outputFile = tmpDir.resolve("log.xlsx");
-        Path outputFile = Paths.get("D:\\temp\\sbol").resolve("log.xlsx");
+        Path outputFile = tmpDir.resolve("log.xlsx");
         handler.writeLogToExcel(outputFile, dataLines);
 
         FeaturesReader featuresReader = new FeaturesReader();

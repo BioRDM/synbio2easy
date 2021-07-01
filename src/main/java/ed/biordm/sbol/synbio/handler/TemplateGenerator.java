@@ -70,7 +70,7 @@ public class TemplateGenerator {
         }
 
         try {
-            this.writeLogToCsv(outputFile, dataLines);
+            //this.writeLogToCsv(outputFile, dataLines);
             this.writeLogToExcel(outputFile, dataLines);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
