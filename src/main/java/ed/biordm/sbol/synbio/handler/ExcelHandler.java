@@ -39,6 +39,7 @@ public class ExcelHandler {
 
     final String SBOL_OBJ_TYPE;
     final String SBOL_DISP_ID_TYPE;
+    final int MAX_NUM_COLUMNS;
 
     public ExcelHandler(SynBioClient client) {
         // that should be probably injected in autowired constructor
@@ -46,6 +47,7 @@ public class ExcelHandler {
         this.client = client;
         this.SBOL_DISP_ID_TYPE = client.encodeURL("<http://sbols.org/v2#displayId>");
         this.SBOL_OBJ_TYPE = "ComponentDefinition";
+        this.MAX_NUM_COLUMNS = 15;
     }
 
     public Outcome processUpdateExcel(CommandOptions parameters) throws URISyntaxException, IOException {
@@ -71,9 +73,9 @@ public class ExcelHandler {
             FormulaEvaluator formEval = workbook.getCreationHelper().createFormulaEvaluator();
             formEval.setIgnoreMissingWorkbooks(true);
 
-            // assume always 4 column names in header
-            List<String> colHeaders = featuresReader.readWorksheetHeader(sheet, 4, formEval);
-            Map<String, List<String>> rows = featuresReader.readWorksheetRows(sheet, 1, 4, formEval);
+            // use MAX_NUM_COLUMNS so the reader knows when to stop reading columns
+            List<String> colHeaders = featuresReader.readWorksheetHeader(sheet, MAX_NUM_COLUMNS, formEval);
+            Map<String, List<String>> rows = featuresReader.readWorksheetRows(sheet, 1, MAX_NUM_COLUMNS, formEval);
 
             rows.forEach((key, value) -> {
                 List<String> colVals = (List<String>) value;
