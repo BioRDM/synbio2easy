@@ -8,6 +8,7 @@ package ed.biordm.sbol.synbio.handler;
 import ed.biordm.sbol.synbio.client.SynBioClient;
 import ed.biordm.sbol.synbio.dom.Command;
 import ed.biordm.sbol.synbio.dom.CommandOptions;
+import ed.biordm.sbol.toolkit.meta.ExcelMetaReader;
 import ed.biordm.sbol.toolkit.transform.Outcome;
 import java.io.BufferedReader;
 import java.io.File;
@@ -141,6 +142,34 @@ public class TemplateGeneratorTest {
                 }
             }
         }
+    }
+
+    @Test
+    public void testWriteLogToExcel() throws IOException {
+        List<String[]> dataLines = new ArrayList();
+
+        // add header row
+        String[] row1 = new String[]{"insert", null, "insert", "1.0", "http://localhost:7777/user/Johnny/insert/1.0"};
+        String[] row2 = new String[]{"sl1099_left", "sl1099_left", "sl1099_left", "1.0", "http://localhost:7777/user/Johnny/sl1099_left/1.0"};
+        String[] row3 = new String[]{"sl1099_right", null, "sl1099/right", "1.0", "http://localhost:7777/user/Johnny/sl1099_right/1.0"};
+
+        dataLines.add(0, row1);
+        dataLines.add(1, row2);
+        dataLines.add(2, row3);
+
+//        Path outputFile = tmpDir.resolve("log.xlsx");
+        Path outputFile = Paths.get("D:\\temp\\sbol").resolve("log.xlsx");
+        handler.writeLogToExcel(outputFile, dataLines);
+
+        FeaturesReader featuresReader = new FeaturesReader();
+
+        Map<String, List<String>> result = featuresReader.readMultiFeatures(outputFile, 0, 0, 5);
+
+        assertEquals(result.get("insert"), List.of("insert", "", "insert", "1.0", "http://localhost:7777/user/Johnny/insert/1.0"));
+
+        assertEquals(result.get("sl1099_left"), List.of("sl1099_left", "sl1099_left", "sl1099_left", "1.0", "http://localhost:7777/user/Johnny/sl1099_left/1.0"));
+
+        assertEquals(result.get("sl1099_right"), List.of("sl1099_right", "", "sl1099/right", "1.0", "http://localhost:7777/user/Johnny/sl1099_right/1.0"));
     }
 
     @Test

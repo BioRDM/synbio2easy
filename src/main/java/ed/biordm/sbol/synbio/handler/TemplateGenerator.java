@@ -10,6 +10,7 @@ import ed.biordm.sbol.synbio.dom.CommandOptions;
 import ed.biordm.sbol.toolkit.meta.ExcelMetaReader;
 import ed.biordm.sbol.toolkit.transform.Outcome;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -22,6 +23,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.sbolstandard.core2.ComponentDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +40,7 @@ import org.slf4j.LoggerFactory;
 public class TemplateGenerator {
     final SynBioClient client;
     final Logger logger = LoggerFactory.getLogger(this.getClass());
+    final String[] COL_HEADERS;
 
     public TemplateGenerator(SynBioClient client) {
         // that should be probably injected in autowired constructor
@@ -40,6 +48,11 @@ public class TemplateGenerator {
         this.client = client;
         //this.SBOL_DISP_ID_TYPE = client.encodeURL("<http://sbols.org/v2#displayId>");
         //this.SBOL_OBJ_TYPE = "ComponentDefinition";
+        this.COL_HEADERS = new String[]{ ExcelMetaReader.DISP_ID_HEADER,
+            "uploaded_name", "original_name",
+            ExcelMetaReader.VERSION_HEADER, "uri",
+            ExcelMetaReader.ATTACH_FILE_HEADER,
+            ExcelMetaReader.DESC_HEADER, ExcelMetaReader.NOTES_HEADER };
     }
 
     public Outcome generateTemplate(CommandOptions parameters) {
@@ -58,6 +71,7 @@ public class TemplateGenerator {
 
         try {
             this.writeLogToCsv(outputFile, dataLines);
+            this.writeLogToExcel(outputFile, dataLines);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
@@ -67,15 +81,11 @@ public class TemplateGenerator {
 
     protected void writeLogToCsv(Path csvOutputFile, List<String[]> dataLines) throws IOException {
         // add header row
-        String[] header = new String[]{ ExcelMetaReader.DISP_ID_HEADER,
-            "uploaded_name", "original_name",
-            ExcelMetaReader.VERSION_HEADER, "uri",
-            ExcelMetaReader.ATTACH_FILE_HEADER,
-            ExcelMetaReader.DESC_HEADER, ExcelMetaReader.NOTES_HEADER };
-        dataLines.add(0, header);
+        List<String[]> dataLinesCpy = new ArrayList(dataLines);
+        dataLinesCpy.add(0, COL_HEADERS);
 
         try (PrintWriter pw = new PrintWriter(csvOutputFile.toFile())) {
-            dataLines.stream().map(this::convertToCSV).forEach(pw::println);
+            dataLinesCpy.stream().map(this::convertToCSV).forEach(pw::println);
         }
     }
 
@@ -177,5 +187,54 @@ public class TemplateGenerator {
         }
 
         return designMaps;
+    }
+
+    protected void writeLogToExcel(Path excelOutputFile, List<String[]> dataLines) throws IOException {
+        // Create a Workbook
+        Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
+
+        /* CreationHelper helps us create instances of various things like DataFormat,
+           Hyperlink, RichTextString etc, in a format (HSSF, XSSF) independent way */
+        //CreationHelper createHelper = workbook.getCreationHelper();
+
+        // Create a Sheet
+        Sheet sheet = workbook.createSheet("Designs");
+
+        // Create a Row
+        Row headerRow = sheet.createRow(0);
+
+        // Create cells
+        for(int i = 0; i < COL_HEADERS.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(COL_HEADERS[i]);
+        }
+
+        // Create Other rows and cells with employees data
+        int rowNum = 1;
+        for(String[] dataLine: dataLines) {
+            Row row = sheet.createRow(rowNum++);
+            int cellIdx = 0;
+
+            for(String cellVal: dataLine) {
+                row.createCell(cellIdx++)
+                    .setCellValue(cellVal);
+            }
+        }
+
+        // Resize all columns to fit the content size
+        for(int i = 0; i < COL_HEADERS.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        // Write the output to a file
+        try(FileOutputStream fileOut = new FileOutputStream(excelOutputFile.toFile().getAbsoluteFile())) {
+            workbook.write(fileOut);
+            fileOut.close();
+        } catch(IOException e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            // Closing the workbook
+            workbook.close();
+        }
     }
 }
