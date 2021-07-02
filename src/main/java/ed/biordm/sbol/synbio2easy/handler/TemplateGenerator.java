@@ -101,6 +101,7 @@ public class TemplateGenerator {
                 String upldName = (String)designMap.get("name");
                 displayId = (String)designMap.get("displayId");
                 String upldVersion = (String)designMap.get("version");
+                String upldDesc = (String)designMap.get("description");
 
                 String cleanUpName = escapeSpecialCharacters(upldName);
                 String cleanDisplayId = escapeSpecialCharacters(displayId);
@@ -108,7 +109,7 @@ public class TemplateGenerator {
                 String cleanUri = escapeSpecialCharacters((String)designMap.get("uri"));
 
                 dataLines.add(new String[]
-                    { cleanDisplayId, cleanUpName, cleanVersion, cleanUri });
+                    { cleanDisplayId, cleanUpName, cleanVersion, cleanUri, null, upldDesc });
 
                 outcome.successful.add(cleanDisplayId);
             } catch(Exception e) {
