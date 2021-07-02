@@ -20,6 +20,7 @@
         <java.version>11</java.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <maven.surefire.version>3.0.0-M5</maven.surefire.version>
     </properties>
     
     <licenses>
@@ -90,6 +91,17 @@
                 <configuration>
                     <executable>true</executable>
                     <finalName>SynBioHub-CLI</finalName>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.version}</version>
+                <configuration>
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                    <forkCount>3</forkCount>
+                    <reuseForks>true</reuseForks>
+                    <argLine>-Xmx1024m</argLine>
                 </configuration>
             </plugin>
             <!-- launch4j plugin to wrap built jar in .exe for Windows -->
