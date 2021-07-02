@@ -100,7 +100,7 @@ public class TemplateGeneratorIntTest {
         Outcome outcome = new Outcome();
         Path inputFilePath = Paths.get(new File(getClass().getResource("cyano_template.xml").getFile()).getAbsolutePath());
         List<String[]> dataLines = handler.getUploadedDesignProperties(parameters,
-                inputFilePath, outcome);
+                outcome);
 
         for(String[] dataLine: dataLines) {
             System.out.println(String.join(",", dataLine));

@@ -20,16 +20,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.sbolstandard.core2.ComponentDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,22 +46,23 @@ public class TemplateGenerator {
         //this.SBOL_DISP_ID_TYPE = client.encodeURL("<http://sbols.org/v2#displayId>");
         //this.SBOL_OBJ_TYPE = "ComponentDefinition";
         this.COL_HEADERS = new String[]{ ExcelMetaReader.DISP_ID_HEADER,
-            "uploaded_name", "original_name",
+            ExcelMetaReader.NAME_HEADER,
             ExcelMetaReader.VERSION_HEADER, "uri",
             ExcelMetaReader.ATTACH_FILE_HEADER,
-            ExcelMetaReader.DESC_HEADER, ExcelMetaReader.NOTES_HEADER };
+            ExcelMetaReader.DESC_HEADER, ExcelMetaReader.NOTES_HEADER,
+            ExcelMetaReader.AUTHOR_HEADER, ExcelMetaReader.SUMMARY_HEADER};
     }
 
     public Outcome generateTemplate(CommandOptions parameters) {
         List<String[]> dataLines = new ArrayList();
 
         Path outputFile = Paths.get(parameters.outputFile);
-        Path inputFile = Paths.get(parameters.inputFile);
+        //Path inputFile = Paths.get(parameters.inputFile);
         Outcome outcome = new Outcome();
 
         try {
-            // do output to CSV file of uploaded designs
-            dataLines.addAll(getUploadedDesignProperties(parameters, inputFile, outcome));
+            // do output to Excel file of uploaded designs
+            dataLines.addAll(getUploadedDesignProperties(parameters, outcome));
         } catch (FileNotFoundException | UnsupportedEncodingException | URISyntaxException e) {
             logger.error(e.getMessage(), e);
         }
@@ -90,40 +88,35 @@ public class TemplateGenerator {
     }
 
     protected List<String[]> getUploadedDesignProperties(CommandOptions parameters,
-            Path sbolFile, Outcome outcome)
+            Outcome outcome)
             throws FileNotFoundException, UnsupportedEncodingException, URISyntaxException {
-        Set<ComponentDefinition> cmpDefs = client.getComponentDefinitions(sbolFile);
         List<Map<String,Object>> designMaps = listCollectionDesigns(parameters);
         List<String[]> dataLines = new ArrayList<>();
 
-        for(ComponentDefinition cmpDef: cmpDefs) {
-            String name = cmpDef.getName();
-            String displayId = cmpDef.getDisplayId();
-            String version = cmpDef.getVersion();
-
-            // match the ComponentDefinition properties from the SBOL file with those
-            // in the uploaded collection
-            for(Map<String,Object> designMap: designMaps) {
+        // match the ComponentDefinition properties from the SBOL file with those
+        // in the uploaded collection
+        for(Map<String,Object> designMap: designMaps) {
+            String displayId = new String();
+            try {
                 String upldName = (String)designMap.get("name");
-                String upldDisplayId = (String)designMap.get("displayId");
+                displayId = (String)designMap.get("displayId");
                 String upldVersion = (String)designMap.get("version");
 
-                if(upldDisplayId.equals(displayId) && upldVersion.equals(version)) {
-                    String cleanUpName = escapeSpecialCharacters(upldName);
-                    String cleanOrigName = escapeSpecialCharacters(name);
-                    String cleanDisplayId = escapeSpecialCharacters(upldDisplayId);
-                    String cleanVersion = escapeSpecialCharacters(upldVersion);
-                    String cleanUri = escapeSpecialCharacters((String)designMap.get("uri"));
+                String cleanUpName = escapeSpecialCharacters(upldName);
+                String cleanDisplayId = escapeSpecialCharacters(displayId);
+                String cleanVersion = escapeSpecialCharacters(upldVersion);
+                String cleanUri = escapeSpecialCharacters((String)designMap.get("uri"));
 
-                    dataLines.add(new String[]
-                        { cleanDisplayId, cleanUpName, cleanOrigName, cleanVersion, cleanUri });
+                dataLines.add(new String[]
+                    { cleanDisplayId, cleanUpName, cleanVersion, cleanUri });
 
-                    outcome.successful.add(displayId);
+                outcome.successful.add(cleanDisplayId);
+            } catch(Exception e) {
+                logger.error(e.getMessage(), e);
+            } finally {
+                if(!outcome.successful.contains(displayId)) {
+                    outcome.missingId.add(displayId);
                 }
-            }
-
-            if(!outcome.successful.contains(displayId)) {
-                outcome.missingId.add(displayId);
             }
         }
 
