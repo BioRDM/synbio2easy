@@ -14,11 +14,21 @@
     <name>SynBio2Easy</name>
     <description>Tool for interacting with sbol2/SynBioHub in "batch" mode
     using excel tables as metadata inputs.</description>
+    <url>https://github.com/BioRDM/synbio2easy</url>
+    
     <properties>
         <java.version>11</java.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
+    
+    <licenses>
+      <license>
+        <name>MIT License</name>
+        <url>https://opensource.org/licenses/MIT</url>
+      </license>
+    </licenses>
+        
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
