@@ -17,12 +17,15 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 
 /**
  *
@@ -30,6 +33,8 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest
 public class SynBioClientIntTest {
+    @Autowired
+    Environment environment;
     
     @Autowired
     SynBioClient client;
@@ -58,6 +63,8 @@ public class SynBioClientIntTest {
         
         synBioUser = "j.hay@epcc.ed.ac.uk";
         synBioPassword = "admin";
+
+        Assumptions.assumeTrue(Arrays.asList(this.environment.getActiveProfiles()).contains("integration"));
     }
 
     @Test

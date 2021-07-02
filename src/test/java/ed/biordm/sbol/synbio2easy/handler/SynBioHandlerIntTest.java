@@ -5,13 +5,11 @@
  */
 package ed.biordm.sbol.synbio2easy.handler;
 
-import ed.biordm.sbol.synbio2easy.handler.SynBioHandler;
 import ed.biordm.sbol.synbio2easy.dom.Command;
 import ed.biordm.sbol.synbio2easy.dom.CommandOptions;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,16 +17,16 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 
 /**
  *
@@ -36,6 +34,8 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest
 public class SynBioHandlerIntTest {
+    @Autowired
+    Environment environment;
     
     @TempDir
     Path tmpDir;        
@@ -64,6 +64,8 @@ public class SynBioHandlerIntTest {
         
         synBioUser = "j.hay@epcc.ed.ac.uk";
         synBioPassword = "admin";
+
+        Assumptions.assumeTrue(Arrays.asList(this.environment.getActiveProfiles()).contains("integration"));
     }
     
     @Test

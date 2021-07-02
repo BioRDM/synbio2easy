@@ -5,7 +5,6 @@
  */
 package ed.biordm.sbol.synbio2easy.handler;
 
-import ed.biordm.sbol.synbio2easy.handler.ExcelHandler;
 import ed.biordm.sbol.synbio2easy.client.SynBioClient;
 import ed.biordm.sbol.synbio2easy.dom.Command;
 import ed.biordm.sbol.synbio2easy.dom.CommandOptions;
@@ -13,19 +12,24 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import org.assertj.core.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 
 /**
  *
  * @author jhay
  */
 @SpringBootTest
-public class ExcelHandlerTest {
+public class ExcelHandlerIntTest {
+    @Autowired
+    Environment environment;
 
     @TempDir
     Path tmpDir;        
@@ -39,7 +43,7 @@ public class ExcelHandlerTest {
     String synBioUser;
     String synBioPassword;
 
-    public ExcelHandlerTest() {
+    public ExcelHandlerIntTest() {
     }
     
     @BeforeEach
@@ -55,6 +59,8 @@ public class ExcelHandlerTest {
         synBioPassword = "admin";
 
         handler = new ExcelHandler(client);
+
+        Assumptions.assumeTrue(Arrays.asList(this.environment.getActiveProfiles()).contains("integration"));
     }
 
     @Test

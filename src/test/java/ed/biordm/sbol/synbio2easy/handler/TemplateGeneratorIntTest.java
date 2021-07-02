@@ -5,12 +5,9 @@
  */
 package ed.biordm.sbol.synbio2easy.handler;
 
-import ed.biordm.sbol.synbio2easy.handler.FeaturesReader;
-import ed.biordm.sbol.synbio2easy.handler.TemplateGenerator;
 import ed.biordm.sbol.synbio2easy.client.SynBioClient;
 import ed.biordm.sbol.synbio2easy.dom.Command;
 import ed.biordm.sbol.synbio2easy.dom.CommandOptions;
-import ed.biordm.sbol.sbol2easy.meta.ExcelMetaReader;
 import ed.biordm.sbol.sbol2easy.transform.Outcome;
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,18 +26,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 
 /**
  *
  * @author jhay
  */
 @SpringBootTest
-public class TemplateGeneratorTest {
+public class TemplateGeneratorIntTest {
+    @Autowired
+    Environment environment;
 
     @TempDir
     Path tmpDir;        
@@ -54,7 +55,7 @@ public class TemplateGeneratorTest {
     String synBioUser;
     String synBioPassword;
 
-    public TemplateGeneratorTest() {
+    public TemplateGeneratorIntTest() {
     }
     
     @BeforeEach
@@ -70,6 +71,8 @@ public class TemplateGeneratorTest {
         synBioPassword = "admin";
 
         handler = new TemplateGenerator(client);
+
+        Assumptions.assumeTrue(Arrays.asList(this.environment.getActiveProfiles()).contains("integration"));
     }
 
     @Test

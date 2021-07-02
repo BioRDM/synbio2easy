@@ -17,6 +17,8 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.file.Path;
+import org.assertj.core.util.Arrays;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -24,6 +26,7 @@ import static org.mockito.Mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 
 /**
  *
@@ -31,6 +34,8 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest
 public class SynBioRunnerIntTest {
+    @Autowired
+    Environment environment;
 
     //@Autowired
     UserInputPrompter prompter;
@@ -72,6 +77,8 @@ public class SynBioRunnerIntTest {
         prompter = new UserInputPrompter();
         handler = new SynBioHandler(client);
         runner = new SynBioRunner(prompter, handler);
+
+        Assumptions.assumeTrue(Arrays.asList(this.environment.getActiveProfiles()).contains("integration"));
     }
 
     @Test
