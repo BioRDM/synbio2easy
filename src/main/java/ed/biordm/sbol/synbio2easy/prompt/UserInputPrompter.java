@@ -1182,7 +1182,7 @@ public class UserInputPrompter {
         console.printf("... creating template for updating SynBioHub designs in designated SBOL document%n");
         console.printf("%n");
 
-        if (options.inputFile == null) {
+        /*if (options.inputFile == null) {
             console.printf("Please enter the path to the SBOL file containing the designs to be updated%n");
             options.inputFile = console.readLine("Filename: ");
 
@@ -1205,7 +1205,7 @@ public class UserInputPrompter {
             console.printf("%n");
         }
 
-        console.printf("%n");
+        console.printf("%n");*/
 
         if (options.outputFile == null) {
             String noExtFilePath = removeFileExtension(options.inputFile, false);
