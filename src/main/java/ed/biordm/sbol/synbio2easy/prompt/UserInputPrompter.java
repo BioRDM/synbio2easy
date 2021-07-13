@@ -476,10 +476,10 @@ public class UserInputPrompter {
 
         if (options.filenamePrefix == null) {
             console.printf("Please enter the filename prefix for the generated SBOL document files%n");
-            options.filenamePrefix = console.readLine("Filename Prefix [<ENTER> for 'plasmid']: ");
+            options.filenamePrefix = console.readLine("Filename Prefix [<ENTER> for 'library']: ");
 
             if (options.filenamePrefix == null || options.filenamePrefix.trim().isEmpty()) {
-                options.filenamePrefix = "plasmid";
+                options.filenamePrefix = "library";
             }
         } else {
             console.printf("%n");
