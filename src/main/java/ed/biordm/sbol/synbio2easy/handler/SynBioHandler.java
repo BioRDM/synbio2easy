@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import static ed.biordm.sbol.sbol2easy.transform.ComponentUtil.saveValidSbol;
 import ed.biordm.sbol.sbol2easy.transform.LibraryGenerator;
 import ed.biordm.sbol.sbol2easy.transform.Outcome;
+import java.util.ArrayList;
 
 /**
  *
@@ -112,12 +113,7 @@ public class SynBioHandler {
         }
 
         Outcome outcome = excelHandler.processUpdateExcel(parameters);
-
-        // TODO printout outcome status, for example id of missing meta
-        //
-        // if (!outcome.missingMeta.isEmpty()) {
-        //  print some designs were missing ....
-        // }....
+        printOutcome(outcome, "updated");
     }
 
     void handleCyano(CommandOptions parameters) throws URISyntaxException, IOException {
@@ -148,7 +144,7 @@ public class SynBioHandler {
         generator.DEBUG = true;
         Outcome outcome = generator.generateFromFiles(name, defVersion, templateFile, metaFile, outDir, stopOnMissing, batchSize);
 
-        printOutcome(outcome);
+        printOutcome(outcome, "generated");
     }
 
     void handleClean(CommandOptions parameters) throws URISyntaxException, IOException {
@@ -170,6 +166,8 @@ public class SynBioHandler {
             logger.error(e.getMessage(), e);
             throw new IOException(e);
         }
+
+        System.out.printf("Successfully cleaned SBOL file located at '%s'%n", outputFile.toFile().getAbsolutePath());
     }
 
     void handleFlatten(CommandOptions parameters) throws IOException {
@@ -182,18 +180,19 @@ public class SynBioHandler {
             outDoc.setDefaultURIprefix(parameters.namespace);
         }
 
+        List<ComponentDefinition> flatDesigns = new ArrayList();
+
         try {
         
             SBOLDocument inDoc = SBOLReader.read(inputFile.toFile());
 
-
             if (parameters.allRoots) {
                 // should add handling of what was actually flattened or not
-                flattener.flattenDesigns(inDoc, parameters.suffix, outDoc, false);
+                flatDesigns = flattener.flattenDesigns(inDoc, parameters.suffix, outDoc, false);
             } else {
                 ComponentDefinition comp = compUtil.extractComponent(parameters.compDefinitionId, inDoc);
-                flattener.flattenDesign(comp, comp.getDisplayId()+parameters.suffix,
-                                              compUtil.nameOrId(comp)+parameters.suffix, outDoc);
+                flatDesigns.add(flattener.flattenDesign(comp, comp.getDisplayId()+parameters.suffix,
+                                              compUtil.nameOrId(comp)+parameters.suffix, outDoc));
             }
 
             saveValidSbol(outDoc, outFile);
@@ -202,6 +201,8 @@ public class SynBioHandler {
             logger.error(e.getMessage(), e);
             throw new IOException(e);
         }
+
+        System.out.printf("Successfully flattened %d designs%n", flatDesigns.size());
     }
 
     void handleAnnotate(CommandOptions parameters) throws IOException, URISyntaxException {
@@ -217,13 +218,7 @@ public class SynBioHandler {
             Outcome outcome = annotator.annotate(doc, metaFile, parameters.overwrite, parameters.stopOnMissingId, parameters.stopOnMissingMeta);
             
             saveValidSbol(doc, outFile);
-            
-            // TODO printout outcome status, for example missing id and missing meta
-            // 
-            // if (!outcome.missingId.isEmpty()) {
-            //  print some designs were missing ....    
-            // }....
-
+            printOutcome(outcome, "annotated");
         } catch (SBOLValidationException | SBOLConversionException e) {
             logger.error(e.getMessage(), e);
             throw new IOException(e);
@@ -238,12 +233,7 @@ public class SynBioHandler {
         // String csvLogFilename = new SimpleDateFormat("'deposit_log_'yyyy-MM-dd-HH-mm-ss'.csv'").format(new Date());
         // Path csvOutputFile = Paths.get(System.getProperty("user.dir")).resolve(csvLogFilename);
         Outcome outcome = templateGenerator.generateTemplate(parameters);
-
-        // TODO printout outcome status, for example id of missing meta
-        //
-        // if (!outcome.missingMeta.isEmpty()) {
-        //  print some designs were missing ....
-        // }....
+        printOutcome(outcome, "generated");
     }
 
     String login(CommandOptions parameters) throws URISyntaxException {
@@ -374,7 +364,7 @@ public class SynBioHandler {
         return cleanName;
     }
 
-    protected void printOutcome(Outcome outcome) {
+    protected void printOutcome(Outcome outcome, String verb) {
         for(String missingMeta: outcome.missingMeta) {
             System.out.printf("Design '%s' has missing metadata%n", missingMeta);
         }
@@ -384,7 +374,7 @@ public class SynBioHandler {
         }
 
         for(String success: outcome.successful) {
-            System.out.printf("Design '%s' was generated successfully%n", success);
+            System.out.printf("Design '%s' was %s successfully%n", success, verb);
         }
     }
 }
