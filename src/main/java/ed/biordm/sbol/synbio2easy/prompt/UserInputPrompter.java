@@ -53,16 +53,20 @@ public class UserInputPrompter {
         CommandOptions options = new CommandOptions(command);
         setPassedOptions(options, args);
 
-        switch (command) {
-            case DEPOSIT: return promptDepositOptions(options);
-            case UPDATE: return promptUpdateOptions(options);
-            case GENERATE: return promptGenerateOptions(options);
-            case CYANO: return promptCyanoOptions(options);
-            case CLEAN: return promptCleanOptions(options);
-            case FLATTEN: return promptFlattenOptions(options);
-            case ANNOTATE: return promptAnnotateOptions(options);
-            case TEMPLATE4UPDATE: return promptTemplate4UpdateOptions(options);
-            default: throw new IllegalArgumentException("Unsupported command: "+command);
+        if(this.console != null) {
+            switch (command) {
+                case DEPOSIT: return promptDepositOptions(options);
+                case UPDATE: return promptUpdateOptions(options);
+                case GENERATE: return promptGenerateOptions(options);
+                case CYANO: return promptCyanoOptions(options);
+                case CLEAN: return promptCleanOptions(options);
+                case FLATTEN: return promptFlattenOptions(options);
+                case ANNOTATE: return promptAnnotateOptions(options);
+                case TEMPLATE4UPDATE: return promptTemplate4UpdateOptions(options);
+                default: throw new IllegalArgumentException("Unsupported command: "+command);
+            }
+        } else {
+            return options;
         }
     }
 
@@ -1322,11 +1326,11 @@ public class UserInputPrompter {
             }
 
             if (args.getOptionNames().contains("create-new") && !args.getOptionValues("create-new").isEmpty()) {
-                options.crateNew = Boolean.parseBoolean(args.getOptionValues("create-new").get(0));
+                options.crateNew = Y_PATTERN.matcher(args.getOptionValues("create-new").get(0)).matches();
                 options.isCreateNewDef = true;
             }
             if (args.getOptionNames().contains("c") && !args.getOptionValues("c").isEmpty()) {
-                options.crateNew = Boolean.parseBoolean(args.getOptionValues("c").get(0));
+                options.crateNew = Y_PATTERN.matcher(args.getOptionValues("c").get(0)).matches();
                 options.isCreateNewDef = true;
             }
 
@@ -1408,11 +1412,11 @@ public class UserInputPrompter {
         }
 
         if (args.getOptionNames().contains("multi") && !args.getOptionValues("multi").isEmpty()) {
-            options.multipleCollections = Boolean.parseBoolean(args.getOptionValues("multi").get(0));
+            options.multipleCollections = Y_PATTERN.matcher(args.getOptionValues("multi").get(0)).matches();
             options.isMultipleCollectionsDef = true;
         }
         if (args.getOptionNames().contains("m") && !args.getOptionValues("m").isEmpty()) {
-            options.multipleCollections = Boolean.parseBoolean(args.getOptionValues("m").get(0));
+            options.multipleCollections = Y_PATTERN.matcher(args.getOptionValues("m").get(0)).matches();
             options.isMultipleCollectionsDef = true;
         }
 
@@ -1424,12 +1428,19 @@ public class UserInputPrompter {
         }
 
         if (args.getOptionNames().contains("overwrite") && !args.getOptionValues("overwrite").isEmpty()) {
-            options.overwrite = Boolean.parseBoolean(args.getOptionValues("overwrite").get(0));
+            options.overwrite = Y_PATTERN.matcher(args.getOptionValues("overwrite").get(0)).matches();
             options.isOverwriteDef = true;
         }
         if (args.getOptionNames().contains("o") && !args.getOptionValues("o").isEmpty()) {
-            options.overwrite = Boolean.parseBoolean(args.getOptionValues("o").get(0));
+            options.overwrite = Y_PATTERN.matcher(args.getOptionValues("o").get(0)).matches();
             options.isOverwriteDef = true;
+        }
+
+        if (args.getOptionNames().contains("password") && !args.getOptionValues("password").isEmpty()) {
+            options.password = args.getOptionValues("password").get(0);
+        }
+        if (args.getOptionNames().contains("p") && !args.getOptionValues("p").isEmpty()) {
+            options.password = args.getOptionValues("p").get(0);
         }
     }
 
