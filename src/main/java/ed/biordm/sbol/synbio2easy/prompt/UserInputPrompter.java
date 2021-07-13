@@ -1358,8 +1358,8 @@ public class UserInputPrompter {
             options.templateFile = args.getOptionValues("t").get(0);
         }
 
-        if (args.getOptionNames().contains("flank-file") && !args.getOptionValues("flank-file").isEmpty()) {
-            options.metaFile = args.getOptionValues("flank-file").get(0);
+        if (args.getOptionNames().contains("meta-file") && !args.getOptionValues("meta-file").isEmpty()) {
+            options.metaFile = args.getOptionValues("meta-file").get(0);
         }
         if (args.getOptionNames().contains("f") && !args.getOptionValues("f").isEmpty()) {
             options.metaFile = args.getOptionValues("f").get(0);
@@ -1382,18 +1382,36 @@ public class UserInputPrompter {
         if (args.getOptionNames().contains("output-dir") && !args.getOptionValues("output-dir").isEmpty()) {
             options.outputDir = args.getOptionValues("output-dir").get(0);
         }
-        if (args.getOptionNames().contains("o") && !args.getOptionValues("o").isEmpty()) {
-            options.outputDir = args.getOptionValues("o").get(0);
+        if (args.getOptionNames().contains("d") && !args.getOptionValues("d").isEmpty()) {
+            options.outputDir = args.getOptionValues("d").get(0);
         }
 
         if (args.getOptionNames().contains("overwrite") && !args.getOptionValues("overwrite").isEmpty()) {
-            options.overwrite = Boolean.parseBoolean(args.getOptionValues("overwrite").get(0));
+            options.overwrite = Y_PATTERN.matcher(args.getOptionValues("overwrite").get(0)).matches();
             options.isOverwriteDef = true;
         }
         if (args.getOptionNames().contains("o") && !args.getOptionValues("o").isEmpty()) {
-            options.overwrite = Boolean.parseBoolean(args.getOptionValues("o").get(0));
+            options.overwrite = Y_PATTERN.matcher(args.getOptionValues("o").get(0)).matches();
             options.isOverwriteDef = true;
         }
+
+        if (args.getOptionNames().contains("stop-missing-metadata") && !args.getOptionValues("stop-missing-metadata").isEmpty()) {
+            options.stopOnMissingMeta = Y_PATTERN.matcher(args.getOptionValues("stop-missing-metadata").get(0)).matches();
+            options.isStopOnMissingMetaDef = true;
+        }
+        if (args.getOptionNames().contains("m") && !args.getOptionValues("m").isEmpty()) {
+            options.stopOnMissingMeta = Y_PATTERN.matcher(args.getOptionValues("m").get(0)).matches();
+            options.isStopOnMissingMetaDef = true;
+        }
+
+        /*if (args.getOptionNames().contains("stop-missing-id") && !args.getOptionValues("stop-missing-id").isEmpty()) {
+            options.stopOnMissingMeta = Y_PATTERN.matcher(args.getOptionValues("stop-missing-id").get(0)).matches();
+            options.isStopOnMissingMetaDef = true;
+        }
+        if (args.getOptionNames().contains("i") && !args.getOptionValues("i").isEmpty()) {
+            options.stopOnMissingId = Y_PATTERN.matcher(args.getOptionValues("i").get(0)).matches();
+            options.isStopOnMissingIdDef = true;
+        }*/
     }
 
     void setPassedDepositOptions(CommandOptions options, ApplicationArguments args) {
