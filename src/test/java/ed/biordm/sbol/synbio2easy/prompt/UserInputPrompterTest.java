@@ -170,7 +170,7 @@ public class UserInputPrompterTest {
         argsList.add("generate");
         argsList.add("--output-dir=examples/library");
         argsList.add("--template-file=examples/template.xml");
-        argsList.add("--flank-file=examples/library_def.xlsx");
+        argsList.add("--meta-file=examples/library_def.xlsx");
         argsList.add("--filename-prefix=library");
         argsList.add("--overwrite=Y");
         argsList.add("--stop-missing-metadata=N");
@@ -199,13 +199,12 @@ public class UserInputPrompterTest {
     public void testFlattenCommandPassedArgs() throws MissingOptionException {
         List<String> argsList = new ArrayList();
         argsList.add("flatten");
-        argsList.add("--output-dir=examples/library");
-        argsList.add("--template-file=examples/template.xml");
-        argsList.add("--meta-file=examples/library_def.xlsx");
-        argsList.add("--filename-prefix=library");
+        argsList.add("--input-file=examples/library/library.1.xml");
+        argsList.add("--output-file=examples/library/library_flattened.1.xml");
+        argsList.add("--all-roots=Y");
+        argsList.add("--component-id=sll0188");
+        argsList.add("--suffix=_flat");
         argsList.add("--overwrite=Y");
-        argsList.add("--stop-missing-metadata=N");
-        argsList.add("--version=1.0");
 
         String[] args = argsList.toArray(new String[argsList.size()]);
         ApplicationArguments appArgs = new DefaultApplicationArguments(args);
@@ -214,15 +213,14 @@ public class UserInputPrompterTest {
 
         params = instance.getCommandOptions(appArgs);
 
-        assertEquals(Command.GENERATE, params.command);
-        assertTrue(params.outputDir.endsWith("library"));
-        assertTrue(params.templateFile.endsWith("examples/template.xml"));
-        assertTrue(params.metaFile.endsWith("examples/library_def.xlsx"));
-        assertEquals("library", params.filenamePrefix);
+        assertEquals(Command.FLATTEN, params.command);
+        assertTrue(params.inputFile.endsWith("examples/library/library.1.xml"));
+        assertTrue(params.outputFile.endsWith("examples/library/library_flattened.1.xml"));
+        assertEquals(Boolean.TRUE, params.allRoots);
+        assertEquals(Boolean.TRUE, params.isAllRootsDef);
         assertEquals(Boolean.TRUE, params.overwrite);
         assertEquals(Boolean.TRUE, params.isOverwriteDef);
-        assertEquals(Boolean.FALSE, params.stopOnMissingMeta);
-        assertEquals(Boolean.TRUE, params.isStopOnMissingMetaDef);
-        assertEquals("1.0", params.version);
+        assertEquals("_flat", params.suffix);
+        assertEquals("sll0188", params.compDefinitionId);
     }
 }
