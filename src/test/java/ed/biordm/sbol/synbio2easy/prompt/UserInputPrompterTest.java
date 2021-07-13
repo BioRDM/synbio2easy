@@ -4,13 +4,16 @@
  * and open the template in the editor.
  */
 package ed.biordm.sbol.synbio2easy.prompt;
-import ed.biordm.sbol.synbio2easy.prompt.UserInputPrompter;
 import ed.biordm.sbol.synbio2easy.dom.Command;
+import ed.biordm.sbol.synbio2easy.dom.CommandOptions;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.DefaultApplicationArguments;
 
 /**
@@ -89,5 +92,41 @@ public class UserInputPrompterTest {
         String expFilePath = "D:\\temp\\sbol\\sl0199.xlsx";
 
         assertEquals(expFilePath, outputFilePath);
+    }
+
+    @Test
+    public void testDepositCommandPassedArgs() throws MissingOptionException {
+        List<String> argsList = new ArrayList();
+        argsList.add("deposit");
+        argsList.add("--username=j.hay@epcc.ed.ac.uk");
+        argsList.add("--password=pass");
+        argsList.add("--dir=examples");
+        argsList.add("--file-extension=.xml");
+        argsList.add("--multi=N");
+        argsList.add("--create-new=Y");
+        argsList.add("--name=\"test collection\"");
+        argsList.add("--url=https://synbiohub.org");
+        argsList.add("--version=1.0");
+        // argsList.add("j.hay@epcc.ed.ac.uk");
+
+        String[] args = argsList.toArray(new String[argsList.size()]);
+        ApplicationArguments appArgs = new DefaultApplicationArguments(args);
+
+        CommandOptions params = null;
+
+        params = instance.getCommandOptions(appArgs);
+
+        assertEquals(Command.DEPOSIT, params.command);
+        assertEquals("j.hay@epcc.ed.ac.uk", params.user);
+        assertEquals("pass", params.password);
+        assertTrue(params.dir.endsWith("examples"));
+        assertEquals(".xml", params.fileExtFilter);
+        assertEquals(Boolean.FALSE, params.multipleCollections);
+        assertEquals(Boolean.TRUE, params.isMultipleCollectionsDef);
+        assertEquals(Boolean.TRUE, params.crateNew);
+        assertEquals(Boolean.TRUE, params.isCreateNewDef);
+        assertEquals("test collection", params.collectionName);
+        assertEquals("https://synbiohub.org", params.url);
+        assertEquals("1.0", params.version);
     }
 }
