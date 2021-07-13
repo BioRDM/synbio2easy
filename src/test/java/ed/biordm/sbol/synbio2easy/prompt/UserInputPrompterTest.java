@@ -95,7 +95,7 @@ public class UserInputPrompterTest {
     }
 
     @Test
-    public void testDepositCommandPassedArgs() throws MissingOptionException {
+    public void testDepositCreateNewSingleCollCommandPassedArgs() throws MissingOptionException {
         List<String> argsList = new ArrayList();
         argsList.add("deposit");
         argsList.add("--username=j.hay@epcc.ed.ac.uk");
@@ -104,10 +104,9 @@ public class UserInputPrompterTest {
         argsList.add("--file-extension=.xml");
         argsList.add("--multi=N");
         argsList.add("--create-new=Y");
-        argsList.add("--name=\"test collection\"");
-        argsList.add("--url=https://synbiohub.org");
+        argsList.add("--name=test collection");
+        argsList.add("--url=https://synbiohub.org/");
         argsList.add("--version=1.0");
-        // argsList.add("j.hay@epcc.ed.ac.uk");
 
         String[] args = argsList.toArray(new String[argsList.size()]);
         ApplicationArguments appArgs = new DefaultApplicationArguments(args);
@@ -126,7 +125,104 @@ public class UserInputPrompterTest {
         assertEquals(Boolean.TRUE, params.crateNew);
         assertEquals(Boolean.TRUE, params.isCreateNewDef);
         assertEquals("test collection", params.collectionName);
-        assertEquals("https://synbiohub.org", params.url);
+        assertEquals("https://synbiohub.org/", params.url);
+        assertEquals("1.0", params.version);
+    }
+
+    @Test
+    public void testDepositCreateNewMultiCollCommandPassedArgs() throws MissingOptionException {
+        List<String> argsList = new ArrayList();
+        argsList.add("deposit");
+        argsList.add("--username=j.hay@epcc.ed.ac.uk");
+        argsList.add("--password=pass");
+        argsList.add("--dir=examples");
+        argsList.add("--file-extension=.xml");
+        argsList.add("--multi=Y");
+        argsList.add("--create-new=Y");
+        argsList.add("--name=test prefix");
+        argsList.add("--url=https://synbiohub.org/");
+        argsList.add("--version=1.0");
+
+        String[] args = argsList.toArray(new String[argsList.size()]);
+        ApplicationArguments appArgs = new DefaultApplicationArguments(args);
+
+        CommandOptions params = null;
+
+        params = instance.getCommandOptions(appArgs);
+
+        assertEquals(Command.DEPOSIT, params.command);
+        assertEquals("j.hay@epcc.ed.ac.uk", params.user);
+        assertEquals("pass", params.password);
+        assertTrue(params.dir.endsWith("examples"));
+        assertEquals(".xml", params.fileExtFilter);
+        assertEquals(Boolean.TRUE, params.multipleCollections);
+        assertEquals(Boolean.TRUE, params.isMultipleCollectionsDef);
+        assertEquals(Boolean.TRUE, params.crateNew);
+        assertEquals(Boolean.TRUE, params.isCreateNewDef);
+        assertEquals("test prefix", params.collectionName);
+        assertEquals("https://synbiohub.org/", params.url);
+        assertEquals("1.0", params.version);
+    }
+
+    @Test
+    public void testGenerateCommandPassedArgs() throws MissingOptionException {
+        List<String> argsList = new ArrayList();
+        argsList.add("generate");
+        argsList.add("--output-dir=examples/library");
+        argsList.add("--template-file=examples/template.xml");
+        argsList.add("--flank-file=examples/library_def.xlsx");
+        argsList.add("--filename-prefix=library");
+        argsList.add("--overwrite=Y");
+        argsList.add("--stop-missing-metadata=N");
+        argsList.add("--version=1.0");
+
+        String[] args = argsList.toArray(new String[argsList.size()]);
+        ApplicationArguments appArgs = new DefaultApplicationArguments(args);
+
+        CommandOptions params = null;
+
+        params = instance.getCommandOptions(appArgs);
+
+        assertEquals(Command.GENERATE, params.command);
+        assertTrue(params.outputDir.endsWith("library"));
+        assertTrue(params.templateFile.endsWith("examples/template.xml"));
+        assertTrue(params.metaFile.endsWith("examples/library_def.xlsx"));
+        assertEquals("library", params.filenamePrefix);
+        assertEquals(Boolean.TRUE, params.overwrite);
+        assertEquals(Boolean.TRUE, params.isOverwriteDef);
+        assertEquals(Boolean.FALSE, params.stopOnMissingMeta);
+        assertEquals(Boolean.TRUE, params.isStopOnMissingMetaDef);
+        assertEquals("1.0", params.version);
+    }
+
+    @Test
+    public void testFlattenCommandPassedArgs() throws MissingOptionException {
+        List<String> argsList = new ArrayList();
+        argsList.add("flatten");
+        argsList.add("--output-dir=examples/library");
+        argsList.add("--template-file=examples/template.xml");
+        argsList.add("--meta-file=examples/library_def.xlsx");
+        argsList.add("--filename-prefix=library");
+        argsList.add("--overwrite=Y");
+        argsList.add("--stop-missing-metadata=N");
+        argsList.add("--version=1.0");
+
+        String[] args = argsList.toArray(new String[argsList.size()]);
+        ApplicationArguments appArgs = new DefaultApplicationArguments(args);
+
+        CommandOptions params = null;
+
+        params = instance.getCommandOptions(appArgs);
+
+        assertEquals(Command.GENERATE, params.command);
+        assertTrue(params.outputDir.endsWith("library"));
+        assertTrue(params.templateFile.endsWith("examples/template.xml"));
+        assertTrue(params.metaFile.endsWith("examples/library_def.xlsx"));
+        assertEquals("library", params.filenamePrefix);
+        assertEquals(Boolean.TRUE, params.overwrite);
+        assertEquals(Boolean.TRUE, params.isOverwriteDef);
+        assertEquals(Boolean.FALSE, params.stopOnMissingMeta);
+        assertEquals(Boolean.TRUE, params.isStopOnMissingMetaDef);
         assertEquals("1.0", params.version);
     }
 }
