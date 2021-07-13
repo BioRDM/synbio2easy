@@ -148,19 +148,7 @@ public class SynBioHandler {
         generator.DEBUG = true;
         Outcome outcome = generator.generateFromFiles(name, defVersion, templateFile, metaFile, outDir, stopOnMissing, batchSize);
 
-            // TODO printout outcome status, for example id of missing meta
-            //
-            // if (!outcome.missingMeta.isEmpty()) {
-            //  print some designs were missing ....
-            // }....
-            
-        /*try {
-            
-            generator.generateFromFiles(name, version, templateFile, flankFile, outDir);
-        } catch (SBOLValidationException | SBOLConversionException | ed.biordm.sbol.toolkit.transform.SBOLConversionException e) {
-            logger.error(e.getMessage(), e);
-            throw new IOException(e);
-        }*/
+        printOutcome(outcome);
     }
 
     void handleClean(CommandOptions parameters) throws URISyntaxException, IOException {
@@ -384,5 +372,19 @@ public class SynBioHandler {
     protected String sanitizeName(String name) {
         String cleanName = name.replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit}]", "_");
         return cleanName;
+    }
+
+    protected void printOutcome(Outcome outcome) {
+        for(String missingMeta: outcome.missingMeta) {
+            System.out.printf("Design '%s' has missing metadata%n", missingMeta);
+        }
+
+        for(String missingId: outcome.missingId) {
+            System.out.printf("Design '%s' was not found%n", missingId);
+        }
+
+        for(String success: outcome.successful) {
+            System.out.printf("Design '%s' was generated successfully%n", success);
+        }
     }
 }
