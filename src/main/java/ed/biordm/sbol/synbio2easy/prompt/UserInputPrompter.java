@@ -1347,6 +1347,8 @@ public class UserInputPrompter {
             }
         } else if(options.command == Command.GENERATE) {
             setPassedGenerateOptions(options, args);
+        } else if(options.command == Command.FLATTEN) {
+            setPassedFlattenOptions(options, args);
         }
     }
 
@@ -1495,7 +1497,51 @@ public class UserInputPrompter {
     }
 
     void setPassedFlattenOptions(CommandOptions options, ApplicationArguments args) {
+        if (args.getOptionNames().contains("input-file") && !args.getOptionValues("input-file").isEmpty()) {
+            options.inputFile = args.getOptionValues("input-file").get(0);
+        }
+        if (args.getOptionNames().contains("i") && !args.getOptionValues("i").isEmpty()) {
+            options.inputFile = args.getOptionValues("i").get(0);
+        }
 
+        if (args.getOptionNames().contains("output-file") && !args.getOptionValues("output-file").isEmpty()) {
+            options.outputFile = args.getOptionValues("output-file").get(0);
+        }
+        if (args.getOptionNames().contains("f") && !args.getOptionValues("f").isEmpty()) {
+            options.outputFile = args.getOptionValues("f").get(0);
+        }
+
+        if (args.getOptionNames().contains("all-roots") && !args.getOptionValues("all-roots").isEmpty()) {
+            options.allRoots = Y_PATTERN.matcher(args.getOptionValues("all-roots").get(0)).matches();
+            options.isAllRootsDef = true;
+        }
+        if (args.getOptionNames().contains("r") && !args.getOptionValues("r").isEmpty()) {
+            options.allRoots = Y_PATTERN.matcher(args.getOptionValues("r").get(0)).matches();
+            options.isAllRootsDef = true;
+        }
+
+        if (args.getOptionNames().contains("component-id") && !args.getOptionValues("component-id").isEmpty()) {
+            options.compDefinitionId = args.getOptionValues("component-id").get(0);
+        }
+        if (args.getOptionNames().contains("c") && !args.getOptionValues("c").isEmpty()) {
+            options.compDefinitionId = args.getOptionValues("component-id").get(0);
+        }
+
+        if (args.getOptionNames().contains("suffix") && !args.getOptionValues("suffix").isEmpty()) {
+            options.suffix = args.getOptionValues("suffix").get(0);
+        }
+        if (args.getOptionNames().contains("s") && !args.getOptionValues("s").isEmpty()) {
+            options.suffix = args.getOptionValues("s").get(0);
+        }
+
+        if (args.getOptionNames().contains("overwrite") && !args.getOptionValues("overwrite").isEmpty()) {
+            options.overwrite = Y_PATTERN.matcher(args.getOptionValues("overwrite").get(0)).matches();
+            options.isOverwriteDef = true;
+        }
+        if (args.getOptionNames().contains("o") && !args.getOptionValues("o").isEmpty()) {
+            options.overwrite = Y_PATTERN.matcher(args.getOptionValues("o").get(0)).matches();
+            options.isOverwriteDef = true;
+        }
     }
 
     void setPassedAnnotateOptions(CommandOptions options, ApplicationArguments args) {
