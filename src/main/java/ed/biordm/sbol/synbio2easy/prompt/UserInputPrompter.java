@@ -710,6 +710,7 @@ public class UserInputPrompter {
             }
         } else {
             options.overwrite = false;
+            new File(options.outputDir).mkdirs();
         }
 
         console.printf("%n");
