@@ -57,7 +57,9 @@ The CLI client requires certain parameters to be specified at runtime, and will 
 ### Examples
 #### Generate
 ```shell
-& "D:\Program Files\Java\jdk-16.0.1\bin\java" -jar .\target\SynBioHub-CLI.jar generate --output-dir=examples/library --template-file=examples/template.xml --meta-file=examples/library_def.xlsx --filename-prefix=library --stop-missing-metadata=N --version=1.0
+& "D:\Program Files\Java\jdk-16.0.1\bin\java" -jar .\target\SynBioHub-CLI.jar generate `
+--output-dir=examples/library --template-file=examples/template.xml --meta-file=examples/library_def.xlsx `
+--filename-prefix=library --stop-missing-metadata=N --version=1.0
 ```
 
 #### Flatten
