@@ -1351,6 +1351,10 @@ public class UserInputPrompter {
             setPassedFlattenOptions(options, args);
         } else if(options.command == Command.ANNOTATE) {
             setPassedAnnotateOptions(options, args);
+        } else if(options.command == Command.CLEAN) {
+            setPassedCleanOptions(options, args);
+        } else if(options.command == Command.TEMPLATE4UPDATE) {
+            setPassedTemplate4UpdateOptions(options, args);
         }
     }
 
@@ -1480,11 +1484,11 @@ public class UserInputPrompter {
         }
 
         if (args.getOptionNames().contains("remove-collections") && !args.getOptionValues("remove-collections").isEmpty()) {
-            options.removeColls = Boolean.parseBoolean(args.getOptionValues("remove-collections").get(0));
+            options.removeColls = Y_PATTERN.matcher(args.getOptionValues("remove-collections").get(0)).matches();
             options.isRemoveCollsDef = true;
         }
         if (args.getOptionNames().contains("r") && !args.getOptionValues("r").isEmpty()) {
-            options.removeColls = Boolean.parseBoolean(args.getOptionValues("r").get(0));
+            options.removeColls = Y_PATTERN.matcher(args.getOptionValues("r").get(0)).matches();
             options.isRemoveCollsDef = true;
         }
     }
@@ -1584,6 +1588,22 @@ public class UserInputPrompter {
         if (args.getOptionNames().contains("s") && !args.getOptionValues("s").isEmpty()) {
             options.stopOnMissingMeta = Y_PATTERN.matcher(args.getOptionValues("s").get(0)).matches();
             options.isStopOnMissingMetaDef = true;
+        }
+    }
+
+    void setPassedTemplate4UpdateOptions(CommandOptions options, ApplicationArguments args) {
+        if (args.getOptionNames().contains("output-file") && !args.getOptionValues("output-file").isEmpty()) {
+            options.outputFile = args.getOptionValues("output-file").get(0);
+        }
+        if (args.getOptionNames().contains("f") && !args.getOptionValues("f").isEmpty()) {
+            options.outputFile = args.getOptionValues("f").get(0);
+        }
+
+        if (args.getOptionNames().contains("password") && !args.getOptionValues("password").isEmpty()) {
+            options.password = args.getOptionValues("password").get(0);
+        }
+        if (args.getOptionNames().contains("p") && !args.getOptionValues("p").isEmpty()) {
+            options.password = args.getOptionValues("p").get(0);
         }
     }
 
