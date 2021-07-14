@@ -67,7 +67,10 @@ The CLI client requires certain parameters to be specified at runtime, and will 
 
 #### Annotate
 ```shell
-& "D:\Program Files\Java\jdk-16.0.1\bin\java" -jar .\target\SynBioHub-CLI.jar annotate --input-file=examples/library/library_flattened.1.xml --meta-file=examples/flat_annotation.xlsx --output-file=examples/library/library_flattened_annotated.1.xml --stop-missing-metadata=N --stop-missing-id=N --overwrite=N
+& "D:\Program Files\Java\jdk-16.0.1\bin\java" -jar .\target\SynBioHub-CLI.jar annotate `
+--input-file=examples/library/library_flattened.1.xml --meta-file=examples/flat_annotation.xlsx `
+--output-file=examples/library/library_flattened_annotated.1.xml --stop-missing-metadata=N `
+--stop-missing-id=N --overwrite=N
 ```
 
 #### Deposit
