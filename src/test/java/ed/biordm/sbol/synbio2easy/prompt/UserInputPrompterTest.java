@@ -223,4 +223,34 @@ public class UserInputPrompterTest {
         assertEquals("_flat", params.suffix);
         assertEquals("sll0188", params.compDefinitionId);
     }
+
+    @Test
+    public void testAnnotateCommandPassedArgs() throws MissingOptionException {
+        List<String> argsList = new ArrayList();
+        argsList.add("annotate");
+        argsList.add("--input-file=examples/library/library_flattened.1.xml");
+        argsList.add("--meta-file=examples/flat_annotation.xlsx");
+        argsList.add("--output-file=examples/library/library_flattened_annotated.1.xml");
+        argsList.add("--stop-missing-metadata=N");
+        argsList.add("--stop-missing-id=N");
+        argsList.add("--overwrite=N");
+
+        String[] args = argsList.toArray(new String[argsList.size()]);
+        ApplicationArguments appArgs = new DefaultApplicationArguments(args);
+
+        CommandOptions params = null;
+
+        params = instance.getCommandOptions(appArgs);
+
+        assertEquals(Command.ANNOTATE, params.command);
+        assertTrue(params.inputFile.endsWith("examples/library/library_flattened.1.xml"));
+        assertTrue(params.outputFile.endsWith("examples/library/library_flattened_annotated.1.xml"));
+        assertTrue(params.metaFile.endsWith("examples/flat_annotation.xlsx"));
+        assertEquals(Boolean.FALSE, params.stopOnMissingId);
+        assertEquals(Boolean.TRUE, params.isStopOnMissingIdDef);
+        assertEquals(Boolean.FALSE, params.stopOnMissingMeta);
+        assertEquals(Boolean.TRUE, params.isStopOnMissingMetaDef);
+        assertEquals(Boolean.FALSE, params.overwrite);
+        assertEquals(Boolean.TRUE, params.isOverwriteDef);
+    }
 }
