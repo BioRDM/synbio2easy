@@ -1349,6 +1349,8 @@ public class UserInputPrompter {
             setPassedGenerateOptions(options, args);
         } else if(options.command == Command.FLATTEN) {
             setPassedFlattenOptions(options, args);
+        } else if(options.command == Command.ANNOTATE) {
+            setPassedAnnotateOptions(options, args);
         }
     }
 
@@ -1405,15 +1407,6 @@ public class UserInputPrompter {
             options.stopOnMissingMeta = Y_PATTERN.matcher(args.getOptionValues("m").get(0)).matches();
             options.isStopOnMissingMetaDef = true;
         }
-
-        /*if (args.getOptionNames().contains("stop-missing-id") && !args.getOptionValues("stop-missing-id").isEmpty()) {
-            options.stopOnMissingMeta = Y_PATTERN.matcher(args.getOptionValues("stop-missing-id").get(0)).matches();
-            options.isStopOnMissingMetaDef = true;
-        }
-        if (args.getOptionNames().contains("i") && !args.getOptionValues("i").isEmpty()) {
-            options.stopOnMissingId = Y_PATTERN.matcher(args.getOptionValues("i").get(0)).matches();
-            options.isStopOnMissingIdDef = true;
-        }*/
     }
 
     void setPassedDepositOptions(CommandOptions options, ApplicationArguments args) {
@@ -1545,7 +1538,53 @@ public class UserInputPrompter {
     }
 
     void setPassedAnnotateOptions(CommandOptions options, ApplicationArguments args) {
+        if (args.getOptionNames().contains("input-file") && !args.getOptionValues("input-file").isEmpty()) {
+            options.inputFile = args.getOptionValues("input-file").get(0);
+        }
+        if (args.getOptionNames().contains("i") && !args.getOptionValues("i").isEmpty()) {
+            options.inputFile = args.getOptionValues("i").get(0);
+        }
 
+        if (args.getOptionNames().contains("meta-file") && !args.getOptionValues("meta-file").isEmpty()) {
+            options.metaFile = args.getOptionValues("meta-file").get(0);
+        }
+        if (args.getOptionNames().contains("m") && !args.getOptionValues("m").isEmpty()) {
+            options.metaFile = args.getOptionValues("m").get(0);
+        }
+
+        if (args.getOptionNames().contains("output-file") && !args.getOptionValues("output-file").isEmpty()) {
+            options.outputFile = args.getOptionValues("output-file").get(0);
+        }
+        if (args.getOptionNames().contains("f") && !args.getOptionValues("f").isEmpty()) {
+            options.outputFile = args.getOptionValues("f").get(0);
+        }
+
+        if (args.getOptionNames().contains("overwrite") && !args.getOptionValues("overwrite").isEmpty()) {
+            options.overwrite = Y_PATTERN.matcher(args.getOptionValues("overwrite").get(0)).matches();
+            options.isOverwriteDef = true;
+        }
+        if (args.getOptionNames().contains("o") && !args.getOptionValues("o").isEmpty()) {
+            options.overwrite = Y_PATTERN.matcher(args.getOptionValues("o").get(0)).matches();
+            options.isOverwriteDef = true;
+        }
+
+        if (args.getOptionNames().contains("stop-missing-id") && !args.getOptionValues("stop-missing-id").isEmpty()) {
+            options.stopOnMissingId = Y_PATTERN.matcher(args.getOptionValues("stop-missing-id").get(0)).matches();
+            options.isStopOnMissingIdDef = true;
+        }
+        if (args.getOptionNames().contains("d") && !args.getOptionValues("d").isEmpty()) {
+            options.stopOnMissingId = Y_PATTERN.matcher(args.getOptionValues("d").get(0)).matches();
+            options.isStopOnMissingIdDef = true;
+        }
+
+        if (args.getOptionNames().contains("stop-missing-metadata") && !args.getOptionValues("stop-missing-metadata").isEmpty()) {
+            options.stopOnMissingMeta = Y_PATTERN.matcher(args.getOptionValues("stop-missing-metadata").get(0)).matches();
+            options.isStopOnMissingMetaDef = true;
+        }
+        if (args.getOptionNames().contains("s") && !args.getOptionValues("s").isEmpty()) {
+            options.stopOnMissingMeta = Y_PATTERN.matcher(args.getOptionValues("s").get(0)).matches();
+            options.isStopOnMissingMetaDef = true;
+        }
     }
 
     boolean validateDirPath(String dirPath) {
