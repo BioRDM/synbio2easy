@@ -1345,6 +1345,7 @@ public class UserInputPrompter {
             if (args.getOptionNames().contains("e") && !args.getOptionValues("e").isEmpty()) {
                 options.metaFile = args.getOptionValues("e").get(0);
             }
+            setPassedUpdateOptions(options, args);
         } else if(options.command == Command.GENERATE) {
             setPassedGenerateOptions(options, args);
         } else if(options.command == Command.FLATTEN) {
@@ -1453,6 +1454,15 @@ public class UserInputPrompter {
             options.isOverwriteDef = true;
         }
 
+        if (args.getOptionNames().contains("password") && !args.getOptionValues("password").isEmpty()) {
+            options.password = args.getOptionValues("password").get(0);
+        }
+        if (args.getOptionNames().contains("p") && !args.getOptionValues("p").isEmpty()) {
+            options.password = args.getOptionValues("p").get(0);
+        }
+    }
+
+    void setPassedUpdateOptions(CommandOptions options, ApplicationArguments args) {
         if (args.getOptionNames().contains("password") && !args.getOptionValues("password").isEmpty()) {
             options.password = args.getOptionValues("password").get(0);
         }
