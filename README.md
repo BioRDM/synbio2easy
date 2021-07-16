@@ -63,7 +63,7 @@ The CLI client requires certain parameters to be specified at runtime, and will 
 --filename-prefix=library --stop-missing-metadata=N --version=1.0
 ```
 
-**Mac/Linux Terminal**
+##### Mac/Linux Terminal
 ```shell
 /usr/bin/java -jar ./target/SynBioHub-CLI.jar generate \
 --output-dir=examples/library --template-file=examples/template.xml --meta-file=examples/library_def.xlsx \
@@ -71,14 +71,14 @@ The CLI client requires certain parameters to be specified at runtime, and will 
 ```
 
 #### Flatten
-**Windows PowerShell**
+##### Windows PowerShell
 ```shell
 & "C:\Java\jdk-16.0.1\bin\java" -jar .\target\SynBioHub-CLI.jar flatten `
 --input-file=examples/library/library.1.xml --output-file=examples/library/library_flattened.1.xml `
 --all-roots=Y --suffix=_flat
 ```
 
-**Mac/Linux Terminal**
+##### Mac/Linux Terminal
 ```shell
 /usr/bin/java -jar ./target/SynBioHub-CLI.jar flatten \
 --input-file=examples/library/library.1.xml --output-file=examples/library/library_flattened.1.xml \
@@ -86,7 +86,7 @@ The CLI client requires certain parameters to be specified at runtime, and will 
 ```
 
 #### Annotate
-**Windows PowerShell**
+##### Windows PowerShell
 ```shell
 & "C:\Java\jdk-16.0.1\bin\java" -jar .\target\SynBioHub-CLI.jar annotate `
 --input-file=examples/library/library_flattened.1.xml --meta-file=examples/flat_annotation.xlsx `
@@ -94,7 +94,7 @@ The CLI client requires certain parameters to be specified at runtime, and will 
 --stop-missing-id=N --overwrite=N
 ```
 
-**Mac/Linux Terminal**
+##### Mac/Linux Terminal
 ```shell
 /usr/bin/java -jar ./target/SynBioHub-CLI.jar annotate \
 --input-file=examples/library/library_flattened.1.xml --meta-file=examples/flat_annotation.xlsx \
@@ -103,14 +103,14 @@ The CLI client requires certain parameters to be specified at runtime, and will 
 ```
 
 #### Deposit
-**Windows PowerShell**
+##### Windows PowerShell
 ```shell
 & "C:\Java\jdk-16.0.1\bin\java" -jar .\target\SynBioHub-CLI.jar deposit `
 --username=j.hay@epcc.ed.ac.uk --dir=examples/upload --file-extension=.xml --multi=N `
 --create-new=Y --name="library 14-07-21" --url=https://synbiohub.org/ --version=1.0
 ```
 
-**Mac/Linux Terminal**
+##### Mac/Linux Terminal
 ```shell
 /usr/bin/java -jar ./target/SynBioHub-CLI.jar deposit \
 --username=j.hay@epcc.ed.ac.uk --dir=examples/upload --file-extension=.xml --multi=N \
@@ -118,7 +118,7 @@ The CLI client requires certain parameters to be specified at runtime, and will 
 ```
 
 #### Template4Update
-**Windows PowerShell**
+##### Windows PowerShell
 ```shell
 & "C:\Java\jdk-16.0.1\bin\java" -jar .\target\SynBioHub-CLI.jar template4update `
 --output-file=examples/library/template_4_update.xlsx `
@@ -126,7 +126,7 @@ The CLI client requires certain parameters to be specified at runtime, and will 
 --username=j.hay@epcc.ed.ac.uk
 ```
 
-**Mac/Linux Terminal**
+##### Mac/Linux Terminal
 ```shell
 /usr/bin/java -jar ./target/SynBioHub-CLI.jar template4update \
 --output-file=examples/library/template_4_update.xlsx \
@@ -135,7 +135,7 @@ The CLI client requires certain parameters to be specified at runtime, and will 
 ```
 
 #### Update
-**Windows PowerShell**
+##### Windows PowerShell
 ```shell
 & "C:\Java\jdk-16.0.1\bin\java" -jar .\target\SynBioHub-CLI.jar update `
 --meta-file=examples/library/template_4_update.xlsx `
@@ -143,7 +143,7 @@ The CLI client requires certain parameters to be specified at runtime, and will 
 --username=j.hay@epcc.ed.ac.uk
 ```
 
-**Mac/Linux Terminal**
+##### Mac/Linux Terminal
 ```shell
 /usr/bin/java -jar ./target/SynBioHub-CLI.jar update \
 --meta-file=examples/library/template_4_update.xlsx \
@@ -152,14 +152,14 @@ The CLI client requires certain parameters to be specified at runtime, and will 
 ```
 
 #### Clean
-**Windows PowerShell**
+##### Windows PowerShell
 ```shell
 & "C:\Java\jdk-16.0.1\bin\java" -jar .\target\SynBioHub-CLI.jar clean `
 --input-file=examples/library/library_downloaded.1.xml --output-file=examples/library/library_downloaded_cleaned.1.xml `
 --namespace=http://biordm.sbs.ed.ac.uk --remove-collections=Y
 ```
 
-**Mac/Linux Terminal**
+##### Mac/Linux Terminal
 ```shell
 /usr/bin/java -jar ./target/SynBioHub-CLI.jar clean \
 --input-file=examples/library/library_downloaded.1.xml --output-file=examples/library/library_downloaded_cleaned.1.xml \
