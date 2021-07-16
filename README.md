@@ -54,6 +54,58 @@ The CLI client requires certain parameters to be specified at runtime, and will 
 | Username             | Your username for the target SynBioHub server (usually your email address)    |   -    |
 | Password             | The password for your user on the target SynBioHub server                     |   -    |
 
+### Examples
+#### Generate
+```shell
+& "D:\Program Files\Java\jdk-16.0.1\bin\java" -jar .\target\SynBioHub-CLI.jar generate `
+--output-dir=examples/library --template-file=examples/template.xml --meta-file=examples/library_def.xlsx `
+--filename-prefix=library --stop-missing-metadata=N --version=1.0
+```
+
+#### Flatten
+```shell
+& "D:\Program Files\Java\jdk-16.0.1\bin\java" -jar .\target\SynBioHub-CLI.jar flatten `
+--input-file=examples/library/library.1.xml --output-file=examples/library/library_flattened.1.xml `
+--all-roots=Y --suffix=_flat
+```
+
+#### Annotate
+```shell
+& "D:\Program Files\Java\jdk-16.0.1\bin\java" -jar .\target\SynBioHub-CLI.jar annotate `
+--input-file=examples/library/library_flattened.1.xml --meta-file=examples/flat_annotation.xlsx `
+--output-file=examples/library/library_flattened_annotated.1.xml --stop-missing-metadata=N `
+--stop-missing-id=N --overwrite=N
+```
+
+#### Deposit
+```shell
+& "D:\Program Files\Java\jdk-16.0.1\bin\java" -jar .\target\SynBioHub-CLI.jar deposit `
+--username=j.hay@epcc.ed.ac.uk --dir=examples/upload --file-extension=.xml --multi=N `
+--create-new=Y --name="library 14-07-21" --url=https://synbiohub.org/ --version=1.0
+```
+
+#### Template4Update
+```shell
+& "D:\Program Files\Java\jdk-16.0.1\bin\java" -jar .\target\SynBioHub-CLI.jar template4update `
+--output-file=examples/library/template_4_update.xlsx `
+--url=https://synbiohub.org/user/jhay/library_14_07_21/library_14_07_21_collection/1.0 `
+--username=j.hay@epcc.ed.ac.uk
+```
+
+#### Update
+```shell
+& "D:\Program Files\Java\jdk-16.0.1\bin\java" -jar .\target\SynBioHub-CLI.jar update `
+--meta-file=examples/library/template_4_update.xlsx `
+--url=https://synbiohub.org/user/jhay/library_14_07_21/library_14_07_21_collection/1.0 `
+--username=j.hay@epcc.ed.ac.uk
+```
+
+#### Clean
+```shell
+& "D:\Program Files\Java\jdk-16.0.1\bin\java" -jar .\target\SynBioHub-CLI.jar clean `
+--input-file=examples/library/library_downloaded.1.xml --output-file=examples/library/library_downloaded_cleaned.1.xml `
+--namespace=http://biordm.sbs.ed.ac.uk --remove-collections=Y
+```
 
 ## Development
 ### Spring Boot
