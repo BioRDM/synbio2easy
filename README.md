@@ -54,6 +54,21 @@ The CLI client requires certain parameters to be specified at runtime, and will 
 | Username             | Your username for the target SynBioHub server (usually your email address)    |   -    |
 | Password             | The password for your user on the target SynBioHub server                     |   -    |
 
+### CLI Parameters
+#### Generate
+
+| CLI Parameter (Long) | CLI Parameter (Short) | Description                                                                                                            | Default Value |
+|----------------------|-----------------------|------------------------------------------------------------------------------------------------------------------------|---------------|
+| --template-file      | -t                    | The absolute or relative path to the template file from which to generate the SBOL document library                    | -             |
+| --meta-file          | -f                    | The absolute or relative path to the MS Excel file containing properties of constructs to be generated in SBOL library | -             |
+| --filename-prefix    | -p                    | The filename for the generated SBOL document                                                                           | "library"     |
+| --version            | -v                    | The version to assign to the designs generated in the SBOL documents                                                   | 1.0           |
+| --output-dir         | -d                    | The absolute or relative path to the output directory where the generated SBOL document files will be created          | -             |
+| --stop-missing-meta  | -m                    | Whether the generation process should halt if missing metadata is encountered for a design in the Excel file           | No            |
+
+#### Flatten
+
+
 ### Examples
 #### Generate
 ##### Windows PowerShell
