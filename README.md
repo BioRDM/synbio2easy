@@ -56,7 +56,7 @@ The CLI client requires certain parameters to be specified at runtime, and will 
 
 ### Examples
 #### Generate
-**Windows PowerShell**
+##### Windows PowerShell
 ```shell
 & "C:\Java\jdk-16.0.1\bin\java" -jar .\target\SynBioHub-CLI.jar generate `
 --output-dir=examples/library --template-file=examples/template.xml --meta-file=examples/library_def.xlsx `
