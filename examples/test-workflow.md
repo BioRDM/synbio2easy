@@ -32,14 +32,37 @@ the template's abstract components.
 We will start the tool, specify where the input files are located, and used the default values for most of the parameters.
 
 1.      Type ```java -jar SynBio2Easy.jar generate```
-2.	Type in the name of the template file, “template.xml” then <ENTER> when asked to specify the template file
-3.	Type in the name of the Excel file that defines the new components, “library_def.xlsx” then <ENTER>
-4.	Just press <ENTER> to accept the default ‘library’ filename prefix (the output file will be called library.1.xml)
-5.	Just press <ENTER> to accept the default ‘1.0’ version string
-6.	Just press <ENTER> to accept the default output directory (‘library’ in our case).
+2.	Type in the name of the template file, `template.xml` then <ENTER> when asked to specify the template file
+3.	Type in the name of the Excel file that defines the new components, `library_def.xlsx` then <ENTER>
+4.	Just press <ENTER> to accept the default `library` filename prefix (the output file will be called library.1.xml)
+5.	Just press <ENTER> to accept the default `1.0` version string
+6.	Just press <ENTER> to accept the default output directory (`library` in our case).
 7.      Press ENTER on other questions to use the default silent errors handling
 
 The program creates a file `library.1.xml` under `examples/library` folder.
 
+Check how the details in Excel file were used to create the 3 plasmids.
 
+Alternatively you can use the inlined command parameters as bellow, avoiding the interactive prompt:
 
+```
+java -jar SynBio2Easy.jar generate `
+--output-dir=library --template-file=template.xml --meta-file=library_def.xlsx `
+--filename-prefix=library --version=1.0 --stop-missing-metadata=N 
+```
+
+In the rest of the workflow we will use the inlined command parameters,
+but you can always start the program without any and answer the guided questions.
+
+We also assume that you used the same parameters as us in all the previous steps.
+
+## Flatten
+
+In this scenario, the user intends to flatten the hierarchy of components and sequence annotations contained in an SBOL document. 
+Such 'flattened', simple annotated sequences can then be visualized or exported to GenBank.
+
+We will use `libary/library.1.xml` from the previous example as the input.
+
+```
+java -jar SynBio2Easy.jar flatten --input-file=library/library.1.xml --output-file=library/library_flattened.1.xml --all-roots=Y --suffix=_flat
+```
