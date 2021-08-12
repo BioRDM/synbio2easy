@@ -96,7 +96,7 @@ public class UserInputPrompter {
     String promptForCommand() {
 
         console.printf("%n");
-        console.printf("Welcome to the SynBioHub Client!%n");
+        console.printf("Welcome to the SynBio2Easy tool!%n");
         console.printf("To exit the application at any time, press <CTRL> + C%n");
 
         String command = "";

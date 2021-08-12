@@ -23,6 +23,25 @@ You should see a version text. In case of error follow a guide how to install ja
 * extract files from examples.zip into a folder, we assume it is called 'examples'
 * copy the SynBio2Easy.jar into the 'examples' folder
 
+### Running the tool
+* start a terminal/console window in your system
+* navigate in the terminal to the 'examples' folder where you stored the SynBio2Easy.jar and examples files
+* type
+```shell
+java -jar SynBio2Easy.jar
+```
+and press enter.
+
+The simple, interactive, command line program starts. You can choose one of the required operations
+and then you will be prompted for the necessary parameters and inputs. 
+Each prompt contains short description of the parameters asked as well as sensible defaults.
+
+### Example workflow
+The best way to learn this tool is by trying it with our example workflow. 
+
+Follow our step by step guide document [test-workflow.md](examples/test-workflow.md)
+and examine the provided input files and the outcomes of each of the available operations.
+
 
 
 ## SBOL Transformer Library Features
