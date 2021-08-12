@@ -102,7 +102,7 @@ public class UpdateHandler {
                 continue;
             }
             
-            boolean success = updateRecord(definition.get(), designUri.get(), meta, metaFormat, overwriteDesc, session);
+            boolean success = updateRecord(definition.get(), designUri.get(), meta, overwriteDesc, session);
             if (success) {
                 status.successful.add(displayId);
             } else {
@@ -140,7 +140,7 @@ public class UpdateHandler {
         
     }    
 
-    boolean updateRecord(ComponentDefinition component, String componentUri, MetaRecord meta, MetaFormat metaFormat, boolean overwrite, String session)  {
+    boolean updateRecord(ComponentDefinition component, String componentUri, MetaRecord meta, boolean overwrite, String session)  {
         
         String displayId = component.getDisplayId();
         String key = meta.key.orElse("");
@@ -154,7 +154,10 @@ public class UpdateHandler {
         }
         
         try {
-            attachFileToDesign(component, componentUri, meta.attachment, overwrite, session);
+            if (meta.attachment.isPresent()) {
+                String attachment = annotator.parseTemplate(meta.attachment.get(), displayId, key, name);
+                attachFileToDesign(component, componentUri, attachment, overwrite, session);
+            }
 
             if (meta.description.isPresent()) {
                 annotator.addDescription(component, meta.description, overwrite, displayId, key, name);
@@ -312,10 +315,10 @@ public class UpdateHandler {
         }
     }
     
-    void attachFileToDesign(ComponentDefinition component, String componentUri, Optional<String> attachment, boolean overwrite, String session) throws SynBioClient.SynBioClientException {
-        if (attachment.isEmpty()) return;
+    void attachFileToDesign(ComponentDefinition component, String componentUri, String attachmentPath, boolean overwrite, String session) throws SynBioClient.SynBioClientException {
+        if (attachmentPath.isBlank()) return;
         
-        Path file = Paths.get(attachment.get());
+        Path file = Paths.get(attachmentPath);
         if (!Files.isRegularFile(file))
             throw new IllegalArgumentException("Cant read file: "+file);
         

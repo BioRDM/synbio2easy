@@ -395,6 +395,33 @@ public class UserInputPrompter {
             console.printf("Collection URL: %s", options.url);
             console.printf("%n");
         }
+        
+        if (options.isOverwriteDef == false && options.overwrite == false) {
+            console.printf("Do you wish to overwrite existing descriptions and comments if they exist (Y) or append to them (N)?%n");
+            String overwriteAns = console.readLine("Y | N [<ENTER> for 'N' if you are not sure]: ").strip();
+
+            if(overwriteAns.isEmpty()) {
+                overwriteAns = "N";
+            }
+
+            while(!Y_N_PATTERN.matcher(overwriteAns).matches()) {
+                overwriteAns = console.readLine("Y | N [<ENTER> for 'N' if you are not sure]: ").strip();
+
+                if(overwriteAns.isEmpty()) {
+                    overwriteAns = "N";
+                }
+            }
+
+            if (Y_PATTERN.matcher(overwriteAns).matches()) {
+                options.overwrite = true;
+            } else {
+                options.overwrite = false;
+            }
+        } else {
+            console.printf("%n");
+            console.printf("Overwrite: %s", options.overwrite);
+            console.printf("%n");
+        }        
 
         console.printf("%n");
 
@@ -415,6 +442,7 @@ public class UserInputPrompter {
             console.printf("Password: *****");
         }
 
+        
         options.crateNew = false;
         options.overwrite = true;
 

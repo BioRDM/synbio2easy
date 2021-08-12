@@ -66,11 +66,11 @@ public class SynBioClientIntTest {
         synBioCollUrl = synBioUrl+"user/test/Testupload/Testupload_collection/1";
         compId = "cs0004_sll0558";
         
-        //sbolFilePath = Paths.get("D://temp//sbol//cyano_sl1099.xml");
+        sbolFilePath = Paths.get("D://temp//sbol//cyano_sl1099.xml");
         
 
 
-        //Assumptions.assumeTrue(Arrays.asList(this.environment.getActiveProfiles()).contains("integration"));
+        Assumptions.assumeTrue(Arrays.asList(this.environment.getActiveProfiles()).contains("integration"));
     }
 
     @Test
