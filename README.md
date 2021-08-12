@@ -1,8 +1,29 @@
-# SynBio Toolkit
-A collection of biologist-friendly tools for interacting with SBOL and SynBioHub
+# SynBio2Easy 
+A biologist-friendly tool for batch operations on SBOL designs with metadata input from Excel.
 
 ## Purpose
-The aim of this toolkit is to provide convenient solutions for streamlining common data management tasks performed by biological researchers who work with designs libraries rather than individual sbol files. For example, it helps with multifiles upload to an instance of [SynBioHub](https://github.com/SynBioHub/synbiohub) like the public [synbiohub.org](https://synbiohub.org/) repository or permits batch metadata data update. There are two main components in the toolkit: \'SBOL Transformer\' and \'SynBioHub CLI Client\'.
+The aim of this toolkit is to provide convenient solutions for streamlining common data management 
+tasks performed by biological researchers who work with designs libraries rather than individual sbol files. 
+
+For example, it helps with multifiles upload to an instance of [SynBioHub](https://github.com/SynBioHub/synbiohub) 
+like the public [synbiohub.org](https://synbiohub.org/) repository.
+
+It permits batch metadata data update either off-line on a sbol document or online on records in SynBioHub. 
+
+## Quick start
+
+### Installation
+* check if java version 11 or higher is available in the system, type in a terminal
+```shell
+java -version
+```
+You should see a version text. In case of error follow a guide how to install java on your machine.
+
+* download SynBio2Easy.jar and examples.zip from the latest release [SynBio2Easy](https://github.com/BioRDM/synbio2easy/releases)
+* extract files from examples.zip into a folder, we assume it is called 'examples'
+* copy the SynBio2Easy.jar into the 'examples' folder
+
+
 
 ## SBOL Transformer Library Features
 ### SBOL Generation
