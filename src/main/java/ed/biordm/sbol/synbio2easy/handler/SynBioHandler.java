@@ -291,8 +291,14 @@ public class SynBioHandler {
 
             // some other params as needed by the API
             // for example overwrite is needed here not only for the creation
-            client.deposit(parameters.sessionToken, collectionUrl, file,
+            try {
+                client.deposit(parameters.sessionToken, collectionUrl, file,
                     client.getOverwriteParam(parameters, true));
+                System.out.printf("Deposited file <%s> into collection <%s>%n%n", file.getFileName().toString(), collectionUrl);                
+            } catch (SynBioClient.SynBioClientException| RuntimeException e) {
+                System.out.printf("Failed to deposit file <%s> into collection <%s>%n%n", file.getFileName().toString(), collectionUrl);
+                logger.error("Failed to deposit file: "+file.getFileName()+"; "+e.getMessage(),e);
+            }
         }
     }
 

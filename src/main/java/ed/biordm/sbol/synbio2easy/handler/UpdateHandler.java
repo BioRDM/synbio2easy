@@ -5,10 +5,18 @@
  */
 package ed.biordm.sbol.synbio2easy.handler;
 
+import ed.biordm.sbol.sbol2easy.meta.ExcelMetaReader;
 import ed.biordm.sbol.synbio2easy.client.SynBioClient;
 import ed.biordm.sbol.synbio2easy.dom.CommandOptions;
 import static ed.biordm.sbol.sbol2easy.meta.ExcelMetaReader.*;
+import ed.biordm.sbol.sbol2easy.meta.MetaFormat;
+import ed.biordm.sbol.sbol2easy.meta.MetaHelper;
+import static ed.biordm.sbol.sbol2easy.meta.MetaHelper.setTemplateVariable;
+import ed.biordm.sbol.sbol2easy.meta.MetaRecord;
+import ed.biordm.sbol.sbol2easy.transform.ComponentAnnotator;
 import ed.biordm.sbol.sbol2easy.transform.Outcome;
+import ed.biordm.sbol.synbio2easy.client.SynBioClient.SynBioClientException;
+import static ed.biordm.sbol.synbio2easy.client.SynBioClient.encodeURL;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -16,13 +24,18 @@ import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.sbolstandard.core2.ComponentDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,20 +50,135 @@ public class UpdateHandler {
     final SynBioClient client;
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    final String SBOL_OBJ_TYPE;
-    final String SBOL_DISP_ID_TYPE;
+
     final int MAX_NUM_COLUMNS;
+    
+    final MetaHelper metaHelper = new MetaHelper();
+    final ComponentAnnotator annotator = new ComponentAnnotator();
+    
 
     @Autowired
     public UpdateHandler(SynBioClient client) {
         // that should be probably injected in autowired constructor
         //this.jsonParser = JsonParserFactory.getJsonParser();        
         this.client = client;
-        this.SBOL_DISP_ID_TYPE = client.encodeURL("<http://sbols.org/v2#displayId>");
-        this.SBOL_OBJ_TYPE = "ComponentDefinition";
         this.MAX_NUM_COLUMNS = 15;
     }
 
+    public Outcome updateRecords(String collUrl, Path metaFile, boolean overwriteDesc, String session) throws IOException {
+        
+        ExcelMetaReader metaReader = new ExcelMetaReader();
+        
+        MetaFormat metaFormat = metaReader.readMetaFormat(metaFile);
+        validateMetaFormat(metaFormat);
+        
+        List<MetaRecord> metaData = metaReader.readMeta(metaFile, metaFormat);
+        metaData = metaHelper.calculateIdFromKey(metaData);
+    
+        Outcome status = new Outcome();
+        
+        
+        return updateRecords(collUrl, metaData, metaFormat, overwriteDesc, status, session);
+        
+    }
+    
+    Outcome updateRecords(String collUrl, List<MetaRecord> metaData, MetaFormat metaFormat, boolean overwriteDesc, Outcome status, String session) {
+
+        collUrl = versionedCollection(collUrl, session);
+        
+        for (MetaRecord meta : metaData) {
+            String displayId = meta.displayId.get();
+            
+            Optional<String> designUri = findDesignUri(collUrl, displayId, session);
+            
+            if (designUri.isEmpty()) {
+                status.missingId.add(displayId);
+                continue;
+            }
+            
+            Optional<ComponentDefinition> definition = findCompDefintion(designUri.get(),session);
+            if (definition.isEmpty()) {
+                status.missingId.add(displayId);
+                continue;
+            }
+            
+            boolean success = updateRecord(definition.get(), designUri.get(), meta, metaFormat, overwriteDesc, session);
+            if (success) {
+                status.successful.add(displayId);
+            } else {
+                status.failed.add(displayId);
+            }
+
+        }
+
+        return status;    
+    }    
+    
+    void validateMetaFormat(MetaFormat metaFormat) {
+        if (metaFormat.displayId.isEmpty())
+            throw new IllegalArgumentException("DisplayId must be present in the meta description table");
+    } 
+    
+    String versionedCollection(String collUrl, String session) {
+        return client.verifyCollectionUrlVersion(collUrl, session);
+    }
+    
+    Optional<String> findDesignUri(String collUrl, String displayId, String session) {
+        
+        return client.findDesignUriInCollection(session, collUrl, displayId);
+    }
+    
+    Optional<ComponentDefinition> findCompDefintion(String designUri, String session) {
+        
+        try {
+            ComponentDefinition def = client.getComponentDefition(session, designUri);
+            return Optional.ofNullable(def);
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+            return Optional.empty();
+        }
+        
+    }    
+
+    boolean updateRecord(ComponentDefinition component, String componentUri, MetaRecord meta, MetaFormat metaFormat, boolean overwrite, String session)  {
+        
+        String displayId = component.getDisplayId();
+        String key = meta.key.orElse("");
+        
+        String name = component.getName() != null ? component.getName() : "";
+        if (meta.name.isPresent()) {
+            String template = meta.name.get();
+            template = setTemplateVariable("displayId", displayId, template);
+            template = setTemplateVariable("key", key, template);
+            name = template;
+        }
+        
+        try {
+            attachFileToDesign(component, componentUri, meta.attachment, overwrite, session);
+
+            if (meta.description.isPresent()) {
+                annotator.addDescription(component, meta.description, overwrite, displayId, key, name);
+                String desc = annotator.getDescription(component);
+                updateDesignDescription(componentUri, desc, session);
+            }
+            
+            if (meta.notes.isPresent()) {
+                annotator.addNotes(component, meta.notes, overwrite, displayId, key, name);
+                String note = annotator.getNotes(component);
+                updateDesignNotes(componentUri, note, session);
+            }
+
+            
+        } catch (IllegalArgumentException | SynBioClientException e) {
+            logger.error("Could not update "+displayId+"; "+e.getMessage(),e);
+            return false;
+        }
+        
+        return true;
+    }    
+    
+    
+    
     public Outcome processUpdateExcel(CommandOptions parameters) throws URISyntaxException, IOException {
         FeaturesReader featuresReader = new FeaturesReader();
         String url = client.hubFromUrl(parameters.url);
@@ -91,7 +219,7 @@ public class UpdateHandler {
                 } catch(Exception e) {
                     // abort the run and print out all the successful rows up to this point
                     outputDesigns(updatedDesigns);
-                    throw(e);
+                    throw new IllegalStateException(e);
                 }
             });
         }
@@ -103,7 +231,7 @@ public class UpdateHandler {
 
     protected void processUpdateRow(CommandOptions parameters, String cwd, 
             String collUrl, String url, String displayId, List<String> colHeaders,
-            List<String> colVals, Map<String, String> updatedDesigns, Outcome outcome) {
+            List<String> colVals, Map<String, String> updatedDesigns, Outcome outcome) throws SynBioClient.SynBioClientException {
         String attachFilename = null;
         String description = null;
         String notes = null;
@@ -120,8 +248,8 @@ public class UpdateHandler {
             notes = colVals.get(colHeaders.indexOf(NOTES_HEADER));
         }
 
-        String requestParams = "/objectType="+SBOL_OBJ_TYPE+"&collection="+collUrl+
-            "&"+SBOL_DISP_ID_TYPE+"='"+displayId+"'&/?offset=0&limit=10";
+        String requestParams = ""; //= "/objectType="+SBOL_OBJ_TYPE+"&collection="+collUrl+
+        //    "&"+SBOL_DISP_ID_TYPE+"='"+displayId+"'&/?offset=0&limit=10";
 
         // String metadata = client.searchMetadata(url, requestParams, parameters.sessionToken);
         //Object design = client.getSubmissionByDisplayId();
@@ -167,7 +295,7 @@ public class UpdateHandler {
     }
 
     protected void attachFileToDesign(CommandOptions parameters, String cwd,
-            String designUri, String attachFilename) {
+            String designUri, String attachFilename) throws SynBioClient.SynBioClientException {
         if (attachFilename != null && !attachFilename.isEmpty()) {
             File attachFile = new File(attachFilename);
 
@@ -183,6 +311,16 @@ public class UpdateHandler {
             }
         }
     }
+    
+    void attachFileToDesign(ComponentDefinition component, String componentUri, Optional<String> attachment, boolean overwrite, String session) throws SynBioClient.SynBioClientException {
+        if (attachment.isEmpty()) return;
+        
+        Path file = Paths.get(attachment.get());
+        if (!Files.isRegularFile(file))
+            throw new IllegalArgumentException("Cant read file: "+file);
+        
+        client.attachFile(session, componentUri, file, overwrite);
+    }    
 
     protected void updateDesignDescription(CommandOptions parameters, String cwd,
             String designUri, String description) {
@@ -190,13 +328,28 @@ public class UpdateHandler {
             client.appendToDescription(parameters.sessionToken, designUri+"/", description);
         }
     }
+    
+    void updateDesignDescription(String componentUri, String desc, String session) {
+        if (desc == null) return;
+        client.setMutableDescription(session, componentUri, desc);
+    }    
 
+    
     protected void updateDesignNotes(CommandOptions parameters, String cwd,
             String designUri, String notes) {
         if (notes != null && !notes.isEmpty()) {
             client.appendToNotes(parameters.sessionToken, designUri+"/", notes);
         }
     }
+    
+
+    void updateDesignNotes(String componentUri, String note, String session) {
+        
+        if (note == null) return;
+        
+        client.setNotes(session, componentUri, note);
+    }
+    
 
     protected void outputDesigns(Map<String, String> updatedDesigns) {
         // replace this with UI logger
@@ -215,4 +368,16 @@ public class UpdateHandler {
 
         System.out.println("");
     }
+
+
+
+
+
+
+
+
+
+
+
+
 }

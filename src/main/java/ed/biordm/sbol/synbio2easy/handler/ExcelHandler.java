@@ -87,7 +87,7 @@ public class ExcelHandler {
                 } catch(Exception e) {
                     // abort the run and print out all the successful rows up to this point
                     outputDesigns(updatedDesigns);
-                    throw(e);
+                    throw new IllegalStateException(e);
                 }
             });
         }
@@ -99,7 +99,7 @@ public class ExcelHandler {
 
     protected void processUpdateRow(CommandOptions parameters, String cwd, 
             String collUrl, String url, String displayId, List<String> colHeaders,
-            List<String> colVals, Map<String, String> updatedDesigns, Outcome outcome) {
+            List<String> colVals, Map<String, String> updatedDesigns, Outcome outcome) throws SynBioClient.SynBioClientException {
         String attachFilename = null;
         String description = null;
         String notes = null;
@@ -163,7 +163,7 @@ public class ExcelHandler {
     }
 
     protected void attachFileToDesign(CommandOptions parameters, String cwd,
-            String designUri, String attachFilename) {
+            String designUri, String attachFilename) throws SynBioClient.SynBioClientException {
         if (attachFilename != null && !attachFilename.isEmpty()) {
             File attachFile = new File(attachFilename);
 
