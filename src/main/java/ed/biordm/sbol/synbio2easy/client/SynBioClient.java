@@ -5,6 +5,7 @@
  */
 package ed.biordm.sbol.synbio2easy.client;
 
+import ed.biordm.sbol.sbol2easy.transform.CommonAnnotations;
 import ed.biordm.sbol.synbio2easy.dom.CommandOptions;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -62,6 +63,10 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 @Service
 public class SynBioClient {
 
+    
+    final String SBOL_DISP_ID_TYPE = encodeURL("<http://sbols.org/v2#displayId>");
+    final String SBOL_COMP_TYPE = "ComponentDefinition";
+    
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     final RestTemplateBuilder restBuilder;
     private static final Pattern COLL_URL_VERSION_PATTERN = Pattern.compile(".*/[0-9]+.*");
@@ -72,19 +77,23 @@ public class SynBioClient {
         this.jsonParser = JsonParserFactory.getJsonParser();
     }
 
-    public String hubFromUrl(String url) throws URISyntaxException {
-        URI collectionUri = new URI(url);
-        String scheme = collectionUri.getScheme();
-        String domain = collectionUri.getHost();
-        int port = collectionUri.getPort();
-        String collServerUrl = scheme.concat("://").concat(domain);
+    public String hubFromUrl(String url) {
+        try {
+            URI collectionUri = new URI(url);
+            String scheme = collectionUri.getScheme();
+            String domain = collectionUri.getHost();
+            int port = collectionUri.getPort();
+            String collServerUrl = scheme.concat("://").concat(domain);
 
-        if (port > 0) {
-            collServerUrl = collServerUrl.concat(":").concat(String.valueOf(port));
+            if (port > 0) {
+                collServerUrl = collServerUrl.concat(":").concat(String.valueOf(port));
+            }
+
+            collServerUrl = collServerUrl.concat("/");
+            return collServerUrl;
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Could not get base SynBioHub from "+url+": "+e.getMessage());
         }
-
-        collServerUrl = collServerUrl.concat("/");
-        return collServerUrl;
     }    
     
     public String login(String hubUrl, String user, String password) {
@@ -115,20 +124,15 @@ public class SynBioClient {
     
     // some other params as for API
     public void deposit(String sessionToken, String collectionUrl, Path file,
-            int overwriteMerge) {
+            int overwriteMerge) throws SynBioClientException {
         
-        String url;
-        try {
-            url = hubFromUrl(collectionUrl) + "submit";
-        } catch (URISyntaxException e) {
-            throw reportError("Could not derive base SynBioHub server URL", e);
-        }
+        String url= hubFromUrl(collectionUrl) + "submit";
 
         doDeposit(url, sessionToken, collectionUrl, file, overwriteMerge);
     }
 
     public void doDeposit(String url, String sessionToken, String collectionUrl,
-            Path file, int overwriteMerge) {
+            Path file, int overwriteMerge) throws SynBioClientException {
         HttpHeaders headers = authenticatedHeaders(sessionToken);
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN));
@@ -143,10 +147,22 @@ public class SynBioClient {
         try {
             String response = template.postForObject(url, reqEntity, String.class);
             logger.debug("Response from deposit request: "+response);
-            System.out.printf("Deposited file <%s> into collection <%s>%n%n", file.toString(), collectionUrl);
+            //System.out.printf("Deposited file <%s> into collection <%s>%n%n", file.toString(), collectionUrl);
         } catch (RuntimeException e) {
-            System.out.printf("Failed to deposit file <%s> into collection <%s>%n%n", file.toString(), collectionUrl);
+            //System.out.printf("Failed to deposit file <%s> into collection <%s>%n%n", file.toString(), collectionUrl);
             // throw reportError("Could not deposit", e);
+            String fileName = file.getFileName().toString();
+            throw new SynBioClientException("Could not deposit "+fileName+" into collection "+collectionUrl+"\t"+e.getMessage(),e);
+        }
+    }
+    
+    public static class SynBioClientException extends Exception {
+        SynBioClientException(String msg) {
+            super(msg);    
+        }
+        
+        SynBioClientException(String msg, Throwable err) {
+            super(msg, err);
         }
     }
 
@@ -218,7 +234,7 @@ public class SynBioClient {
                     throw reportError(errorMsg, new IllegalArgumentException("Invalid collection specified"));
                 }
             }
-        } catch (RuntimeException | URISyntaxException e) {
+        } catch (RuntimeException e) {
             throw reportError("Could not create new collection", e);
         }
 
@@ -383,16 +399,25 @@ public class SynBioClient {
     }
 
     public void attachFile(String sessionToken, String designUri,
-            String attachFilename, int overwriteMerge) {
+            String attachFilename, int overwriteMerge) throws SynBioClientException {
         String url = designUri + "attach";
 
         Path file = Paths.get(attachFilename);
 
         doDeposit(url, sessionToken, designUri, file, overwriteMerge);
     }
+    
+    public void attachFile(String sessionToken, String componentUri, Path file, boolean overwrite) throws SynBioClientException {
+        
+        if (!componentUri.endsWith("/")) 
+            componentUri+="/";
+        
+        String url = componentUri+"attach";
+        doDeposit(url, sessionToken, componentUri, file, getOverwriteParam(overwrite));
+    }    
 
     public void appendToDescription(String sessionToken, String designUri, String description) {
-        String designXml = getDesign(sessionToken, designUri);
+        String designXml = getDesignText(sessionToken, designUri);
         String currentDesc = getDesignAnnotation(designXml, designUri, CommonAnnotations.SBH_DESCRIPTION);
 
         if(currentDesc == null) {
@@ -403,9 +428,16 @@ public class SynBioClient {
 
         updateDesignText(sessionToken, designUri, newDesc, "updateMutableDescription");
     }
+    
+    public void setMutableDescription(String sessionToken, String componentUri, String newDesc) {
+       //if (!componentUri.endsWith("/")) 
+       //     componentUri+="/";
+       
+       updateDesignText(sessionToken, componentUri, newDesc, "updateMutableDescription"); 
+    }
 
     public void appendToNotes(String sessionToken, String designUri, String notes) {
-        String designXml = getDesign(sessionToken, designUri);
+        String designXml = getDesignText(sessionToken, designUri);
         String currentNotes = getDesignAnnotation(designXml, designUri, CommonAnnotations.SBH_NOTES);
 
         if(currentNotes == null) {
@@ -417,13 +449,13 @@ public class SynBioClient {
         updateDesignText(sessionToken, designUri, newNotes, "updateMutableNotes");
     }
 
+    public void setNotes(String sessionToken, String designUri, String newNotes) {
+
+        updateDesignText(sessionToken, designUri, newNotes, "updateMutableNotes");
+    }    
+    
     public void updateDesignText(String sessionToken, String designUri, String text, String endpoint) {
-        String url;
-        try {
-            url = hubFromUrl(designUri) + endpoint;
-        } catch (URISyntaxException e) {
-            throw reportError("Could not derive base SynBioHub server URL", e);
-        }
+        String url = hubFromUrl(designUri) + endpoint;
 
         // Need to remove any trailing slash as it will return a 401 otherwise
         if(designUri.endsWith("/")) {
@@ -432,7 +464,51 @@ public class SynBioClient {
         doEditPost(sessionToken, url, designUri, text);
     }
 
-    public String getDesign(String sessionToken, String designUri) {
+    
+    public Optional<String> findDesignUriInCollection(String session, String collUrl, String displayId) {
+        
+        final String encodedColUrl = encodeURL("<"+collUrl+">");
+        final String hub = hubFromUrl(collUrl);
+    
+        
+        String requestParams = "/objectType="+SBOL_COMP_TYPE+"&collection="+encodedColUrl+
+            "&"+SBOL_DISP_ID_TYPE+"='"+displayId+"'&/?offset=0&limit=10";
+
+        List<Object> designList = searchMetadata(hub, requestParams, session);
+
+        if(designList == null || designList.isEmpty()) 
+            return Optional.empty();
+
+        Object design = designList.get(0);
+
+        if (design instanceof Map) {
+            Map<String,Object> map = (Map<String,Object>) design;
+            String designUri = (String)map.get("uri");
+            
+            return Optional.of(designUri);
+        }
+        return Optional.empty();
+    }
+    
+    public ComponentDefinition getComponentDefition(String sessionToken, String designUri) throws IOException {
+        
+        String sbol = getDesignText(sessionToken, designUri);
+        
+        
+        try (InputStream is = new ByteArrayInputStream(sbol.getBytes(StandardCharsets.UTF_8))){
+            SBOLDocument doc = SBOLReader.read(is);
+            //doc.setDefaultURIprefix("http://bio.ed.ac.uk/a_mccormick/cyano_source/");
+            if (designUri.endsWith("/"))
+                designUri = removeLastMatchingChar(designUri, "/");
+            ComponentDefinition cmpDef = doc.getComponentDefinition(new URI(designUri));
+            
+            return cmpDef;
+        } catch (SBOLValidationException|SBOLConversionException| URISyntaxException e) {
+            throw new IOException(e.getClass().getSimpleName()+" "+e.getMessage(),e);
+        }         
+    }
+    
+    public String getDesignText(String sessionToken, String designUri) {
         HttpHeaders headers = authenticatedHeaders(sessionToken);
         headers.setAccept(Arrays.asList(MediaType.TEXT_PLAIN));
 
@@ -455,8 +531,18 @@ public class SynBioClient {
 
             return responseData;
         } catch (RuntimeException e) {
-            throw reportError("Could search submissions", e);
+            if (isNotFound(e)) throw new IllegalStateException("Not found: "+designUri);
+            
+            throw reportError("Could not get design text", e);
         }
+    }
+    
+    protected boolean isNotFound(RuntimeException  e) {
+        if (e instanceof HttpClientErrorException) {
+            HttpClientErrorException he = (HttpClientErrorException)e;
+            if (he.getStatusCode().equals(HttpStatus.NOT_FOUND)) return true;
+        }        
+        return false;
     }
 
     protected void doEditPost(String sessionToken, String url, String designUri, String data) {
@@ -530,18 +616,23 @@ public class SynBioClient {
 
     public String verifyCollectionUrlVersion(CommandOptions parameters)
             throws UnsupportedEncodingException, URISyntaxException {
-        String verCollUrl = parameters.url;
+        
+        return verifyCollectionUrlVersion(parameters.url, parameters.sessionToken);
+
+    }
+    
+    public String verifyCollectionUrlVersion(String verCollUrl, String sessionToken)
+            {
 
         boolean hasVersion = COLL_URL_VERSION_PATTERN.matcher(verCollUrl).matches();
 
         if(hasVersion == false) {
             // retrieve the latest version as the default if none provided in URL
             String requestParams = "/persistentIdentity=" +
-                    URLEncoder.encode("<"+verCollUrl+">", StandardCharsets.UTF_8.name()) +
-                    "&";
+                    encodeURL("<"+verCollUrl+">") + "&";
 
             // String metadata = this.searchMetadata(this.hubFromUrl(verCollUrl), requestParams, parameters.sessionToken);
-            List<Object> collList = this.searchMetadata(this.hubFromUrl(verCollUrl), requestParams, parameters.sessionToken);
+            List<Object> collList = this.searchMetadata(this.hubFromUrl(verCollUrl), requestParams, sessionToken);
 
             if(collList == null || collList.isEmpty()) {
                 String userMessage = "No collection found with persistent ID {}";
@@ -576,6 +667,18 @@ public class SynBioClient {
         return verCollUrl;
     }
 
+    public int getOverwriteParam(boolean isOverwrite) {
+
+        if(isOverwrite) {
+            // never want to accidentally overwrite files if they already exist
+            // when the user chose to create a new collection
+            return 3;
+        } else {
+            return 2;
+        }
+
+    }
+    
     public int getOverwriteParam(CommandOptions parameters, boolean isFile) {
         boolean isOverwrite = parameters.overwrite;
         int overwriteMerge = 0; // Assume we prevent overwriting if exists
@@ -611,4 +714,6 @@ public class SynBioClient {
             throw new IllegalStateException(e);
         }
     }
+
+
 }

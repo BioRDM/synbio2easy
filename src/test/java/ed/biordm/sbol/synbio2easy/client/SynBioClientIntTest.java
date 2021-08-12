@@ -5,8 +5,9 @@
  */
 package ed.biordm.sbol.synbio2easy.client;
 
+import ed.biordm.sbol.sbol2easy.transform.CommonAnnotations;
+import ed.biordm.sbol.sbol2easy.transform.ComponentUtil;
 import ed.biordm.sbol.synbio2easy.client.SynBioClient;
-import ed.biordm.sbol.synbio2easy.client.CommonAnnotations;
 import ed.biordm.sbol.synbio2easy.dom.Command;
 import ed.biordm.sbol.synbio2easy.dom.CommandOptions;
 import java.io.File;
@@ -17,12 +18,15 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import org.assertj.core.util.Arrays;
+import org.joda.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.io.TempDir;
+import org.sbolstandard.core2.ComponentDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
@@ -47,6 +51,7 @@ public class SynBioClientIntTest {
     String synBioPassword;
 
     String synBioCollUrl;
+    String compId;
     Path sbolFilePath;
     
     public SynBioClientIntTest() {
@@ -55,16 +60,17 @@ public class SynBioClientIntTest {
     @BeforeEach
     public void setUp() {
         synBioUrl = "http://localhost:7777/";
-        synBioUser = "test@test.com";
-        synBioPassword = "testpass";
+        synBioUser = "test@test.ed";
+        synBioPassword = "test";
 
-        synBioCollUrl = synBioUrl+"user/Johnny/johnny_collection_29_01_21/johnny_collection_29_01_21_collection/1.0";
-        sbolFilePath = Paths.get("D://temp//sbol//cyano_sl1099.xml");
+        synBioCollUrl = synBioUrl+"user/test/Testupload/Testupload_collection/1";
+        compId = "cs0004_sll0558";
         
-        synBioUser = "j.hay@epcc.ed.ac.uk";
-        synBioPassword = "admin";
+        //sbolFilePath = Paths.get("D://temp//sbol//cyano_sl1099.xml");
+        
 
-        Assumptions.assumeTrue(Arrays.asList(this.environment.getActiveProfiles()).contains("integration"));
+
+        //Assumptions.assumeTrue(Arrays.asList(this.environment.getActiveProfiles()).contains("integration"));
     }
 
     @Test
@@ -99,7 +105,7 @@ public class SynBioClientIntTest {
     }
 
     @Test
-    public void deposit() {
+    public void deposit() throws Exception {
         String token = client.login(synBioUrl, synBioUser, synBioPassword);
         System.out.println(token);
         assertNotNull(token);
@@ -110,7 +116,7 @@ public class SynBioClientIntTest {
     }
 
     @Test
-    public void multiCollectionDeposit() {
+    public void multiCollectionDeposit() throws Exception {
         String token = client.login(synBioUrl, synBioUser, synBioPassword);
         System.out.println(token);
         assertNotNull(token);
@@ -156,7 +162,7 @@ public class SynBioClientIntTest {
     }
 
     @Test
-    public void addSubCollectionDeposit() {
+    public void addSubCollectionDeposit() throws Exception {
         String token = client.login(synBioUrl, synBioUser, synBioPassword);
         System.out.println(token);
         assertNotNull(token);
@@ -231,7 +237,7 @@ public class SynBioClientIntTest {
     }
 
     @Test
-    public void testAttachFile() {
+    public void testAttachFile() throws Exception {
         String attachFilename = "../handler/NC_001499.gbk";
         File file = new File(getClass().getResource(attachFilename).getFile());
         attachFilename = file.getAbsolutePath();
@@ -304,6 +310,8 @@ public class SynBioClientIntTest {
         String designUri = "http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km/1.0.0/";
         client.updateDesignText(token, designUri, newNote, "updateMutableNotes");
     }
+    
+
 
     @Test
     public void testGetDesign() throws Exception {
@@ -312,11 +320,11 @@ public class SynBioClientIntTest {
         assertNotNull(token);
 
         String designUri = "http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km/1.0.0/";
-        String designXml = client.getDesign(token, designUri);
+        String designXml = client.getDesignText(token, designUri);
         assertTrue(designXml.contains("<sbol:persistentIdentity rdf:resource=\"http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km/backbone\"/>"));
 
         designUri = "http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km";
-        designXml = client.getDesign(token, designUri);
+        designXml = client.getDesignText(token, designUri);
         assertTrue(designXml.contains("<sbol:persistentIdentity rdf:resource=\"http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km\"/>"));
 
         // SBOL method - doesn't work cos the notes/description are sbh namespace
@@ -338,7 +346,7 @@ public class SynBioClientIntTest {
         String designUri = "http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km/1.0.0/";
 
         // get the SBOL document
-        String designXml = client.getDesign(token, designUri);
+        String designXml = client.getDesignText(token, designUri);
         // System.out.println(designXml);
 
         // get the existing description and notes from the document
@@ -353,7 +361,7 @@ public class SynBioClientIntTest {
         client.appendToNotes(token, designUri, notesToAppend);
 
         // verify the update was successful
-        String newDesignXml = client.getDesign(token, designUri);
+        String newDesignXml = client.getDesignText(token, designUri);
         // System.out.println(newDesignXml);
         String newDesc = client.getDesignAnnotation(newDesignXml, designUri, CommonAnnotations.SBH_DESCRIPTION);
         String newNotes = client.getDesignAnnotation(newDesignXml, designUri, CommonAnnotations.SBH_NOTES);
@@ -370,7 +378,7 @@ public class SynBioClientIntTest {
         String designUri = "http://localhost:7777/user/Johnny/johnny_child_collection/cyano_codA_Km/1.0.0/";
 
         // get the SBOL document
-        String designXml = client.getDesign(token, designUri);
+        String designXml = client.getDesignText(token, designUri);
 
         String description = client.getDesignAnnotation(designXml, designUri, CommonAnnotations.SBH_DESCRIPTION);
         
@@ -381,19 +389,125 @@ public class SynBioClientIntTest {
     public void testVerifyCollectionUrlVersion() throws URISyntaxException, UnsupportedEncodingException {
         CommandOptions parameters = new CommandOptions(Command.UPDATE);
 
-        String collPidUrl = "http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection";
-        parameters.url = collPidUrl;
+        //String collPidUrl = "http://localhost:7777/user/Johnny/johnny_child_collection/johnny_child_collection_collection";
+        String collUrl = synBioCollUrl;
+        String version = "1";
+        assertTrue(collUrl.endsWith("/"+version));
+        collUrl = collUrl.substring(0, collUrl.length()-2);
+        assertFalse(collUrl.endsWith("/"+version));
+        
+        parameters.url = collUrl;
         parameters.user = synBioUser;
         parameters.password = synBioPassword;
 
         String token = client.login(synBioUrl, synBioUser, synBioPassword);
-        System.out.println(token);
         assertNotNull(token);
 
         parameters.sessionToken = token;
-
         String verCollUrl = client.verifyCollectionUrlVersion(parameters);
 
-        assertEquals(collPidUrl.concat("/1.1-alpha"), verCollUrl);
+        //System.out.println(verCollUrl);
+        assertEquals(collUrl+"/"+version,verCollUrl);
     }
+    
+    @Test
+    public void findsUriForDisplayIdInCollection() throws Exception {
+        
+        String coll = synBioCollUrl;
+        String displayId = "missing";
+        
+        String token = client.login(synBioUrl, synBioUser, synBioPassword);
+        Optional<String> uri = client.findDesignUriInCollection(token, coll, displayId);
+        assertTrue(uri.isEmpty());
+        
+        displayId = compId;
+        uri = client.findDesignUriInCollection(token, coll, displayId);
+        //System.out.println(uri.get());
+        assertTrue(uri.isPresent());
+    }    
+    
+    @Test
+    public void getsDefinitionFromURI() throws Exception {
+        
+        String displayId = compId;
+        
+        String token = client.login(synBioUrl, synBioUser, synBioPassword);
+        
+        String uri = testURIFromId(displayId, token);
+        
+        ComponentDefinition def = client.getComponentDefition(token, uri);
+        assertNotNull(def);
+        assertEquals(compId, def.getDisplayId());
+        
+        String missing = uri+"xxx";
+        try {
+            def = client.getComponentDefition(token, missing);
+            fail();
+        } catch (IllegalStateException e) {
+            assertTrue(e.getMessage().startsWith("Not found"));
+        }
+    }
+    
+    String testURIFromId(String displayId, String token) {
+        
+        Optional<String> uri = client.findDesignUriInCollection(token, synBioCollUrl, displayId);
+        assertTrue(uri.isPresent());
+        
+        return uri.get();
+        
+    }
+
+    @Test
+    public void setsSBHDesctiption() throws Exception {
+
+        String displayId = compId;
+        
+        String token = client.login(synBioUrl, synBioUser, synBioPassword);
+        assertNotNull(token);
+
+        String uri = testURIFromId(displayId, token);
+        
+        ComponentDefinition def = client.getComponentDefition(token, uri);
+        assertNotNull(def);
+
+        ComponentUtil util = new ComponentUtil();
+        String old = util.getAnnotationValue(def, CommonAnnotations.SBH_DESCRIPTION);
+        
+        String newDesc = "Test"+LocalDateTime.now();
+                
+        client.setMutableDescription(token, uri, newDesc);
+        def = client.getComponentDefition(token, uri);
+        assertEquals(newDesc, util.getAnnotationValue(def, CommonAnnotations.SBH_DESCRIPTION));
+        
+        client.setMutableDescription(token, uri, old);
+        
+    }
+    
+    @Test
+    public void setsNotes() throws Exception {
+
+        String displayId = compId;
+        
+        String token = client.login(synBioUrl, synBioUser, synBioPassword);
+        assertNotNull(token);
+
+        String uri = testURIFromId(displayId, token);
+        
+        ComponentDefinition def = client.getComponentDefition(token, uri);
+        assertNotNull(def);
+
+        ComponentUtil util = new ComponentUtil();
+        String old = util.getAnnotationValue(def, CommonAnnotations.SBH_NOTES);
+        
+        String newDesc = "Test"+LocalDateTime.now();
+                
+        client.setNotes(token, uri, newDesc);
+        def = client.getComponentDefition(token, uri);
+        assertEquals(newDesc, util.getAnnotationValue(def, CommonAnnotations.SBH_NOTES));
+        
+        client.setNotes(token, uri, old);
+        
+    }
+    
+    
 }
