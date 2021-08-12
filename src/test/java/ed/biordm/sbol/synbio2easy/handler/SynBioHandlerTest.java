@@ -46,7 +46,7 @@ public class SynBioHandlerTest {
         
         when(client.hubFromUrl(anyString())).thenReturn("http://synbio.org/");
         
-        handler = new SynBioHandler(client);
+        handler = new SynBioHandler(client, new UpdateHandler(client));
     }
 
     @Test

@@ -424,6 +424,8 @@ public class UserInputPrompter {
         }        
 
         console.printf("%n");
+        
+        options.crateNew = false;      
 
         if (options.user == null) {
             console.printf("Please enter your SynBioHub username%n");
@@ -443,8 +445,6 @@ public class UserInputPrompter {
         }
 
         
-        options.crateNew = false;
-        options.overwrite = true;
 
         console.printf("%n");
 

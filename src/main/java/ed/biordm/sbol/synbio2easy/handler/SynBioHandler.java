@@ -47,7 +47,8 @@ public class SynBioHandler {
     final ComponentUtil compUtil;
     final ComponentAnnotator annotator;
     final LibraryGenerator generator;
-    final ExcelHandler excelHandler;
+    ExcelHandler excelHandler;
+    final UpdateHandler updateHandler;
     final TemplateGenerator templateGenerator;
 
     final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -59,25 +60,26 @@ public class SynBioHandler {
     private static final String NOTES_HEADER = "notes";
 
     @Autowired
-    public SynBioHandler(SynBioClient client) {
+    public SynBioHandler(SynBioClient client, UpdateHandler updateHandler) {
         // that should be probably injected in autowired constructor
         //this.jsonParser = JsonParserFactory.getJsonParser();        
         this(client, new ComponentFlattener(),
                 new ComponentUtil(), new ComponentAnnotator(),
-                new LibraryGenerator(), new ExcelHandler(client),
+                new LibraryGenerator(), new ExcelHandler(client), updateHandler,
                 new TemplateGenerator(client));
     }
 
     protected SynBioHandler(SynBioClient client,
             ComponentFlattener flattener, ComponentUtil compUtil,
             ComponentAnnotator annotator, LibraryGenerator generator,
-            ExcelHandler excelHandler, TemplateGenerator templateGenerator) {
+            ExcelHandler excelHandler, UpdateHandler updateHandler, TemplateGenerator templateGenerator) {
         this.client = client;
         this.flattener = flattener;
         this.compUtil = compUtil;
         this.annotator = annotator;
         this.generator = generator;
         this.excelHandler = excelHandler;
+        this.updateHandler = updateHandler;
         this.templateGenerator = templateGenerator;
     }
     
@@ -107,7 +109,7 @@ public class SynBioHandler {
         }
     }
 
-    void handleUpdate(CommandOptions parameters) throws URISyntaxException, IOException {
+    void handleUpdate1(CommandOptions parameters) throws URISyntaxException, IOException {
         if (parameters.sessionToken == null) {
             parameters.sessionToken = login(parameters);
         }
@@ -204,6 +206,21 @@ public class SynBioHandler {
 
         System.out.printf("Successfully flattened %d designs%n", flatDesigns.size());
     }
+    
+    void handleUpdate(CommandOptions parameters) throws URISyntaxException, IOException {
+        if (parameters.sessionToken == null) {
+            parameters.sessionToken = login(parameters);
+        }
+
+        Path metaFile = Paths.get(parameters.metaFile);
+        
+        String collectionUrl = parameters.url;
+        
+        boolean overwrite = parameters.overwrite;
+        
+        Outcome outcome = updateHandler.updateRecords(collectionUrl, metaFile, overwrite, parameters.sessionToken);
+        printOutcome(outcome, "updated");
+    }    
 
     void handleAnnotate(CommandOptions parameters) throws IOException, URISyntaxException {
         Path inputFile = Paths.get(parameters.inputFile);
@@ -370,8 +387,24 @@ public class SynBioHandler {
         return cleanName;
     }
 
+    protected List<String> list2Strings(List<String> ids, int batch) {
+        List<String> rows = new ArrayList<>();
+        List<String> row = new ArrayList<>();
+        for(String id : ids) {
+            row.add(id);
+            if (row.size() == batch) {
+                rows.add(ids.stream().collect(Collectors.joining(", ")));
+                
+                row.clear();
+            }
+        }
+        rows.add(ids.stream().collect(Collectors.joining(", ")));
+        return rows;
+    }
+    
     protected void printOutcome(Outcome outcome, String verb) {
         for(String missingMeta: outcome.missingMeta) {
+            System.out.println("Missing metadata for ids:");            
             System.out.printf("Design '%s' has missing metadata%n", missingMeta);
         }
 

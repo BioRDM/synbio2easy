@@ -10,6 +10,7 @@ import ed.biordm.sbol.synbio2easy.client.SynBioClient;
 import ed.biordm.sbol.synbio2easy.dom.Command;
 import ed.biordm.sbol.synbio2easy.dom.CommandOptions;
 import ed.biordm.sbol.synbio2easy.handler.SynBioHandler;
+import ed.biordm.sbol.synbio2easy.handler.UpdateHandler;
 import ed.biordm.sbol.synbio2easy.prompt.UserInputPrompter;
 import java.io.BufferedReader;
 import java.io.Console;
@@ -48,6 +49,9 @@ public class SynBioRunnerIntTest {
 
     @Autowired
     SynBioClient client;
+    
+    @Autowired
+    UpdateHandler updateHandler;
 
     @TempDir
     Path tmpDir;
@@ -75,7 +79,7 @@ public class SynBioRunnerIntTest {
         // prompter = new UserInputPrompter(mockConsole);
 
         prompter = new UserInputPrompter();
-        handler = new SynBioHandler(client);
+        handler = new SynBioHandler(client, updateHandler);
         runner = new SynBioRunner(prompter, handler);
 
         Assumptions.assumeTrue(Arrays.asList(this.environment.getActiveProfiles()).contains("integration"));
