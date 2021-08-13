@@ -42,6 +42,7 @@ We will start the tool, specify where the input files are located, and used the 
 The program creates a file `library.1.xml` under `examples/library` folder.
 
 Check how the details in Excel file were used to create the 3 plasmids.
+For example the authors columns became creators. The name and displayId were constructed using simple templating.
 
 Alternatively you can use the inlined command parameters as bellow, avoiding the interactive prompt:
 
@@ -66,3 +67,48 @@ We will use `libary/library.1.xml` from the previous example as the input.
 ```
 java -jar SynBio2Easy.jar flatten --input-file=library/library.1.xml --output-file=library/library_flattened.1.xml --all-roots=Y --suffix=_flat
 ```
+
+A new file `library/library_flattened.1.xml` is created, which contains the 'flattened' 3 plasmids designs.
+Upload them to SynBioHub and check how they are rendered.
+The original template plasmid cannot be flattened as it does not contain the concrete sequences for its flanks.
+
+## Annotate
+
+In this scenario, the user intends to enrich their ComponentDefinitions with extra descriptive metadata 
+added into an existing SBOL file. 
+
+We will use the flattened document as input: `library/library_flattened.1.xml`
+And the metadata excel file: `flat_annotation.xlsx`.
+
+The matching between excel and sbol record is based on displayId value.
+Check how "templating" and excel functions were used to generate values.
+
+```
+java -jar SynBio2Easy.jar annotate `
+--input-file=library/library_flattened.1.xml --meta-file=flat_annotation.xlsx `
+--output-file=library/library_flattened.1.xml --stop-missing-metadata=N `
+--stop-missing-id=N --overwrite=N
+```
+
+Check the overwritten library_flattened.1.xml it should contained appended information
+in its sbh:description and sbh:notes fields.
+
+## Deposit
+
+In this scenario, the user intends to upload files describing their library of designs.
+All files in our `library` directory will be deposited into a new collection in SynBioHub.
+
+```
+java -jar SynBio2Easy.jar deposit `
+--dir=library --file-extension=.xml --multi=N `
+--create-new=Y --name="synbio-test" --version=1.0 --url=https://synbiohub.org/ 
+```
+
+You will be prompted for your email (not username) and password for SynBioHub.
+
+Make a note of the newly created collection:
+https://synbiohub.org/user/YOURLOGIN/synbio_test/synbio_test_collection/1.0
+
+Navigate to it, it contains both the original and flattened designs from both files.
+
+
