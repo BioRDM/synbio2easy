@@ -5,6 +5,7 @@
  */
 package ed.biordm.sbol.synbio2easy.handler;
 
+import ed.biordm.sbol.sbol2easy.transform.FeaturesReader;
 import ed.biordm.sbol.synbio2easy.client.SynBioClient;
 import ed.biordm.sbol.synbio2easy.dom.Command;
 import ed.biordm.sbol.synbio2easy.dom.CommandOptions;
@@ -167,7 +168,7 @@ public class TemplateGeneratorIntTest {
 
         FeaturesReader featuresReader = new FeaturesReader();
 
-        Map<String, List<String>> result = featuresReader.readMultiFeatures(outputFile, 0, 0, 5);
+        Map<String, List<String>> result = featuresReader.readMultiFeatures(outputFile, 0, 0);
 
         assertEquals(result.get("insert"), List.of("insert", "", "insert", "1.0", "http://localhost:7777/user/Johnny/insert/1.0"));
 

@@ -10,7 +10,7 @@
     </parent>
     <groupId>uk.ac.ed.biordm.sbol</groupId>
     <artifactId>synbio2easy</artifactId>
-    <version>1.5.0-SNAPSHOT</version>
+    <version>1.6.1-SNAPSHOT</version>
     <name>SynBio2Easy</name>
     <description>Tool for interacting with sbol2/SynBioHub in "batch" mode
     using excel tables as metadata inputs.</description>

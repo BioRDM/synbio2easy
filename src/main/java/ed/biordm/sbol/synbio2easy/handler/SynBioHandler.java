@@ -47,17 +47,11 @@ public class SynBioHandler {
     final ComponentUtil compUtil;
     final ComponentAnnotator annotator;
     final LibraryGenerator generator;
-    ExcelHandler excelHandler;
     final UpdateHandler updateHandler;
     final TemplateGenerator templateGenerator;
 
     final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    // Excel column header strings - worksheet headers must match these to work
-    private static final String DISP_ID_HEADER = "display_id";
-    private static final String ATTACH_FILE_HEADER = "attachment_filename";
-    private static final String DESC_HEADER = "description";
-    private static final String NOTES_HEADER = "notes";
 
     @Autowired
     public SynBioHandler(SynBioClient client, UpdateHandler updateHandler) {
@@ -65,20 +59,19 @@ public class SynBioHandler {
         //this.jsonParser = JsonParserFactory.getJsonParser();        
         this(client, new ComponentFlattener(),
                 new ComponentUtil(), new ComponentAnnotator(),
-                new LibraryGenerator(), new ExcelHandler(client), updateHandler,
+                new LibraryGenerator(), updateHandler,
                 new TemplateGenerator(client));
     }
 
     protected SynBioHandler(SynBioClient client,
             ComponentFlattener flattener, ComponentUtil compUtil,
             ComponentAnnotator annotator, LibraryGenerator generator,
-            ExcelHandler excelHandler, UpdateHandler updateHandler, TemplateGenerator templateGenerator) {
+            UpdateHandler updateHandler, TemplateGenerator templateGenerator) {
         this.client = client;
         this.flattener = flattener;
         this.compUtil = compUtil;
         this.annotator = annotator;
         this.generator = generator;
-        this.excelHandler = excelHandler;
         this.updateHandler = updateHandler;
         this.templateGenerator = templateGenerator;
     }
@@ -109,14 +102,6 @@ public class SynBioHandler {
         }
     }
 
-    void handleUpdate1(CommandOptions parameters) throws URISyntaxException, IOException {
-        if (parameters.sessionToken == null) {
-            parameters.sessionToken = login(parameters);
-        }
-
-        Outcome outcome = excelHandler.processUpdateExcel(parameters);
-        printOutcome(outcome, "updated");
-    }
 
     void handleCyano(CommandOptions parameters) throws URISyntaxException, IOException {
         PlasmidsGenerator generator = new PlasmidsGenerator();
