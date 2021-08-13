@@ -39,7 +39,7 @@ Each prompt contains short description of the parameters asked as well as sensib
 ### Example workflow
 The best way to learn this tool is by trying it with our example workflow. 
 
-Follow our step by step guide document [test-workflow.md](examples/test-workflow.md)
+Follow our step by step guide document [test-workflow](examples/README.md)
 and examine the provided input files and the outcomes of each of the available operations.
 
 

@@ -24,7 +24,7 @@ You should see a version text. In case of error follow a guide how to install ja
 
 In this scenario, the user intends to generate files describing their library of designs in SBOL document format. 
 * A template SBOL document is provided: `lib_template.xml`
-* the MS Excel spreadsheet `library_def.xlsx` containing details for each component design
+* the MS Excel spreadsheet `lib_def.xlsx` containing details for each component design
 
 The program generates 3 new ComponentDefinitions based on the template with the provided metadata and concrete sequences for
 the template's abstract components.
@@ -36,7 +36,7 @@ We will start the tool, specify where the input files are located, and used the 
 java -jar SynBio2Easy.jar generate
 ```
 2.	Type in the name of the template file, `lib_template.xml` then <ENTER> when asked to specify the template file
-3.	Type in the name of the Excel file that defines the new components, `library_def.xlsx` then <ENTER>
+3.	Type in the name of the Excel file that defines the new components, `lib_def.xlsx` then <ENTER>
 4.	Just press <ENTER> to accept the default `library` filename prefix (the output file will be called library.1.xml)
 5.	Just press <ENTER> to accept the default `1.0` version string
 6.	Just press <ENTER> to accept the default output directory (`library` in our case).
@@ -51,7 +51,7 @@ Alternatively you can use the inlined command parameters as bellow, avoiding the
 
 ```
 java -jar SynBio2Easy.jar generate `
---output-dir=library --template-file=template.xml --meta-file=library_def.xlsx `
+--output-dir=library --template-file=lib_template.xml --meta-file=lib_def.xlsx `
 --filename-prefix=library --version=1.0 --stop-missing-metadata=N 
 ```
 
@@ -127,8 +127,8 @@ Please change the url to the uploaded collection
 
 ```
 java -jar SynBio2Easy.jar synbio2table `
---output-file=collection_table.xlsx `
---url=https://synbiohub.org/user/YOURLOGIN/synbio_test/synbio_test_collection/1.0
+--output-file=library/collection_table.xlsx `
+--url=https://synbiohub.org/user/YOURLOGIN/synbio_test/synbio_test_collection/1.0 
 ```
 
 You will be prompted for your email (not username) and password for SynBioHub.
@@ -154,7 +154,7 @@ please replace YOURLOGIN with suitable value bellow
 ```
 java -jar SynBio2Easy.jar update `
 --meta-file=update.xlsx --overwrite=N `
---url=https://synbiohub.org/user/YOURLOGIN/synbio_test/synbio_test_collection/1.0
+--url=https://synbiohub.org/user/YOURLOGIN/synbio_test/synbio_test_collection/1.0 
 ```
 
 Check in SynBioHub how the selected plasmids (for example sll0558-codA) have a sequences attached and described in notes.

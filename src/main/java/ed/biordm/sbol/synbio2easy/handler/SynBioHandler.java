@@ -250,7 +250,7 @@ public class SynBioHandler {
         // String csvLogFilename = new SimpleDateFormat("'deposit_log_'yyyy-MM-dd-HH-mm-ss'.csv'").format(new Date());
         // Path csvOutputFile = Paths.get(System.getProperty("user.dir")).resolve(csvLogFilename);
         Outcome outcome = templateGenerator.generateTemplate(parameters);
-        printOutcome(outcome, "generated");
+        printOutcome(outcome, "retrived");
     }
 
     String login(CommandOptions parameters) throws URISyntaxException {
