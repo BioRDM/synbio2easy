@@ -72,65 +72,25 @@ Check the [examples](examples) folder for examples of metadata input files and t
 
 ### Available operations
 
-+-----------------------+----------------------------------------------+
-| Command               | Behaviour and example use case               |
-+=======================+==============================================+
-| GENERATE              | Generates a series of designs based on an    |
-|                       | SBOL template and \'concrete\' instance      |
-|                       | parameters (including sub-components\'       |
-|                       | sequences) specified in an Excel table       |
-|                       |                                              |
-|                       | Use case: generation of library of similar   |
-|                       | designs                                      |
-+-----------------------+----------------------------------------------+
-| ANNOTATE              | Adds information (e.g. descriptions,         |
-|                       | authors) to multiple component definitions   |
-|                       | in an SBOL document using details defined in |
-|                       | an Excel table                               |
-|                       |                                              |
-|                       | Use case: batch update of designs'           |
-|                       | descriptions to change their status to       |
-|                       | "tested" and add provenance                  |
-+-----------------------+----------------------------------------------+
-| FLATTEN               | Converts a tree of SBOL sub-components in a  |
-|                       | design into a \'flattened\' component        |
-|                       | definition with an annotated linear sequence |
-|                       |                                              |
-|                       | Use case: create an alternative              |
-|                       | representation of a plasmid suitable for     |
-|                       | export to GenBank file format                |
-+-----------------------+----------------------------------------------+
-| DEPOSIT               | Deposits files from a folder(s) into         |
-|                       | SynBioHub collection(s)                      |
-|                       |                                              |
-|                       | Use case: Deposition of a large collection   |
-|                       | of designs                                   |
-+-----------------------+----------------------------------------------+
-| UPDATE                | Adds information (e.g. notes, attachment     |
-|                       | files) to multiple records in SynBioHub      |
-|                       | using details defined in an Excel table.     |
-|                       | Unlike ANNOTATE it is an online operation on |
-|                       | a server.                                    |
-|                       |                                              |
-|                       | Use case: attach verified sequences to       |
-|                       | designs' descriptions                        |
-+-----------------------+----------------------------------------------+
-| CLEAN                 | Removes annotations and namespaces specific  |
-|                       | to SynBioHub from an SBOL document, so it    |
-|                       | can be re-uploaded to SynBioHub              |
-|                       |                                              |
-|                       | Use case: quick edit of a SynBioHub          |
-|                       | collection using a text editor and           |
-|                       | downloaded XML file                          |
-+-----------------------+----------------------------------------------+
-| SYNBIO2TABLE          | Retrieves identity details of all members of |
-|                       | a collection and saves them to an Excel file |
-|                       | with headings for metadata columns supported |
-|                       | by SynBio2Easy                               |
-|                       |                                              |
-|                       | Use case: preparation of input file for the  |
-|                       | UPDATE operation                             |
-+-----------------------+----------------------------------------------+
+| Command               | Behaviour and example use case                                                               |
+| :-------------------- |:-------------------------------------------------------------------------------------------- |
+| GENERATE              | Generates a series of designs based on an SBOL template and \'concrete\' instance parameters (including sub-components\'sequences) specified in an Excel table
+|   | Use case: generation of library of similar designs |
+| ANNOTATE              | Adds information (e.g. descriptions, authors) to multiple component definitions in an SBOL document using details defined in an Excel table |
+|   | Use case: batch update of designs’ descriptions to change their status to “tested” and add provenance
+|FLATTEN	|Converts a tree of SBOL sub-components in a design into a 'flattened' component definition with an annotated linear sequence
+|   | Use case:  create an alternative representation of a plasmid suitable for export to GenBank file format
+| DEPOSIT	| Deposits files from a folder(s) into SynBioHub collection(s)
+|   | Use case: Deposition of a large collection of designs
+| UPDATE	| Adds information (e.g. notes, attachment files) to multiple records in SynBioHub using details defined in an Excel table. Unlike ANNOTATE it is an online operation on a server.
+|   | Use case: attach verified sequences to designs’ descriptions
+| CLEAN	| Removes annotations and namespaces specific to SynBioHub from an SBOL document, so it can be re-uploaded to SynBioHub
+|   | Use case: quick edit of a SynBioHub collection using a text editor and downloaded XML file
+| SYNBIO2TABLE	| Retrieves identity details of all members of a collection and saves them to an Excel file with headings for metadata columns supported by SynBio2Easy
+|   | Use case: preparation of input file for the UPDATE operation 
+
+
+
 
 ### CLI parameters
 
