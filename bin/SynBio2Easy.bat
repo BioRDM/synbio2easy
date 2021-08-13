@@ -41,5 +41,5 @@ set JDK_Version=
 set Located=
 
 if NOT "%JAVA_HOME%" == "" {
-	start cmd /k "%JAVA_HOME%/bin/java" -jar %cd%/SynBioHub-CLI.jar
+	start cmd /k "%JAVA_HOME%/bin/java" -jar %cd%/SynBio2Easy.jar
 }

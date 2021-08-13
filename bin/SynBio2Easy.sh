@@ -12,9 +12,9 @@ echo ${machine}
 # JAVA_VERSION=`java -version 2>&1 | head -n 1 | cut -d\" -f 2`
 
 if  [ "$machine" = "Linux" ]; then
-	xterm -hold -e "java -jar SynBioHub-CLI.jar"
+	xterm -hold -e "java -jar SynBio2Easy.jar"
 elif [ "$machine" = "Mac" ]; then
-	osascript -e 'do shell script "java -jar SynBioHub-CLI.jar"'
+	osascript -e 'do shell script "java -jar SynBio2Easy.jar"'
 elif [ "$machine" = "MinGw" ]; then
-	mintty -h always "java -jar SynBioHub-CLI.jar"
+	mintty -h always "java -jar SynBio2Easy.jar"
 fi
