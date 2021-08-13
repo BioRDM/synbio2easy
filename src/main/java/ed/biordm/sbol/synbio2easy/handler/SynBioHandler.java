@@ -92,7 +92,7 @@ public class SynBioHandler {
             case CLEAN: handleClean(command); break;
             case FLATTEN: handleFlatten(command); break;
             case ANNOTATE: handleAnnotate(command); break;
-            case TEMPLATE4UPDATE: handleTemplate4Update(command); break;
+            case SYNBIO2TABLE: handleSynBio2Table(command); break;
             default: throw new IllegalArgumentException("Unsuported command: "+command.command);
         }
     }
@@ -242,7 +242,7 @@ public class SynBioHandler {
         }        
     }
 
-    void handleTemplate4Update(CommandOptions parameters) throws URISyntaxException {
+    void handleSynBio2Table(CommandOptions parameters) throws URISyntaxException {
         if (parameters.sessionToken == null) {
             parameters.sessionToken = login(parameters);
         }

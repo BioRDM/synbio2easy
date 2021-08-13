@@ -401,7 +401,7 @@ public class SynBioHandlerIntTest {
 
     @Test
     public void testHandleTemplate4Update() throws IOException, URISyntaxException {
-        CommandOptions parameters = new CommandOptions(Command.TEMPLATE4UPDATE);
+        CommandOptions parameters = new CommandOptions(Command.SYNBIO2TABLE);
         Path outputDir = Paths.get("D:\\temp\\sbol\\");
         //Path outputDir = tmpDir;
         String outputFile = outputDir.resolve("template4update.csv").toFile().getAbsolutePath();
@@ -416,7 +416,7 @@ public class SynBioHandlerIntTest {
         parameters.description = "This is Johnny's latest update to the description at "+ nowTime;
         parameters.notes = "This is Johnny's latest update to the notes at "+ nowTime;*/
 
-        handler.handleTemplate4Update(parameters);
+        handler.handleSynBio2Table(parameters);
     }
 
     @Test

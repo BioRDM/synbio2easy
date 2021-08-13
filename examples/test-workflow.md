@@ -112,3 +112,68 @@ https://synbiohub.org/user/YOURLOGIN/synbio_test/synbio_test_collection/1.0
 Navigate to it, it contains both the original and flattened designs from both files.
 
 
+## SynBio2Table
+
+In this scenario, the user intends to get information about the designs from a SynBioHub collection in a table form.
+
+The main usage is generation of a 'metadata' template for batch updates in SynBioHub.
+as the generated file contains the definitons displayIds, versions, descriptions and etc.
+
+Please change the url to the uploaded collection 
+(you should only need to replace YOURLOGIN with the correct one)
+
+```
+java -jar SynBio2Easy.jar synbio2table `
+--output-file=collection_table.xlsx `
+--url=https://synbiohub.org/user/YOURLOGIN/synbio_test/synbio_test_collection/1.0
+```
+
+You will be prompted for your email (not username) and password for SynBioHub.
+
+The generated file contains the headers in the form needed by the UPDATE operation.
+
+## Update
+
+In this scenario, the intention is to attach files containing supporting data do plasmids definitions in SynBioHub
+along with information what those files are, additional enriched metadata.
+
+We will use the Excel file: `update.xlsx`
+that contains details of the files to be attached and new notes information.
+Such files can be generated with SYNBIO2TABLE command and then edited as needed.
+
+The examples folder contains also the sequence files that will be uploaded.
+
+The target collection for update will be the one recently created
+https://synbiohub.org/user/YOURLOGIN/synbio_test/synbio_test_collection/1.0
+
+please replace YOURLOGIN with suitable value bellow
+
+```
+java -jar SynBio2Easy.jar update `
+--meta-file=update.xlsx --overwrite=N `
+--url=https://synbiohub.org/user/YOURLOGIN/synbio_test/synbio_test_collection/1.0
+```
+
+Check in SynBioHub how the selected plasmids (for example sll0558-codA) have a sequences attached and described in notes.
+
+## Clean
+
+In this scenario, the user intends to re-use an SBOL document that they have downloaded from SynBioHub.
+Such documents even if coudl be quickly edidted in a text editor to provide some
+missing details or change annotations are no longer valid for re-submission because of namespace adjustments. 
+
+The cleaning process allows them to be deposited in SynBioHub again. 
+
+An input SBOL document file to be sanitised is provided, so please navigate to the created collection:
+https://synbiohub.org/user/YOURLOGIN/synbio_test/synbio_test_collection/1.0
+
+Click download in the toolbar and select sbol document as the format, save it as `synbio_test_collection.xml`
+under `examples`
+
+```
+java -jar SynBio2Easy.jar clean `
+--input-file=synbio_test_collection.xml --output-file=synbio_test_collection_cleaned.xml --namespace=http://biordm.sbs.ed.ac.uk --remove-collections=Y
+```
+
+The output document is saved under `synbio_test_collection_cleaned.xml`
+You can upload it to a new collection in SynBioHub using the web interface.

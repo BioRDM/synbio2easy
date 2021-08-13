@@ -114,11 +114,11 @@ public enum Command {
             return textBuf.toString();
         }
     },
-    TEMPLATE4UPDATE {
+    SYNBIO2TABLE {
         @Override
         public String getGuidanceText() {
             StringBuffer textBuf = new StringBuffer();
-            textBuf.append("You selected the TEMPLATE4UPDATE operation%n%n");
+            textBuf.append("You selected the SYNBIO2TABLE operation%n%n");
 
             return textBuf.toString();
         }

@@ -282,7 +282,7 @@ public class UserInputPrompterTest {
     @Test
     public void testTemplate4UpdateCommandPassedArgs() throws MissingOptionException {
         List<String> argsList = new ArrayList();
-        argsList.add("template4update");
+        argsList.add("synbio2table");
         argsList.add("--output-file=examples/library/template_4_update.xlsx");
         argsList.add("--url=http://synbiohub.org/user/johnny/test_13_07_21/test_13_07_21_collection/1.0");
         argsList.add("--username=j.hay@epcc.ed.ac.uk");
@@ -295,7 +295,7 @@ public class UserInputPrompterTest {
 
         params = instance.getCommandOptions(appArgs);
 
-        assertEquals(Command.TEMPLATE4UPDATE, params.command);
+        assertEquals(Command.SYNBIO2TABLE, params.command);
         assertTrue(params.outputFile.endsWith("examples/library/template_4_update.xlsx"));
         assertEquals("http://synbiohub.org/user/johnny/test_13_07_21/test_13_07_21_collection/1.0", params.url);
         assertEquals("j.hay@epcc.ed.ac.uk", params.user);

@@ -62,7 +62,7 @@ public class UserInputPrompter {
                 case CLEAN: return promptCleanOptions(options);
                 case FLATTEN: return promptFlattenOptions(options);
                 case ANNOTATE: return promptAnnotateOptions(options);
-                case TEMPLATE4UPDATE: return promptTemplate4UpdateOptions(options);
+                case SYNBIO2TABLE: return promptSynBio2TableOptions(options);
                 default: throw new IllegalArgumentException("Unsupported command: "+command);
             }
         } else {
@@ -88,7 +88,8 @@ public class UserInputPrompter {
             case CLEAN: return CLEAN;
             case FLATTEN: return FLATTEN;
             case ANNOTATE: return ANNOTATE;
-            case TEMPLATE4UPDATE: return TEMPLATE4UPDATE;
+            case SYNBIO2TABLE: return SYNBIO2TABLE;
+
             default: throw new MissingOptionException("Unknown command "+command);
         }
     }
@@ -1211,9 +1212,9 @@ public class UserInputPrompter {
         return options;
     }
 
-    CommandOptions promptTemplate4UpdateOptions(CommandOptions options) {
+    CommandOptions promptSynBio2TableOptions(CommandOptions options) {
         console.printf("%n");
-        console.printf("... creating template for updating SynBioHub designs in designated SBOL document%n");
+        console.printf("... creating table of SynBioHub content, can be later used for updating SynBioHub records%n");
         console.printf("%n");
 
         /*if (options.inputFile == null) {
@@ -1245,9 +1246,9 @@ public class UserInputPrompter {
             //String noExtFilePath = removeFileExtension(options.inputFile, false);
 
             // String defOutputFile = noExtFilePath.concat(".xlsx");
-            String defOutputFile = "template_4_update.xlsx";
+            String defOutputFile = "collection_table.xlsx";
 
-            console.printf("Please enter the path to the Excel file that will be generated to contain the template for update%n");
+            console.printf("Please enter the path to the Excel file that will be generated to contain the collection content as table%n");
             options.outputFile = console.readLine(String.format("Filename [<ENTER> for default '%s' path]: ", defOutputFile)).strip();
 
             if(options.outputFile.isEmpty()) {
@@ -1271,7 +1272,7 @@ public class UserInputPrompter {
 
             if(Paths.get(options.outputFile).toFile().exists()) {
                 console.printf("%n");
-                console.printf("You have selected an output file that already exists. If you continue, the existing Excel template file will be overwritten.%n");
+                console.printf("You have selected an output file that already exists. If you continue, the existing Excel table file will be overwritten.%n");
                 console.printf("Do you wish to continue and overwrite the template?%n");
                 String overwriteAns = console.readLine("Y | N: ").strip();
 
@@ -1280,7 +1281,7 @@ public class UserInputPrompter {
                 }
 
                 if (!Y_PATTERN.matcher(overwriteAns).matches()) {
-                    throw new IllegalArgumentException("Cannot continue with cleaning as existing Excel template will be overwritten in "+options.outputFile);
+                    throw new IllegalArgumentException("Cannot continue with exporting, Excel would be overwritten in "+options.outputFile);
                 }
             }
         } else {
@@ -1326,7 +1327,7 @@ public class UserInputPrompter {
     public String getUsageTxt() {
         return "Usage:"
                 + "\n"
-                + "deposit | update | generate | cyano | clean | flatten | annotate | template4update";
+                + "deposit | update | generate | cyano | clean | flatten | annotate | synbio2table";
     }
 
     void setPassedOptions(CommandOptions options, ApplicationArguments args) {
@@ -1382,8 +1383,8 @@ public class UserInputPrompter {
             setPassedAnnotateOptions(options, args);
         } else if(options.command == Command.CLEAN) {
             setPassedCleanOptions(options, args);
-        } else if(options.command == Command.TEMPLATE4UPDATE) {
-            setPassedTemplate4UpdateOptions(options, args);
+        } else if(options.command == Command.SYNBIO2TABLE) {
+            setPassedSynBio2TableOptions(options, args);
         }
     }
 
@@ -1497,6 +1498,14 @@ public class UserInputPrompter {
         if (args.getOptionNames().contains("p") && !args.getOptionValues("p").isEmpty()) {
             options.password = args.getOptionValues("p").get(0);
         }
+        if (args.getOptionNames().contains("overwrite") && !args.getOptionValues("overwrite").isEmpty()) {
+            options.overwrite = Y_PATTERN.matcher(args.getOptionValues("overwrite").get(0)).matches();
+            options.isOverwriteDef = true;
+        }
+        if (args.getOptionNames().contains("o") && !args.getOptionValues("o").isEmpty()) {
+            options.overwrite = Y_PATTERN.matcher(args.getOptionValues("o").get(0)).matches();
+            options.isOverwriteDef = true;
+        }        
     }
 
     void setPassedCleanOptions(CommandOptions options, ApplicationArguments args) {
@@ -1629,7 +1638,7 @@ public class UserInputPrompter {
         }
     }
 
-    void setPassedTemplate4UpdateOptions(CommandOptions options, ApplicationArguments args) {
+    void setPassedSynBio2TableOptions(CommandOptions options, ApplicationArguments args) {
         if (args.getOptionNames().contains("output-file") && !args.getOptionValues("output-file").isEmpty()) {
             options.outputFile = args.getOptionValues("output-file").get(0);
         }
