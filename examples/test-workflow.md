@@ -31,7 +31,7 @@ the template's abstract components.
 
 We will start the tool, specify where the input files are located, and used the default values for most of the parameters.
 
-1.      Type 
+1.  Type
 ```
 java -jar SynBio2Easy.jar generate
 ```
@@ -40,7 +40,7 @@ java -jar SynBio2Easy.jar generate
 4.	Just press <ENTER> to accept the default `library` filename prefix (the output file will be called library.1.xml)
 5.	Just press <ENTER> to accept the default `1.0` version string
 6.	Just press <ENTER> to accept the default output directory (`library` in our case).
-7.      Press ENTER on other questions to use the default silent errors handling
+7.  Press ENTER on other questions to use the default silent errors handling
 
 The program creates a file `library.1.xml` under `examples/library` folder.
 
