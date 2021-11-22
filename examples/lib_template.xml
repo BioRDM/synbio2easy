@@ -157,7 +157,6 @@
     <dcterms:description>Recombinant plasmid targeting {key}</dcterms:description>
     <sbh:mutableDescription>Recombinant plasmid targeting {key}
 Target organism: Synechocystis sp. PCC 6803
-Assembly method: MoClo
 </sbh:mutableDescription>
     <sbol:type rdf:resource="http://www.biopax.org/release/biopax-level3.owl#DnaRegion"/>
     <sbol:type rdf:resource="http://identifiers.org/so/SO:0000988"/>
